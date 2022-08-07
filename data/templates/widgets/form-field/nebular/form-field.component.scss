@@ -1,0 +1,9 @@
+.form-field {
+    display: flex;
+    align-items: center;
+    margin: 5px 2px;
+
+    .field {
+        flex: 1 1 0;
+    }
+}

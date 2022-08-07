@@ -2,7 +2,7 @@ import { cliCommandItem, CliCommand, OnImplement } from '@dat/lib/argvs';
 import { CommandArgvName, CommandName, UIFrameWorkType } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
-import { cwd, copyDirectory } from '@dat/lib/os';
+import { cwd, copyDirectory, shell } from '@dat/lib/os';
 import { saveRenderFile } from '@dat/lib/template';
 import { detectAngularSourcePath, UIFrameWorks } from '../common';
 import { select, boolean } from '@dat/lib/input';
@@ -51,21 +51,13 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
         // =>copy template files
         info('copying template files ...');
         await this.copyTemplates();
+        //--------------------------
         info('configuring angular project ...');
-        // =>add properties to tsconfig of project
-        let projectTsConfig = fs.readFileSync(path.join(this.source, 'tsconfig.json')).toString();
-        if (projectTsConfig.startsWith('/*')) {
-            let lines = projectTsConfig.split('\n');
-            lines.shift();
-            projectTsConfig = lines.join('\n');
-        }
-        projectTsConfig = JSON.parse(projectTsConfig);
-        projectTsConfig['compilerOptions']['experimentalDecorators'] = true;
-        projectTsConfig['compilerOptions']['strict'] = false;
-        // =>save tsconfig
-        fs.writeFileSync(path.join(this.source, 'tsconfig.json'), JSON.stringify(projectTsConfig, null, 2));
-
-
+        await this.configProject();
+        //--------------------------
+        info('adding required packages to project ...');
+        await this.addRequiredPackages();
+        //--------------------------
         success(`add 'StrongFBModule' to 'app.module.ts' file`);
         // =>add sample, if want
         if (await boolean('Do you want to load a sample?', true)) {
@@ -135,6 +127,42 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
         }
         // await copyDirectory(path.join(this.templatesPath, 'widgets', this.uiFramework), path.join(this.sourceAppStrongFBPath, 'widgets'));
         // fs.copyFileSync(path.join(this.templatesPath, 'widgets', 'README.md'), path.join(this.sourceAppStrongFBPath, 'widgets', 'README.md'));
+    }
+    /********************************** */
+    async configProject() {
+        // =>add properties to tsconfig of project
+        let projectTsConfig = fs.readFileSync(path.join(this.source, 'tsconfig.json')).toString();
+        if (projectTsConfig.startsWith('/*')) {
+            let lines = projectTsConfig.split('\n');
+            lines.shift();
+            projectTsConfig = lines.join('\n');
+        }
+        projectTsConfig = JSON.parse(projectTsConfig);
+        projectTsConfig['compilerOptions']['experimentalDecorators'] = true;
+        projectTsConfig['compilerOptions']['strict'] = false;
+        // =>save tsconfig
+        fs.writeFileSync(path.join(this.source, 'tsconfig.json'), JSON.stringify(projectTsConfig, null, 2));
+    }
+    /********************************** */
+    async addRequiredPackages() {
+        let packages = { 'notiflix': '^3.2.5' };
+        let exists = true;
+        // =>read package.json of project
+        let projectPackageJson = JSON.parse(fs.readFileSync(path.join(this.source, 'package.json')).toString());
+        // =>check exist all packages before
+        for (const pack of Object.keys(packages)) {
+            if (!projectPackageJson['dependencies'][pack] && !projectPackageJson['devDependencies'][pack]) {
+                exists = false;
+                // =>if not exist, add it
+                projectPackageJson['dependencies'][pack] = packages[pack];
+            }
+        }
+        // =>save package.json
+        fs.writeFileSync(path.join(this.source, 'package.json'), JSON.stringify(projectPackageJson, null, 2));
+        // =>if not exist any packages, reinstall npm
+        if (!exists) {
+            await shell(`npm i`, this.source);
+        }
     }
     /********************************** */
 

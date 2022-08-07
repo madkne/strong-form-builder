@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { StrongFBBase } from '../../common/StrongFB-base';
 import { StrongFBLayoutBuilder } from '../../common/StrongFB-layout-builder';
 import { StrongFBLayoutBuilderSchema } from '../../common/StrongFB-layout-builder-types';
@@ -13,9 +13,11 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
     @ViewChild('WidgetsSection', { read: ViewContainerRef }) WidgetsSection: ViewContainerRef;
     widgetsNeedToReload = true;
 
+    // protected override  showLoading = false;
 
-    constructor(private viewContainerRef: ViewContainerRef) {
-        super();
+
+    constructor(protected override elRef: ElementRef) {
+        super(elRef);
     }
     @Input() form: StrongFBBase;
 
@@ -26,7 +28,7 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['layout']) {
-            console.log('layout:', this.layout);
+            // console.log('layout:', this.layout);
             this.layoutSchema = this.layout.schema;
             // =>load widgets, if exist
             if (this.layoutSchema.widgets && this.layoutSchema.widgets.length > 0) {
@@ -40,14 +42,7 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
         this.widgetsNeedToReload = false;
         let setContainerInterval = setInterval(async () => {
             if (!this.WidgetsSection) return;
-            this.WidgetsSection.clear();
-            for (const widgetFunction of this.layoutSchema.widgets) {
-                let widget = await widgetFunction.call(this.form);
-                console.log('loading widget:', widget.component)
-                let component = this.WidgetsSection.createComponent(widget.component);
-                component.instance['widgetHeader'] = widget;
-            }
-
+            await this.loadDynamicWidgets(this.WidgetsSection, this.layoutSchema.widgets, this.form);
 
             clearInterval(setContainerInterval);
         }, 100);

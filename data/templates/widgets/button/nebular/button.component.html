@@ -1,0 +1,26 @@
+<ng-container *ngIf="schema">
+    <button nbButton [size]="schema.size" [shape]="schema.shape" [status]="schema.status"
+        [disabled]="schema.disabled ? schema.disabled : undefined" [fullWidth]="schema.fullWidth ? true : undefined"
+        [hero]="schema.appearance === 'colorful'" [outline]="schema.appearance === 'outline'"
+        [ghost]="schema.mode === 'icon' || schema.appearance === 'basic'" (click)="clickEvent($event)">
+        <!-- text mode -->
+        <ng-container *ngIf="schema.mode === 'text'">{{schema.text}}</ng-container>
+        <!-- icon before text  mode-->
+        <ng-container *ngIf="schema.mode === 'iconBeforeText'">
+            <nb-icon [icon]="schema.icon"></nb-icon>{{schema.text}}
+        </ng-container>
+        <!-- icon after text  mode-->
+        <ng-container *ngIf="schema.mode === 'iconAfterText'">
+            {{schema.text}}
+            <nb-icon [icon]="schema.icon"></nb-icon>
+        </ng-container>
+        <!-- icon button or icon mode -->
+        <ng-container *ngIf="schema.mode === 'iconButton' || schema.mode === 'icon'">
+            <nb-icon [icon]="schema.icon"></nb-icon>
+        </ng-container>
+
+
+
+    </button>
+
+</ng-container>

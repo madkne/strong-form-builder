@@ -1,1 +1,5 @@
-<input nbInput />
+<ng-container *ngIf="schema">
+    <input nbInput [type]="schema.type" [status]="schema.status" [fullWidth]="schema.fullWidth ? true : undefined"
+        [disabled]="schema.disabled? true : undefined" [shape]="schema.shape" [fieldSize]="schema.size"
+        [placeholder]="schema.placeholder ? schema.placeholder : ''" />
+</ng-container>

@@ -12,6 +12,8 @@ export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChang
 
     @Input() form: StrongFBBase;
 
+    protected override  showLoading = false;
+
     formSchema: StrongFBLayoutBuilderSchema
 
     ngOnChanges(changes: SimpleChanges): void {
