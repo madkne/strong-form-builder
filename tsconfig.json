@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "declaration": false,
+    "removeComments": true,
+    "importHelpers": false,
+    "strict": false,
+    "types": [
+      "node"
+    ],
+    "resolveJsonModule": true,
+    "disableSizeLimit": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "Node",
+    "inlineSourceMap": true,
+    "emitDecoratorMetadata": true,
+    "checkJs": true
+  }
+}
