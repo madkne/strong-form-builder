@@ -8,15 +8,17 @@ import { syncSchema } from './convertor';
     templateUrl: './input.component.html',
     styleUrls: ['./input.component.scss']
 })
-export class StrongFBInputWidgetComponent extends StrongFBBaseWidget {
+export class StrongFBInputWidgetComponent extends StrongFBBaseWidget<InputSchema> {
 
-    schema: InputSchema;
+    override schema: InputSchema;
     override async onInit() {
         this.schema = this.widgetHeader.schema;
         // =>normalize schema
         this.schema = this.normalizeSchema(this.schema);
         // =>sync schema with ui framework
         this.schema = syncSchema(this.schema);
+
+        this.listenOnFormFieldChange('value');
     }
 
     normalizeSchema(schema: InputSchema) {
@@ -28,5 +30,12 @@ export class StrongFBInputWidgetComponent extends StrongFBBaseWidget {
 
 
         return schema;
+    }
+
+    changeValue(event) {
+        // =>set value to form field
+        if (this.widgetHeader['_formFieldName']) {
+            this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema.value;
+        }
     }
 }

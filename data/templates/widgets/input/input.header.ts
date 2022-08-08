@@ -5,7 +5,7 @@ import { StrongFBInputWidgetComponent } from "./input.component";
 
 
 
-export class StrongFBInputWidget extends StrongFBBaseWidgetHeader<InputSchema> {
+export class StrongFBInputWidget<FIELDS = object> extends StrongFBBaseWidgetHeader<InputSchema> {
 
     protected override _schema: InputSchema = {};
 
@@ -13,7 +13,7 @@ export class StrongFBInputWidget extends StrongFBBaseWidgetHeader<InputSchema> {
         return StrongFBInputWidgetComponent;
     }
 
-    override get name(): string {
+    override get widgetName(): string {
         return 'input';
     }
 
@@ -46,4 +46,8 @@ export class StrongFBInputWidget extends StrongFBBaseWidgetHeader<InputSchema> {
         return this;
     }
 
+    formFieldName(name: keyof FIELDS) {
+        this._formFieldName = name as any;
+        return this;
+    }
 }

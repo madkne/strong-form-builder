@@ -1,45 +1,37 @@
 
 import { ComponentFactoryResolver, Injectable, Injector } from '@angular/core';
+import { Router } from '@angular/router';
 
-import { StrongFBBase } from '../common/StrongFB-base';
+import { StrongFBFormClass } from '../common/StrongFB-base';
+import { StrongFBHttpService } from './StrongFB-http.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class StrongFBService {
-
     constructor(
-        private componentFactoryResolver: ComponentFactoryResolver,
-        private injector: Injector,
-    ) { }
+        protected _http: StrongFBHttpService,
+        protected _router: Router,
+    ) {
+
+    }
     // async loadFormOnNgContainer(container: ViewContainerRef: form: StrongFBBase) {
 
     // }
+    /**
+     * create an instance from your form class
+     * @param form your page form that extends from StrongFBBase
+     * @returns 
+     */
+    async loadFormClass(form: any): Promise<StrongFBFormClass> {
+        let formInstance = new form(this._http, this);
 
+        return formInstance;
+    }
 
-    // async loadComponent(componentName: ComponentName) {
-    //     return new Promise((res) => {
-    //       let setContainerInterval = setInterval(async () => {
-    //         if (!this.pageContainer || !this.componentFactoryResolver) return;
-    //         // =>detach all before views
-    //         // for (let i = 0; i < this.pageContainer.length; i++) {
-    //         //   this.pageContainer.detach(i);
-    //         // }
-    //         let componentClass = ComponentLookupRegistry.get(componentName);
-    //         if (!componentClass) {
-    //           Public.warning('not found component', componentName);
-    //           clearInterval(setContainerInterval);
-    //           res(undefined);
-    //           return;
-    //         }
-    //         this.pageContainer.clear();
-    //         const factory = this.componentFactoryResolver.resolveComponentFactory(componentClass);
-    //         const componentInstance = this.pageContainer.createComponent(factory, 0, this.injector);
+    goToPage(path: string) {
+        return this._router.navigateByUrl(path);
+    }
 
-    //         clearInterval(setContainerInterval);
-    //         res(componentInstance);
-    //       }, 150);
-    //     });
-    //   }
 
 }

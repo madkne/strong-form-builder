@@ -9,6 +9,9 @@
         </ng-container>
         <!-- show text -->
         <ng-container *ngIf="layoutSchema.text">{{layoutSchema.text}}</ng-container>
+        <!-- show html -->
+        <div *ngIf="layoutSchema.html" [innerHtml]="layoutSchema.html"></div>
+
         <!-- show widgets -->
         <ng-container *ngIf="layoutSchema.widgets">
             <!-- <ng-container *ngFor="let widget of layoutSchema.widgets"></ng-container> -->

@@ -1,6 +1,6 @@
-import { StrongFBBase } from "./StrongFB-base";
+import { StrongFBFormClass } from "./StrongFB-base";
 import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
-import { BehaviorSubject, Subject, take } from 'rxjs';
+import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
 import { AfterViewInit, Component, ElementRef, Inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewContainerRef } from "@angular/core";
 import { StrongFBLayoutBuilderWidgetFunction } from "./StrongFB-layout-builder-types";
 import { Block } from 'notiflix/build/notiflix-block-aio';
@@ -15,10 +15,12 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
     protected widgetId: string;
     protected showLoading = true;
     @Input() public widgetHeader: StrongFBBaseWidgetHeader<SCHEMA>;
-    @Input() public widgetForm: StrongFBBase;
+    @Input() public widgetForm: StrongFBFormClass;
     protected destroy$ = new Subject<boolean>();
     protected viewInit$ = new BehaviorSubject<boolean>(false);
     protected displayComponentLoading = false;
+
+    public schema: SCHEMA;
 
     /******************************************* */
 
@@ -58,6 +60,16 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
 
     }
     /******************************************* */
+    listenOnFormFieldChange(valueField: keyof SCHEMA) {
+        this.widgetForm['_formFieldValuesUpdated$'].pipe(takeUntil(this.destroy$)).subscribe(it => {
+            if (!it) return;
+            // =>set value by form field
+            if (this.widgetHeader['_formFieldName']) {
+                this.schema[valueField] = this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']];
+            }
+        })
+    }
+    /******************************************* */
 
     // =>Called once, before the instance is destroyed.
     ngOnDestroy(): void {
@@ -65,20 +77,25 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
         this.destroy$.complete();
     }
     /******************************************* */
-    async loadDynamicWidgets(container: ViewContainerRef, widgets?: StrongFBLayoutBuilderWidgetFunction[], form?: StrongFBBase) {
+    async loadDynamicWidgets(container: ViewContainerRef, widgets?: StrongFBLayoutBuilderWidgetFunction[], form?: StrongFBFormClass) {
         if (!form) form = this.widgetForm;
         let widgetComponents = [];
         container.clear();
         for (const widgetFunction of widgets) {
-            let widget = await widgetFunction.call(form);
+
+            let widget = await widgetFunction.call(form) as StrongFBBaseWidgetHeader;
+            // =>if has function name and no name property
+            if (form[widgetFunction.name] && !widget['_name']) {
+                widget.name(widgetFunction.name);
+            }
             // SFB_info('loading widget:', widget.component, widgetFunction, form[widgetFunction.name])
             let component = container.createComponent(widget.component);
             component.instance['widgetHeader'] = widget;
             component.instance['widgetForm'] = form;
             // =>if such widget exist in main form
-            if (form[widgetFunction.name]) {
-                form['_usedWidgets'][widgetFunction.name] = widget;
-                form['_usedWidgetComponents'][widgetFunction.name] = component;
+            if (widget['_name']) {
+                form['_usedWidgets'][widget['_name']] = widget;
+                form['_usedWidgetComponents'][widget['_name']] = component;
             }
         }
         return widgetComponents;

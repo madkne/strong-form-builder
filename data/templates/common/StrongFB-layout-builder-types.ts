@@ -12,6 +12,7 @@ export interface StrongFBLayoutBuilderBoxCommonProperties<WIDGET extends string 
 
 export interface StrongFBLayoutBuilderNormalBoxProperties<WIDGET extends string = string> extends StrongFBLayoutBuilderBoxCommonProperties<WIDGET> {
     text?: string;
+    html?: string;
 }
 
 export type StrongFBLayoutBuilderWidgetFunction = () => StrongFBBaseWidgetHeader;
@@ -24,6 +25,7 @@ export interface StrongFBLayoutBuilderSchema<WIDGET extends string = string> {
     text?: string;
     id?: string;
     widgets?: StrongFBLayoutBuilderWidgetFunction[];
+    html?: string;
 }
 
 /*********************************** */

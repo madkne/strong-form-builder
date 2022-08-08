@@ -1,4 +1,4 @@
-import { StrongFBBase } from "../../../data/templates/common/StrongFB-base";
+import { StrongFBFormClass } from "../../../data/templates/common/StrongFB-base";
 import { AddTicketForm } from "./add-ticket.form";
 
 type widgets = 'add_ticket' | 'search_ticket' | 'filter_ticket_by_status' | 'tickets_table';
@@ -9,7 +9,7 @@ type widgets = 'add_ticket' | 'search_ticket' | 'filter_ticket_by_status' | 'tic
  * drop down: filter tickets by status
  * add button: ticket add in dialog box
  */
-export class TicketsPageForm extends StrongFBBase<widgets> {
+export class TicketsPageForm extends StrongFBFormClass<widgets> {
     selectedTicketStatus: number;
 
 

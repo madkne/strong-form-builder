@@ -1,8 +1,12 @@
 
 
-export class StrongFBBaseWidgetHeader<SCHEMA extends object = object> {
+export class StrongFBBaseWidgetHeader<SCHEMA extends object = object, WIDGET_NAME extends string = string> {
 
     protected _schema: SCHEMA = {} as any;
+
+    protected _formFieldName: string;
+
+    protected _name: string;
 
     get schema() {
         return this._schema;
@@ -12,7 +16,12 @@ export class StrongFBBaseWidgetHeader<SCHEMA extends object = object> {
         return undefined;
     }
 
-    get name(): string {
+    get widgetName(): string {
         return 'widget';
+    }
+
+    name(name: WIDGET_NAME) {
+        this._name = name;
+        return this;
     }
 }

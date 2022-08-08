@@ -15,7 +15,7 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
         return StrongFBFormFieldWidgetComponent;
     }
 
-    override get name(): string {
+    override get widgetName(): string {
         return 'input';
     }
 

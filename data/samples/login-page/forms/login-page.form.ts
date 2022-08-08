@@ -22,7 +22,6 @@ export class LoginPageForm extends StrongFBBase<widgets> {
         //     layout: this.layoutBuilder().columnBox().widget(['usernameField', 'passwordField', 'loginButton'])
         // });
     }
-    @StrongFBWidget
     loginCard() {
         console.log('this;', this)
         return new StrongFBCardWidget().header("Login Form").content(
@@ -31,21 +30,19 @@ export class LoginPageForm extends StrongFBBase<widgets> {
                 this.passwordField,
             ])).footer(this.layoutBuilder().rowBox().widget(this.loginButton));
     }
-    @StrongFBWidget
     usernameField() {
         return new StrongFBFormFieldWidget().field(new StrongFBInputWidget().placeholder('username'));
     }
 
-    @StrongFBWidget
     passwordField() {
         return new StrongFBFormFieldWidget().field(new StrongFBInputWidget().type('password').placeholder('password')).suffixButton(new StrongFBButtonWidget().icon('eye-outline').mode('icon').click((ev, self) => {
             if (this.showPassword) {
                 self.icon('eye-outline');
-                this.findWidgetByFormWidgetName<StrongFBFormFieldWidget>('passwordField').schema.field.schema.type = 'password';
+                this.findWidgetByName<StrongFBFormFieldWidget>('passwordField').schema.field.schema.type = 'password';
 
             } else {
                 self.icon('eye-off-2-outline');
-                this.findWidgetByFormWidgetName<StrongFBFormFieldWidget>('passwordField').schema.field.schema.type = 'text';
+                this.findWidgetByName<StrongFBFormFieldWidget>('passwordField').schema.field.schema.type = 'text';
 
             }
             // this.updateWidgetByFormWidgetName('passwordField');
@@ -53,7 +50,6 @@ export class LoginPageForm extends StrongFBBase<widgets> {
         }));
     }
 
-    @StrongFBWidget
     loginButton() {
         return new StrongFBButtonWidget().text('Login').appearance('colorful').status('primary');
     }

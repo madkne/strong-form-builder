@@ -33,6 +33,9 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
         if (properties?.text) {
             this._schema.text = properties?.text;
         }
+        if (properties?.html) {
+            this._schema.html = properties?.html;
+        }
         return this;
 
     }

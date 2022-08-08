@@ -12,7 +12,7 @@ import { FormFieldSchema } from './form-field-interfaces';
 })
 export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFieldSchema> implements AfterViewInit {
     @ViewChild('FieldContainer', { read: ViewContainerRef }) FieldContainer: ViewContainerRef;
-    schema: FormFieldSchema;
+    override schema: FormFieldSchema;
     fieldIsLoaded = false;
     fieldWidget: StrongFBBaseWidgetHeader;
 

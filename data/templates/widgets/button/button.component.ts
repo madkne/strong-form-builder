@@ -9,7 +9,7 @@ import { ButtonSchema } from './button-interfaces';
 })
 export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSchema> {
 
-    schema: ButtonSchema;
+    override schema: ButtonSchema;
     override async onInit() {
         this.initSchema();
     }

@@ -60,9 +60,9 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
         //--------------------------
         success(`add 'StrongFBModule' to 'app.module.ts' file`);
         // =>add sample, if want
-        if (await boolean('Do you want to load a sample?', true)) {
-            await this.addSample();
-        }
+        // if (await boolean('Do you want to load a sample?', true)) {
+        //     await this.addSample();
+        // }
         return true;
     }
     /********************************** */

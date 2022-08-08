@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { StrongFBBase } from '../../common/StrongFB-base';
+import { StrongFBFormClass } from '../../common/StrongFB-base';
 import { StrongFBLayoutBuilderSchema } from '../../common/StrongFB-layout-builder-types';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 
@@ -10,17 +10,21 @@ import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 })
 export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChanges {
 
-    @Input() form: StrongFBBase;
+    @Input() form: StrongFBFormClass;
 
-    protected override  showLoading = false;
+    // protected override  showLoading = false;
 
     formSchema: StrongFBLayoutBuilderSchema
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['form']) {
-            console.log('form layout:', this.form.layout.generateSchema());
+        if (changes['form'] && this.form) {
+            // console.log('form layout:', this.form.layout.generateSchema());
             this.formSchema = this.form.layout.generateSchema();
             // this.form.layout.schema.
+            // =>call onInit() of form
+            if (!this.form['_callOnInit']) {
+                this.form.onInit();
+            }
         }
     }
 }

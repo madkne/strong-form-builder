@@ -13,7 +13,7 @@ export class StrongFBCardWidget extends StrongFBBaseWidgetHeader {
         return StrongFBCardWidgetComponent;
     }
 
-    override get name(): string {
+    override get widgetName(): string {
         return 'card';
     }
 

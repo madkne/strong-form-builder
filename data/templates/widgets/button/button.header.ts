@@ -13,7 +13,7 @@ export class StrongFBButtonWidget extends StrongFBBaseWidgetHeader {
         return StrongFBButtonWidgetComponent;
     }
 
-    override get name(): string {
+    override get widgetName(): string {
         return 'button';
     }
 

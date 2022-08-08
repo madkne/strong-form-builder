@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
-import { StrongFBBase } from '../../common/StrongFB-base';
+import { StrongFBFormClass } from '../../common/StrongFB-base';
 import { StrongFBLayoutBuilder } from '../../common/StrongFB-layout-builder';
 import { StrongFBLayoutBuilderSchema } from '../../common/StrongFB-layout-builder-types';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
@@ -19,7 +19,7 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
     constructor(protected override elRef: ElementRef) {
         super(elRef);
     }
-    @Input() form: StrongFBBase;
+    @Input() form: StrongFBFormClass;
 
     @Input() layout: StrongFBLayoutBuilder;
 
