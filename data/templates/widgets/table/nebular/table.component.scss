@@ -1,0 +1,29 @@
+table {
+    line-height: 1.5em;
+    border-collapse: collapse;
+    border-spacing: 0;
+    display: table;
+    width: 100%;
+    max-width: 100%;
+    overflow: auto;
+
+    thead {
+        tr {
+            th {
+                padding: 0.875rem 1.25rem;
+
+                .title {
+                    font-weight: 400;
+                }
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            td {
+                padding: 0.875rem 1.25rem;
+            }
+        }
+    }
+}

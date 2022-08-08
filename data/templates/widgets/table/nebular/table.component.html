@@ -1,0 +1,37 @@
+<ng-container *ngIf="schema">
+    <nb-card>
+        <nb-card-body>
+            <table>
+                <thead>
+                    <tr>
+                        <th *ngFor="let col of schema.columns">
+                            <div class="title">{{col.title ?? col.name}}</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of displayRows">
+                        <td *ngFor="let rowCol of schema.columns">
+                            <!-- string type -->
+                            <div *ngIf="!rowCol.type || rowCol.type === 'string'">
+                                {{row[rowCol.name]}}
+                            </div>
+                            <!-- tag, tagsList types -->
+                            <nb-tag-list *ngIf="rowCol.type == 'tag' || rowCol.type === 'tagsList'">
+                                <!-- tag type -->
+                                <nb-tag *ngIf="rowCol.type == 'tag'" appearance="filled" [text]="row[rowCol.name].value"
+                                    [status]="row[rowCol.name].status ? row[rowCol.name].status : 'basic'"></nb-tag>
+                                <!-- tagsList type -->
+                                <ng-container *ngIf="rowCol.type == 'tagsList'">
+                                    <nb-tag appearance="filled" *ngFor="let tag of row[rowCol.name]" [text]="tag.value"
+                                        [status]="tag.status ? tag.status : 'basic'"></nb-tag>
+                                </ng-container>
+
+                            </nb-tag-list>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </nb-card-body>
+    </nb-card>
+</ng-container>

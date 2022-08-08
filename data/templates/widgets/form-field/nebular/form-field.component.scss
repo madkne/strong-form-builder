@@ -1,7 +1,16 @@
+.main-form-field {
+    margin: 5px 2px;
+
+    label {
+        font-size: .75rem;
+        line-height: 1rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
 .form-field {
     display: flex;
     align-items: center;
-    margin: 5px 2px;
 
     .field {
         flex: 1 1 0;

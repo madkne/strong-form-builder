@@ -1,10 +1,13 @@
-import { StrongFBLayoutBuilderBoxCommonProperties, StrongFBLayoutBuilderNormalBoxProperties, StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderType } from "./StrongFB-layout-builder-types";
+import { BehaviorSubject } from "rxjs";
+import { StrongFBLayoutBuilderBoxCommonProperties, StrongFBLayoutBuilderGridColumnType, StrongFBLayoutBuilderNormalBoxProperties, StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderType } from "./StrongFB-layout-builder-types";
+import { ScreenMode } from "./StrongFB-types";
 import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
 
 
 
 export class StrongFBLayoutBuilder<WIDGET extends string = string> {
     private _schema: StrongFBLayoutBuilderSchema = {};
+    private _update$ = new BehaviorSubject<boolean>(true);
 
     constructor(type: StrongFBLayoutBuilderType = 'box') {
         this._schema.type = type;
@@ -59,6 +62,41 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
         return this;
 
     }
+
+    gridBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
+        this._schema.type = 'box';
+        properties = this._makeObject(properties, ['style']);
+        properties.style['display'] = 'flex';
+        properties.style['flex-wrap'] = 'wrap';
+        this._setBoxCommonProperties(properties);
+        return this;
+    }
+
+    gridColumnBox(widths: { [k in ScreenMode]?: StrongFBLayoutBuilderGridColumnType }, properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
+        let classNames = [];
+        // =>create class name by params
+        let screenModeMap: { [k in ScreenMode]: string } = {
+            'desktop': '',
+            'mobile': 'sm',
+            'tablet': 'md',
+        };
+        for (const screen of Object.keys(widths)) {
+            if (screenModeMap[screen] === '') {
+                classNames.push(widths[screen]);
+            } else {
+                let sp = widths[screen].split('-');
+                classNames.push(sp[0] + '-' + screenModeMap[screen] + '-' + sp[1]);
+            }
+        }
+        this._schema.type = 'box';
+        properties = this._makeObject(properties, ['style']);
+        properties = this._makeObject(properties, ['class']);
+        properties.class = [...classNames];
+        this._setBoxCommonProperties(properties);
+        return this;
+    }
+
+
 
     widget(widget: (() => StrongFBBaseWidgetHeader) | (() => StrongFBBaseWidgetHeader)[]) {
         if (!Array.isArray(widget)) widget = [widget];

@@ -1,20 +1,23 @@
 <ng-container *ngIf="schema">
-    <div class="form-field"
-        [class.nb-form-field-control-with-suffix]="schema.suffixIcon || schema.suffixText || schema.suffixButton">
-        <!-- TODO: -->
+    <div class="main-form-field">
+        <label class="label" *ngIf="schema.label">{{schema.label}}</label>
 
-        <div class="field">
-            <ng-container #FieldContainer></ng-container>
-        </div>
-        <!-- suffix element -->
-        <div class="nb-form-field-addon " [ngClass]="['nb-form-field-suffix-'+schema.size]"
-            *ngIf="schema.suffixIcon || schema.suffixText || schema.suffixButton">
-            <!-- suffix button -->
-            <button-widget *ngIf="schema.suffixButton" [widgetForm]="widgetForm"
-                [widgetHeader]="schema.__suffixButtonWidget"></button-widget>
+        <div class="form-field"
+            [class.nb-form-field-control-with-suffix]="schema.suffixIcon || schema.suffixText || schema.suffixButton">
             <!-- TODO: -->
+
+            <div class="field">
+                <ng-container #FieldContainer></ng-container>
+            </div>
+            <!-- suffix element -->
+            <div class="nb-form-field-addon " [ngClass]="['nb-form-field-suffix-'+schema.size]"
+                *ngIf="schema.suffixIcon || schema.suffixText || schema.suffixButton">
+                <!-- suffix button -->
+                <button-widget *ngIf="schema.suffixButton" [widgetForm]="widgetForm"
+                    [widgetHeader]="schema.__suffixButtonWidget"></button-widget>
+                <!-- TODO: -->
+            </div>
+
         </div>
-
-
     </div>
 </ng-container>

@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+import { takeUntil } from 'rxjs';
 import { StrongFBFormClass } from '../../common/StrongFB-base';
 import { StrongFBLayoutBuilder } from '../../common/StrongFB-layout-builder';
 import { StrongFBLayoutBuilderSchema } from '../../common/StrongFB-layout-builder-types';
@@ -25,17 +26,31 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
 
     layoutSchema: StrongFBLayoutBuilderSchema;
 
+    layoutLoaded = false;
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['layout']) {
+    override async onInit() {
+        if (!this.layout || this.layoutLoaded) return;
+        this.layoutLoaded = true;
+        this.layout['_update$'].pipe(takeUntil(this.destroy$)).subscribe(it => {
+            if (!it) return;
             // console.log('layout:', this.layout);
             this.layoutSchema = this.layout.schema;
             // =>load widgets, if exist
             if (this.layoutSchema.widgets && this.layoutSchema.widgets.length > 0) {
                 this.loadWidgets();
             }
+        })
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['layout'] && !this.layoutLoaded) {
+            this.onInit();
+
+
         }
     }
+
+
 
     async loadWidgets() {
         if (!this.widgetsNeedToReload) return;
