@@ -19,6 +19,7 @@ import {
   NbTooltipModule,
   NbToastrModule,
   NbStepperModule,
+  NbDialogModule,
 } from '@nebular/theme';
 
 @NgModule({
@@ -42,7 +43,9 @@ import {
     NbTagModule,
     NbTooltipModule,
     NbToastrModule,
-    NbStepperModule
+    NbStepperModule,
+    NbDialogModule.forRoot(),
+
   ],
   providers: [],
   exports: [
@@ -65,6 +68,7 @@ import {
     NbTooltipModule,
     NbToastrModule,
     NbStepperModule,
+    NbDialogModule,
   ],
 })
 export class StrongFBSharedModule { }

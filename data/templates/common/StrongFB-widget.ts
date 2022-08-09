@@ -2,7 +2,7 @@ import { StrongFBFormClass } from "./StrongFB-base";
 import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
 import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
 import { AfterViewInit, Component, ElementRef, Inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewContainerRef } from "@angular/core";
-import { StrongFBLayoutBuilderWidgetFunction } from "./StrongFB-layout-builder-types";
+import { StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderWidgetFunction } from "./StrongFB-layout-builder-types";
 import { Block } from 'notiflix/build/notiflix-block-aio';
 import { SFB_info } from "./StrongFB-common";
 
@@ -12,7 +12,7 @@ import { SFB_info } from "./StrongFB-common";
     template: '<div></div>'
 })
 export class StrongFBBaseWidget<SCHEMA extends object = object> implements AfterViewInit {
-    protected widgetId: string;
+    protected _widgetId: string;
     protected showLoading = true;
     @Input() public widgetHeader: StrongFBBaseWidgetHeader<SCHEMA>;
     @Input() public widgetForm: StrongFBFormClass;
@@ -25,7 +25,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
     /******************************************* */
 
     constructor(protected elRef: ElementRef) {
-        this.widgetId = 'string_fb_widget_' + new Date().getTime() + '_' + Math.ceil(Math.random() * 10000);
+        this._widgetId = 'strong_fb_widget_' + new Date().getTime() + '_' + Math.ceil(Math.random() * 10000);
         // =>add loading
         if (this.showLoading) {
             let componentLoading = setInterval(() => {
@@ -35,12 +35,16 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
                 }
                 if (!this.elRef) return;
                 this.displayComponentLoading = true;
-                this.elRef.nativeElement.id = this.widgetId;
+                this.elRef.nativeElement.id = this._widgetId;
                 Block.dots([this.elRef.nativeElement]);
                 console.log('loading on:', this.elRef.nativeElement)
                 clearInterval(componentLoading);
             }, 1);
         }
+    }
+
+    get widgetId() {
+        return this._widgetId;
     }
 
     /**
@@ -77,19 +81,43 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
         this.destroy$.complete();
     }
     /******************************************* */
-    async loadDynamicWidgets(container: ViewContainerRef, widgets?: StrongFBLayoutBuilderWidgetFunction[], form?: StrongFBFormClass) {
+    async loadDynamicWidgets(container: ViewContainerRef, widgetsSchema: {
+        widgets?: StrongFBLayoutBuilderWidgetFunction[];
+        widgetHeaders?: StrongFBLayoutBuilderWidgetFunction<StrongFBBaseWidgetHeader[]>[];
+    }, form?: StrongFBFormClass) {
         if (!form) form = this.widgetForm;
         let widgetComponents = [];
         container.clear();
-        for (const widgetFunction of widgets) {
-
-            let widget = await widgetFunction.call(form) as StrongFBBaseWidgetHeader;
-            // =>if has function name and no name property
-            if (form[widgetFunction.name] && !widget['_name']) {
-                widget.name(widgetFunction.name);
+        let widgetHeaders: StrongFBBaseWidgetHeader[] = [];
+        // =>load all headers
+        if (widgetsSchema.widgets) {
+            for (const widgetFunction of widgetsSchema.widgets) {
+                let widget = await widgetFunction.call(form) as StrongFBBaseWidgetHeader;
+                // =>if has function name and no name property
+                if (form[widgetFunction.name] && !widget['_name'] && widget['name']) {
+                    widget.name(widgetFunction.name);
+                }
+                widgetHeaders.push(widget);
             }
+        }
+        if (widgetsSchema.widgetHeaders) {
+            for (const widgetsFunction of widgetsSchema.widgetHeaders) {
+                let widgets = await widgetsFunction.call(form) as StrongFBBaseWidgetHeader[];
+                for (const widget of widgets) {
+                    // =>if has function name and no name property
+                    if (form[widgetsFunction.name] && !widget['_name'] && widget['name']) {
+                        widget.name(widgetsFunction.name);
+                    }
+                    widgetHeaders.push(widget);
+                }
+            }
+        }
+        // =>iterate all widget headers
+        for (const widget of widgetHeaders) {
+
             // SFB_info('loading widget:', widget.component, widgetFunction, form[widgetFunction.name])
             let component = container.createComponent(widget.component);
+            widgetComponents.push(component);
             component.instance['widgetHeader'] = widget;
             component.instance['widgetForm'] = form;
             // =>if such widget exist in main form
@@ -110,7 +138,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
         if (this.showLoading && this.displayComponentLoading) {
             console.log('after view init', this.elRef)
             //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-            Block.remove('#' + this.widgetId);
+            Block.remove('#' + this._widgetId);
             // this.viewInit$.complete();
         }
         // Block.remove([this.elRef.nativeElement]);

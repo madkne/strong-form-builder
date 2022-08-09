@@ -11,9 +11,11 @@ table {
         tr {
             th {
                 padding: 0.875rem 1.25rem;
+                border: 1px solid var(--background-basic-color-2);
 
                 .title {
-                    font-weight: 400;
+                    text-transform: capitalize;
+                    font-weight: 700;
                 }
             }
         }
@@ -23,6 +25,7 @@ table {
         tr {
             td {
                 padding: 0.875rem 1.25rem;
+                border: 1px solid var(--background-basic-color-2);
             }
         }
     }

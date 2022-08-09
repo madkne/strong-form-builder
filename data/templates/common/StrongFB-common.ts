@@ -17,6 +17,15 @@ export function SFB_info(message?: any, ...optionalParams: any[]) {
     );
 }
 
+export function SFB_error(message?: any, ...optionalParams: any[]) {
+    console.log(
+        `%cSFB_ERR` + `%c ${message}`,
+        "font-size: 11px;color: #fff; background:red;border-radius: 10px;padding: 2px 8px;",
+        "",
+        optionalParams,
+    );
+}
+
 export function hashCode(value: string): string {
     let hash = 0, i, chr;
     for (i = 0; i < value.length; i++) {

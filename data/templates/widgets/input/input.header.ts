@@ -5,7 +5,7 @@ import { StrongFBInputWidgetComponent } from "./input.component";
 
 
 
-export class StrongFBInputWidget<FIELDS = object> extends StrongFBBaseWidgetHeader<InputSchema> {
+export class StrongFBInputWidget<FIELDS = { [k: string]: any }> extends StrongFBBaseWidgetHeader<InputSchema> {
 
     protected override _schema: InputSchema = {};
 

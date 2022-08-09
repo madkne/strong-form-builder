@@ -7,7 +7,7 @@ import { NotifyMode } from "./StrongFB-types";
 import { StrongFBFormOptions } from "./StrongFB-interfaces";
 import { StrongFBService } from "../services/StrongFB.service";
 
-export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS extends object = object> {
+export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS extends object = object, INIT_FIELDS extends object = FORM_FIELDS> {
     private _callOnInit = false;
     private _usedWidgets: { [k in WIDGET]?: StrongFBBaseWidgetHeader } = {};
     private _usedWidgetComponents: { [k in WIDGET]?: any } = {};
@@ -17,7 +17,7 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
     private _options: StrongFBFormOptions;
     private _service: StrongFBService;
 
-    constructor(_http: StrongFBHttpService, _service: StrongFBService, _options: StrongFBFormOptions = {
+    constructor(_http: StrongFBHttpService, _service: StrongFBService, _options: StrongFBFormOptions<INIT_FIELDS> = {
         rtl: false,
     }) {
         this._http = _http;
@@ -76,5 +76,9 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
     }
     get service(): StrongFBService {
         return this._service;
+    }
+
+    get initialData(): INIT_FIELDS {
+        return this._options?.initData || {} as any;
     }
 }

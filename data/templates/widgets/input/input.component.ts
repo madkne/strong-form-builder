@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { InputSchema } from './input-interfaces';
 import { syncSchema } from './convertor';
@@ -11,6 +11,9 @@ import { syncSchema } from './convertor';
 export class StrongFBInputWidgetComponent extends StrongFBBaseWidget<InputSchema> {
 
     override schema: InputSchema;
+    @Output() ngModelChange = new EventEmitter<string | number>();
+
+
     override async onInit() {
         this.schema = this.widgetHeader.schema;
         // =>normalize schema
@@ -37,5 +40,6 @@ export class StrongFBInputWidgetComponent extends StrongFBBaseWidget<InputSchema
         if (this.widgetHeader['_formFieldName']) {
             this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema.value;
         }
+        this.ngModelChange.emit(this.schema.value);
     }
 }

@@ -4,7 +4,7 @@
         [hero]="schema.appearance === 'colorful'" [outline]="schema.appearance === 'outline'"
         [ghost]="schema.mode === 'icon' || schema.appearance === 'basic'" (click)="clickEvent($event)">
         <!-- text mode -->
-        <ng-container *ngIf="schema.mode === 'text'">{{schema.text}}</ng-container>
+        <ng-container *ngIf="!schema.mode || schema.mode === 'text'">{{schema.text}}</ng-container>
         <!-- icon before text  mode-->
         <ng-container *ngIf="schema.mode === 'iconBeforeText'">
             <nb-icon [icon]="schema.icon"></nb-icon>{{schema.text}}
@@ -18,9 +18,6 @@
         <ng-container *ngIf="schema.mode === 'iconButton' || schema.mode === 'icon'">
             <nb-icon [icon]="schema.icon"></nb-icon>
         </ng-container>
-
-
-
     </button>
 
 </ng-container>

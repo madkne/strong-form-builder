@@ -1,4 +1,4 @@
-export type TransmitChannelName = 'notification' | 'snackbar-message' | 'page' | 'response' | 'page-loading' | 'screen-mode';
+export type TransmitChannelName = 'notification' | 'snackbar-message' | 'page' | 'response' | 'page-loading' | 'screen-mode' | 'dialog-response' | 'dialog-action-click';
 
 export enum APIStatusCodes {
     HTTP_100_CONTINUE = 100,
@@ -39,3 +39,5 @@ export enum APIStatusCodes {
 export type ScreenMode = 'desktop' | 'tablet' | 'mobile';
 
 export type NotifyMode = 'success' | 'failure' | 'info' | 'warning';
+
+export type StrongFBValidatorName = 'required' | 'maxLength' | 'minLength' | 'acceptPattern' | 'rejectPattern' | 'email' | 'min' | 'max';

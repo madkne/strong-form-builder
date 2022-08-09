@@ -6,6 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { StrongFBSharedModule } from "./StrongFB-shared.module";
 import { StrongFBButtonWidgetComponent } from "./widgets/button/button.component";
 import { StrongFBCardWidgetComponent } from "./widgets/card/card.component";
+import { StrongFBDialogComponent } from "./widgets/dialog/dialog.component";
 import { StrongFBFormFieldWidgetComponent } from "./widgets/form-field/form-field.component";
 import { StrongFBFormComponent } from "./widgets/form/form.component";
 import { StrongFBInputWidgetComponent } from "./widgets/input/input.component";
@@ -21,6 +22,7 @@ import { StrongFBTabledWidgetComponent } from "./widgets/table/table.component";
         StrongFBButtonWidgetComponent,
         StrongFBFormFieldWidgetComponent,
         StrongFBTabledWidgetComponent,
+        StrongFBDialogComponent,
     ],
     imports: [
         StrongFBSharedModule,
@@ -31,6 +33,7 @@ import { StrongFBTabledWidgetComponent } from "./widgets/table/table.component";
     providers: [],
     exports: [
         StrongFBFormComponent,
+        // StrongFBDialogComponent,
     ],
 })
 export class StrongFBModule { }

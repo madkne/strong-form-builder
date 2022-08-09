@@ -1,5 +1,6 @@
 import { BehaviorSubject } from "rxjs";
-import { StrongFBLayoutBuilderBoxCommonProperties, StrongFBLayoutBuilderGridColumnType, StrongFBLayoutBuilderNormalBoxProperties, StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderType } from "./StrongFB-layout-builder-types";
+import { StrongFBLayoutBuilderProperties } from "./StrongFB-layout-builder-properties";
+import { StrongFBLayoutBuilderBoxCommonProperties, StrongFBLayoutBuilderGridColumnType, StrongFBLayoutBuilderGridCommonProperties, StrongFBLayoutBuilderNormalBoxProperties, StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderType } from "./StrongFB-layout-builder-types";
 import { ScreenMode } from "./StrongFB-types";
 import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
 
@@ -9,8 +10,11 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
     private _schema: StrongFBLayoutBuilderSchema = {};
     private _update$ = new BehaviorSubject<boolean>(true);
 
+    private _propertiesClass: StrongFBLayoutBuilderProperties<WIDGET>;
+
     constructor(type: StrongFBLayoutBuilderType = 'box') {
         this._schema.type = type;
+        this._propertiesClass = new StrongFBLayoutBuilderProperties(this);
     }
 
     columnBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
@@ -19,15 +23,20 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
         properties.style['display'] = 'flex';
         properties.style['flex-direction'] = 'column';
         this._setBoxCommonProperties(properties);
-        return this;
+
+
+        return this._propertiesClass = new StrongFBLayoutBuilderProperties<WIDGET>(this);
     }
     rowBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
         this._schema.type = 'box';
         properties = this._makeObject(properties, ['style']);
         properties.style['display'] = 'flex';
         properties.style['flex-direction'] = 'row';
+        properties.style['align-items'] = 'center';
         this._setBoxCommonProperties(properties);
-        return this;
+
+
+        return this._propertiesClass = new StrongFBLayoutBuilderProperties<WIDGET>(this);
 
     }
     box(properties?: StrongFBLayoutBuilderNormalBoxProperties<WIDGET>) {
@@ -39,7 +48,9 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
         if (properties?.html) {
             this._schema.html = properties?.html;
         }
-        return this;
+
+
+        return this._propertiesClass = new StrongFBLayoutBuilderProperties<WIDGET>(this);
 
     }
 
@@ -48,7 +59,9 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
         properties = this._makeObject(properties, ['style']);
         properties.style['flex'] = '1 1 0';
         this._setBoxCommonProperties(properties);
-        return this;
+
+
+        return this._propertiesClass = new StrongFBLayoutBuilderProperties<WIDGET>(this);
 
     }
 
@@ -59,68 +72,25 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
         properties.style['align-items'] = 'center';
         properties.style['justify-content'] = 'center';
         this._setBoxCommonProperties(properties);
-        return this;
+
+
+        return this._propertiesClass = new StrongFBLayoutBuilderProperties<WIDGET>(this);
 
     }
 
-    gridBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
-        this._schema.type = 'box';
+    gridBox(properties?: StrongFBLayoutBuilderGridCommonProperties<WIDGET>) {
+        this._schema.type = 'grid';
         properties = this._makeObject(properties, ['style']);
         properties.style['display'] = 'flex';
         properties.style['flex-wrap'] = 'wrap';
+        properties.style['align-items'] = 'center';
         this._setBoxCommonProperties(properties);
-        return this;
-    }
 
-    gridColumnBox(widths: { [k in ScreenMode]?: StrongFBLayoutBuilderGridColumnType }, properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
-        let classNames = [];
-        // =>create class name by params
-        let screenModeMap: { [k in ScreenMode]: string } = {
-            'desktop': '',
-            'mobile': 'sm',
-            'tablet': 'md',
-        };
-        for (const screen of Object.keys(widths)) {
-            if (screenModeMap[screen] === '') {
-                classNames.push(widths[screen]);
-            } else {
-                let sp = widths[screen].split('-');
-                classNames.push(sp[0] + '-' + screenModeMap[screen] + '-' + sp[1]);
-            }
-        }
-        this._schema.type = 'box';
-        properties = this._makeObject(properties, ['style']);
-        properties = this._makeObject(properties, ['class']);
-        properties.class = [...classNames];
-        this._setBoxCommonProperties(properties);
-        return this;
+        return this._propertiesClass = new StrongFBLayoutBuilderProperties<WIDGET>(this);
     }
 
 
 
-    widget(widget: (() => StrongFBBaseWidgetHeader) | (() => StrongFBBaseWidgetHeader)[]) {
-        if (!Array.isArray(widget)) widget = [widget];
-        this._schema.widgets = widget;
-        return this;
-    }
-
-    styleClass(clas: string | string[]) {
-        if (!Array.isArray(clas)) clas = [clas];
-        this._schema.classes = clas;
-        return this;
-    }
-
-    styleCss(key: string, value: string) {
-        if (!this._schema.styles) this._schema.styles = {};
-        this._schema.styles[key] = value;
-        return this;
-    }
-
-    layout(layout: StrongFBLayoutBuilder | StrongFBLayoutBuilder[]) {
-        if (!Array.isArray(layout)) layout = [layout];
-        this._schema.layouts = layout;
-        return this;
-    }
 
     /**
      * return back schema of this layout

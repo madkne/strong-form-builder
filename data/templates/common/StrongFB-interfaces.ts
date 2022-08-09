@@ -1,5 +1,6 @@
-import { APIStatusCodes } from "./StrongFB-types";
+import { APIStatusCodes, StrongFBValidatorName } from "./StrongFB-types";
 import { HttpErrorResponse } from "@angular/common/http";
+import { ButtonAppearance, ButtonStatus } from "../widgets/button/button-interfaces";
 
 
 export interface APIRequest<T = any> {
@@ -25,7 +26,31 @@ export interface APIResponse<T = any> {
     error?: HttpErrorResponse;
 }
 
-export interface StrongFBFormOptions {
+export interface StrongFBFormOptions<D extends object = object> {
     rtl?: boolean;
     fontFamily?: string;
+    initData?: D;
+}
+
+export interface StrongFBDialogAction<T = any> {
+    id?: string;
+    text?: string;
+    tooltip?: string;
+    icon?: string;
+    disabled?: boolean;
+    status?: ButtonStatus;
+    appearance?: ButtonAppearance;
+    action?: (e?: T) => void,
+    show?: () => Promise<boolean> | boolean;
+    __show?: boolean; // filled auto
+    closable?: boolean;
+    focus?: boolean;
+    isCancel?: boolean;
+}
+
+export interface StrongFBValidatorSchema {
+    name: StrongFBValidatorName;
+    value?: any;
+    error?: string;
+    hint?: string;
 }

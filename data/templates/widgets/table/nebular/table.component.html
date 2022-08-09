@@ -10,7 +10,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let row of displayRows">
+                    <tr *ngFor="let row of displayRows; let rowIndex = index">
                         <td *ngFor="let rowCol of schema.columns">
                             <!-- string type -->
                             <div *ngIf="!rowCol.type || rowCol.type === 'string'">
@@ -26,8 +26,23 @@
                                     <nb-tag appearance="filled" *ngFor="let tag of row[rowCol.name]" [text]="tag.value"
                                         [status]="tag.status ? tag.status : 'basic'"></nb-tag>
                                 </ng-container>
-
                             </nb-tag-list>
+                            <!-- actions type -->
+                            <ng-container *ngIf="rowCol.type === 'actions'">
+                                <button *ngFor="let btn of row[rowCol.name]" nbButton [status]="btn.status"
+                                    [disabled]="btn.disabled ? btn.disabled : undefined"
+                                    [hero]="btn.appearance === 'colorful'" [outline]="btn.appearance === 'outline'"
+                                    [ghost]="btn.mode === 'icon' || btn.appearance === 'basic'"
+                                    (click)="runButtonAction(btn, rowIndex)" [nbTooltip]="btn.text"
+                                    [nbTooltipDisabled]="btn.mode !== 'icon' || !btn.text">
+                                    <!-- text mode -->
+                                    <ng-container *ngIf="!btn.mode || btn.mode === 'text'">{{btn.text}}</ng-container>
+                                    <!-- icon mode -->
+                                    <ng-container *ngIf="btn.mode === 'icon'">
+                                        <nb-icon [icon]="btn.icon"></nb-icon>
+                                    </ng-container>
+                                </button>
+                            </ng-container>
                         </td>
                     </tr>
                 </tbody>

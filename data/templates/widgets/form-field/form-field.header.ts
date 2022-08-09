@@ -1,4 +1,5 @@
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
+import { StrongFBValidator } from "../../common/StrongFB-validator";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBButtonWidget } from "../button/button.header";
 import { StrongFBInputWidget } from "../input/input.header";
@@ -42,6 +43,16 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
 
     size(size: FormFieldSize) {
         this._schema.size = size;
+        return this;
+    }
+
+    label(text: string) {
+        this._schema.label = text;
+        return this;
+    }
+
+    validator(validator: StrongFBValidator) {
+        this._schema.validator = validator;
         return this;
     }
     // value<T = string>(text: T) {

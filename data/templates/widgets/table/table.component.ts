@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ViewChild, ViewContainerRef } from '@angular/
 import { SFB_warn } from '../../common/StrongFB-common';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
-import { TableSchema } from './table-interfaces';
+import { TableColumnAction, TableColumnDynamicActionsType, TableSchema } from './table-interfaces';
 import { takeUntil } from 'rxjs';
 
 @Component({
@@ -41,7 +41,10 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
             // =>set loading for display rows
             let displayRow = {};
             for (const col of this.schema.columns) {
-                displayRow[col.name] = '...';
+                if (col.type === 'actions') displayRow[col.name] = [];
+                else {
+                    displayRow[col.name] = '...';
+                }
             }
             // =>init display rows
             for (const row of this.simpleRows) {
@@ -69,7 +72,15 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
                 // =>check for actions type
                 if (col.type == 'actions') {
                     if (this.schema.columnActions[col.name]) {
-                        //TODO:
+                        // =>if dynamic add actions
+                        if (typeof this.schema.columnActions[col.name] === 'function') {
+                            (this.schema.columnActions[col.name] as TableColumnDynamicActionsType).call(this.widgetForm, simpleRow, i, this.widgetHeader).then(it => {
+                                this.displayRows[i][col.name] = it;
+                            });
+                        } else if (Array.isArray(this.schema.columnActions[col.name])) {
+                            this.displayRows[i][col.name] = this.schema.columnActions[col.name];
+                        }
+
                     }
                     // =>if no action map, change its type
                     else {
@@ -79,7 +90,7 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
                 }
                 // =>check for column map function
                 else if (col.mapValue) {
-                    this.displayRows[i][col.name] = await col.mapValue.call(this.widgetForm, this.simpleRows[i], i, this.widgetHeader);
+                    this.displayRows[i][col.name] = await col.mapValue.call(this.widgetForm, this.simpleRows[i], i, this.widgetHeader);;
                 }
                 // =>set simple row value
                 else {
@@ -87,5 +98,10 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
                 }
             }
         }
+    }
+
+    async runButtonAction(button: TableColumnAction, rowIndex: number) {
+        if (!button.action) return;
+        button.action.call(this.widgetForm, this.simpleRows[rowIndex], rowIndex, this.widgetHeader);
     }
 }

@@ -1,7 +1,8 @@
 <ng-container *ngIf="layoutSchema">
     <!-- box type -->
     <div *ngIf="layoutSchema.type === 'box'" [ngClass]="layoutSchema.classes ? layoutSchema.classes : []"
-        [ngStyle]="layoutSchema.styles ? layoutSchema.styles : {}" [id]="layoutSchema.id">
+        [ngStyle]="layoutSchema.styles ? layoutSchema.styles : {}"
+        [attr.id]="layoutSchema.id ? layoutSchema.id : undefined">
         <!-- show layouts -->
         <ng-container *ngIf="layoutSchema.layouts">
             <strong-layout-builder *ngFor="let lay of layoutSchema.layouts" [form]="form" [layout]="lay">
@@ -14,7 +15,6 @@
 
         <!-- show widgets -->
         <ng-container *ngIf="layoutSchema.widgets">
-            <!-- <ng-container *ngFor="let widget of layoutSchema.widgets"></ng-container> -->
             <ng-container #WidgetsSection></ng-container>
 
 
@@ -22,8 +22,22 @@
 
 
     </div>
+    <!-- grid type -->
+    <div *ngIf="layoutSchema.type === 'grid'" [ngClass]="layoutSchema.classes ? layoutSchema.classes : []"
+        [ngStyle]="layoutSchema.styles ? layoutSchema.styles : {}"
+        [attr.id]="layoutSchema.id ? layoutSchema.id : undefined">
+        <!-- show layouts -->
+        <ng-container *ngIf="layoutSchema.layouts">
+            <strong-layout-builder *ngFor="let lay of layoutSchema.layouts; let i = index" [form]="form" [layout]="lay"
+                [ngClass]="layoutSchema['layoutClasses'][i]">
+            </strong-layout-builder>
+        </ng-container>
+    </div>
 </ng-container>
 
 
 
-<!-- <ng-template #name></ng-template> -->
+<!-- <ng-template #name>
+
+
+</ng-template> -->

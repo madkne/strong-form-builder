@@ -11,6 +11,7 @@ import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChanges {
 
     @Input() form: StrongFBFormClass;
+    // @Input() initialData: object;
 
     // protected override  showLoading = false;
 

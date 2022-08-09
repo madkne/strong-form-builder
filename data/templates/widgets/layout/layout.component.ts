@@ -36,7 +36,7 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
             // console.log('layout:', this.layout);
             this.layoutSchema = this.layout.schema;
             // =>load widgets, if exist
-            if (this.layoutSchema.widgets && this.layoutSchema.widgets.length > 0) {
+            if ((this.layoutSchema.widgets && this.layoutSchema.widgets.length > 0) || (this.layoutSchema.widgetHeaders && this.layoutSchema.widgetHeaders.length > 0)) {
                 this.loadWidgets();
             }
         })
@@ -57,7 +57,7 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
         this.widgetsNeedToReload = false;
         let setContainerInterval = setInterval(async () => {
             if (!this.WidgetsSection) return;
-            await this.loadDynamicWidgets(this.WidgetsSection, this.layoutSchema.widgets, this.form);
+            await this.loadDynamicWidgets(this.WidgetsSection, { widgets: this.layoutSchema.widgets, widgetHeaders: this.layoutSchema.widgetHeaders }, this.form);
 
             clearInterval(setContainerInterval);
         }, 100);

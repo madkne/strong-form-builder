@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ComponentRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { takeUntil } from 'rxjs';
 import { SFB_warn } from '../../common/StrongFB-common';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
@@ -15,6 +16,8 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
     override schema: FormFieldSchema;
     fieldIsLoaded = false;
     fieldWidget: StrongFBBaseWidgetHeader;
+    formFieldInstance: ComponentRef<StrongFBBaseWidget>[] = [];
+    errorMessage: string;
 
 
 
@@ -44,15 +47,42 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
         return schema;
     }
 
+    get fieldId() {
+        if (!this.formFieldInstance || this.formFieldInstance.length == 0) return '';
+        return this.formFieldInstance[0].instance.widgetId;
+    }
+
     override afterViewInit(): void {
 
-        let setContainerInterval = setInterval(() => {
+        let setContainerInterval = setInterval(async () => {
             if (!this.FieldContainer) return;
             this.FieldContainer.clear();
-            this.loadDynamicWidgets(this.FieldContainer, [() => this.schema.field]);
+            // =>load dynamic field
+            this.formFieldInstance = await this.loadDynamicWidgets(this.FieldContainer, { widgets: [() => this.schema.field] });
             this.fieldIsLoaded = true;
+            // =>listen on ngModelChange
+            this.formFieldInstance[0].instance['ngModelChange'].pipe(takeUntil(this.destroy$)).subscribe(it => this.changeFormFieldValue(it));
             clearInterval(setContainerInterval);
         }, 100);
 
+    }
+
+    isRequiredField() {
+        if (!this.schema?.validator) return false;
+        if (this.schema.validator.schema.find(i => i.name === 'required')) return true;
+        return false;
+    }
+
+    async changeFormFieldValue(event) {
+        // console.log('change value:', event);
+        // =>check validators with value
+        if (this.schema.validator) {
+            let res = await this.schema.validator.checkValidators(event);
+            if (res.isValid) {
+                this.errorMessage = undefined;
+            } else {
+                this.errorMessage = res.error;
+            }
+        }
     }
 }

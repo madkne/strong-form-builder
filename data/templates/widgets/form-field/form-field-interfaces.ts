@@ -1,3 +1,4 @@
+import { StrongFBValidator } from "../../common/StrongFB-validator";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { ButtonSchema } from "../button/button-interfaces";
 import { StrongFBButtonWidget } from "../button/button.header";
@@ -47,6 +48,8 @@ export interface FormFieldSchema {
     suffixText?: string;
 
     suffixButton?: StrongFBButtonWidget;
+
+    validator?: StrongFBValidator;
 
     /**
     * 

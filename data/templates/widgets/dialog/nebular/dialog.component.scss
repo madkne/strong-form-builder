@@ -1,0 +1,27 @@
+.title {
+    h1 {
+        font-size: 1.3em;
+        margin: 0;
+    }
+
+    p {
+        font-size: 0.5em;
+    }
+}
+
+.html {
+    line-height: 1.8;
+}
+
+.dialog-container {
+    min-width: 300px;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+
+    button {
+        margin: 0 5px;
+    }
+}

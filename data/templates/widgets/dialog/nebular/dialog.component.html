@@ -1,0 +1,23 @@
+<ng-template #dialog let-data let-ref="dialogRef">
+    <nb-card class="dialog-container">
+        <nb-card-header *ngIf="title" class="title">
+            <h1>{{ title }}</h1>
+            <p *ngIf="description" class="light-black" [innerHtml]="description"></p>
+        </nb-card-header>
+        <nb-card-body>
+            <!-- html -->
+            <p class="html" *ngIf="html" [innerHtml]="html"></p>
+            <strong-form-builder [form]="form"></strong-form-builder>
+        </nb-card-body>
+        <nb-card-footer *ngIf="actions" class="actions">
+            <ng-container *ngFor="let action of actions">
+                <button *ngIf="action.__show" nbButton [status]="action.status"
+                    [disabled]="action.disabled ? action.disabled : undefined" [hero]="action.appearance === 'colorful'"
+                    [outline]="action.appearance === 'outline'" [ghost]="action.appearance === 'basic'"
+                    (click)="runAction(action)">
+                    {{ action.text }}
+                </button>
+            </ng-container>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>

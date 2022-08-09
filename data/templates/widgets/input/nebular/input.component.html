@@ -1,6 +1,6 @@
 <ng-container *ngIf="schema">
     <input nbInput [type]="schema.type" [status]="schema.status" [fullWidth]="schema.fullWidth ? true : undefined"
         [disabled]="schema.disabled? true : undefined" [shape]="schema.shape" [fieldSize]="schema.size"
-        [placeholder]="schema.placeholder ? schema.placeholder : ''" [(ngModel)]="schema.value"
+        [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId" [(ngModel)]="schema.value"
         (ngModelChange)="changeValue($event)" />
 </ng-container>

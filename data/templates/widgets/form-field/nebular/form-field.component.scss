@@ -1,10 +1,24 @@
 .main-form-field {
     margin: 5px 2px;
+    display: flex;
+    flex-direction: column;
 
     label {
         font-size: .75rem;
         line-height: 1rem;
         margin-bottom: 0.5rem;
+        transition: all 0.3s;
+        cursor: pointer;
+
+        &:hover {
+            color: var(--card-text-color);
+        }
+
+        .required {
+            padding: 0 4px;
+            color: red;
+            font-weight: 500;
+        }
     }
 }
 
@@ -15,4 +29,17 @@
     .field {
         flex: 1 1 0;
     }
+}
+
+.error {
+    color: var(--text-danger-color);
+    font-size: 75%;
+    margin-top: 0.6666666667em;
+}
+
+.hint {
+    font-size: 75%;
+    line-height: 1.125;
+    margin-top: 0.6666666667em;
+    color: var(--text-hint-color);
 }

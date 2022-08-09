@@ -1,6 +1,9 @@
 <ng-container *ngIf="schema">
     <div class="main-form-field">
-        <label class="label" *ngIf="schema.label">{{schema.label}}</label>
+        <label class="label" [for]="fieldId" *ngIf="schema.label">
+            {{schema.label}}
+            <span class="required" *ngIf="isRequiredField()">*</span>
+        </label>
 
         <div class="form-field"
             [class.nb-form-field-control-with-suffix]="schema.suffixIcon || schema.suffixText || schema.suffixButton">
@@ -19,5 +22,9 @@
             </div>
 
         </div>
+        <!-- error -->
+        <div class="error" *ngIf="errorMessage">{{errorMessage}}</div>
+        <!-- hint -->
+        <div class="hint" *ngIf="schema.hint">{{schema.hint}}</div>
     </div>
 </ng-container>
