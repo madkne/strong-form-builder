@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { NbDialogService } from '@nebular/theme';
+import { Component, ElementRef, Input, EventEmitter, SimpleChanges, TemplateRef, ViewChild, Output } from '@angular/core';
+import { NbDialogRef, NbDialogService } from '@nebular/theme';
 import { interval, takeUntil } from 'rxjs';
 import { StrongFBFormClass } from '../../common/StrongFB-base';
 import { StrongFBDialogAction } from '../../common/StrongFB-interfaces';
@@ -28,8 +28,9 @@ export class StrongFBDialogComponent extends StrongFBBaseWidget {
     @Input() initialData: object;
     // @Input() waitForComponentResponse = false;
 
+    // @Output() formValuesByAction = new EventEmitter<[string, object]>();
     // protected override  showLoading = false;
-
+    protected _dialogRef: NbDialogRef<StrongFBDialogComponent>;
 
     constructor(protected override elRef: ElementRef, private dialogService: NbDialogService, private transmit: StrongFBTransmitService) {
         super(elRef);
@@ -42,15 +43,15 @@ export class StrongFBDialogComponent extends StrongFBBaseWidget {
     override async onInit() {
 
         // =>listen on component response channel
-        this.transmit.listen('dialog-response').pipe(takeUntil(this.destroy$)).subscribe(it => {
-            if (!it) return;
-            // =>check for refId
-            // if (it.refId !== this.refId) return;
-            // // =>set schemaChangesJson
-            // this.dataValues = it.values;
-            // =>run action
-            this.runActionFunction(it.action);
-        });
+        // this.transmit.listen('dialog-response').pipe(takeUntil(this.destroy$)).subscribe(it => {
+        //     if (!it) return;
+        //     // =>check for refId
+        //     // if (it.refId !== this.refId) return;
+        //     // // =>set schemaChangesJson
+        //     // this.dataValues = it.values;
+        //     // =>run action
+        //     this.runActionFunction(it.action);
+        // });
         // =>update every 1s
         interval(1000).pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.normalizeActions();
@@ -78,24 +79,29 @@ export class StrongFBDialogComponent extends StrongFBBaseWidget {
 
     }
     /***************************************** */
-    open() {
-        let dialogLoading = setInterval(() => {
-            if (!this.dialogTemplateRef) return;
-            // =>normalize actions
-            this.normalizeActions();
-            // =>open dialog
-            this.dialogService.open(this.dialogTemplateRef, {
-                context: {
-                    title: this.title,
-                    description: this.description,
-                    html: this.html,
-                    actions: this.actions,
-                    form: this.form,
-                    data: this.initialData,
-                }
-            });
-            clearInterval(dialogLoading);
-        }, 20);
+    async open(): Promise<NbDialogRef<StrongFBDialogComponent>> {
+        return new Promise((res) => {
+
+            let dialogLoading = setInterval(() => {
+                if (!this.dialogTemplateRef) return;
+                // =>normalize actions
+                this.normalizeActions();
+                // =>open dialog
+                let ref = this.dialogService.open(this.dialogTemplateRef, {
+                    context: {
+                        title: this.title,
+                        description: this.description,
+                        html: this.html,
+                        actions: this.actions,
+                        form: this.form,
+                        data: this.initialData,
+                    }
+                });
+                this._dialogRef = ref;
+                clearInterval(dialogLoading);
+                res(ref);
+            }, 20);
+        });
     }
 
     /***************************************** */
@@ -112,16 +118,16 @@ export class StrongFBDialogComponent extends StrongFBBaseWidget {
     /***************************************** */
     async runActionFunction(action: StrongFBDialogAction) {
         if (action.action) {
-            const ret = await action.action.call(this.widgetForm);
-            //     if (ret) {
-            //         this.dialogRef.close(this.dataValues);
-            //     }
-            // }
-            // if (action.closable) {
-            //     this.dialogRef.close(this.dataValues);
-            // }
+            const ret = await action.action.call(this.widgetForm, this.form.formFieldValues());
+            if (ret) {
+                this._dialogRef.close(this.form.formFieldValues());
+            }
         }
-
-
+        if (action.closable) {
+            this._dialogRef.close(this.form.formFieldValues());
+        }
     }
+
+
+
 }

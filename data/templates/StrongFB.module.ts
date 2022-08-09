@@ -12,6 +12,7 @@ import { StrongFBFormComponent } from "./widgets/form/form.component";
 import { StrongFBInputWidgetComponent } from "./widgets/input/input.component";
 import { StrongFBLayoutComponent } from "./widgets/layout/layout.component";
 import { StrongFBTabledWidgetComponent } from "./widgets/table/table.component";
+import { StrongFBTextAreaWidgetComponent } from "./widgets/textarea/textarea.component";
 
 @NgModule({
     declarations: [
@@ -23,6 +24,7 @@ import { StrongFBTabledWidgetComponent } from "./widgets/table/table.component";
         StrongFBFormFieldWidgetComponent,
         StrongFBTabledWidgetComponent,
         StrongFBDialogComponent,
+        StrongFBTextAreaWidgetComponent,
     ],
     imports: [
         StrongFBSharedModule,

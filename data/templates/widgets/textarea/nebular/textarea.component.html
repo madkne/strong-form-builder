@@ -1,0 +1,7 @@
+<ng-container *ngIf="schema">
+    <textarea nbInput [status]="schema.status" [fullWidth]="schema.fullWidth ? true : undefined"
+        [disabled]="schema.disabled? true : undefined" [shape]="schema.shape" [fieldSize]="schema.size"
+        [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId" [(ngModel)]="schema.value"
+        (ngModelChange)="changeValue($event)" [rows]="schema.rows" [cols]="schema.cols"
+        [ngStyle]="{'max-width': schema.maxWidth, 'max-height': schema.maxHeight}"></textarea>
+</ng-container>

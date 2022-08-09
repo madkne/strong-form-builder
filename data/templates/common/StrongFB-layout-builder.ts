@@ -68,6 +68,7 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
     centerScreenBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
         this._schema.type = 'box';
         properties = this._makeObject(properties, ['style']);
+        properties.style['height'] = '100%';
         properties.style['display'] = 'flex';
         properties.style['align-items'] = 'center';
         properties.style['justify-content'] = 'center';

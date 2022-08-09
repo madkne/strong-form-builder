@@ -32,7 +32,7 @@ export interface StrongFBFormOptions<D extends object = object> {
     initData?: D;
 }
 
-export interface StrongFBDialogAction<T = any> {
+export interface StrongFBDialogAction<T extends object = object> {
     id?: string;
     text?: string;
     tooltip?: string;
@@ -40,7 +40,7 @@ export interface StrongFBDialogAction<T = any> {
     disabled?: boolean;
     status?: ButtonStatus;
     appearance?: ButtonAppearance;
-    action?: (e?: T) => void,
+    action?: (formValues?: T) => void,
     show?: () => Promise<boolean> | boolean;
     __show?: boolean; // filled auto
     closable?: boolean;

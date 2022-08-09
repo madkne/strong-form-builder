@@ -1,4 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, interval, Observable, Subject } from 'rxjs';
 import { lengthInUtf8Bytes } from '../common/StrongFB-common';
@@ -25,10 +26,12 @@ export class StrongFBHttpService {
     protected apiEndpoint: string;
     protected authenticationHeaderName: string;
     protected getRefreshTokenApi: (http: StrongFBHttpService) => Promise<{ access_token: string; refresh_token: string; }>;
+    protected loginPath: string;
     /************************************************** */
     constructor(
         private http: HttpClient,
         private transmit: StrongFBTransmitService,
+        private route: Router,
     ) {
         this.configs();
         // =>listen on 5 times of update interval
@@ -46,6 +49,7 @@ export class StrongFBHttpService {
         refreshTokenKey: 'refresh_token',
         apiEndpoint: 'http:localhost:8081/api',
         authenticationHeaderName: 'Authentication',
+        loginPath: '/login',
         getRefreshTokenApi: async (http: StrongFBHttpService) => {
             return {
                 access_token: '',
@@ -59,6 +63,7 @@ export class StrongFBHttpService {
         this.apiEndpoint = options.apiEndpoint;
         this.authenticationHeaderName = options.authenticationHeaderName;
         this.getRefreshTokenApi = options.getRefreshTokenApi;
+        this.loginPath = options.loginPath;
     }
     /************************************************** */
     send<T = any>(data: APIRequest<any>): Observable<any> {
@@ -179,6 +184,9 @@ export class StrongFBHttpService {
                                 statusCode: APIStatusCodes.HTTP_401_UNAUTHORIZED,
                                 error,
                             });
+                            if (reloadIf401) {
+                                this.redirectLogin();
+                            }
                             return;
                         }
                         // =>remove page loading
@@ -240,12 +248,19 @@ export class StrongFBHttpService {
 
                 res(true);
             } catch (e) {
+                // =>redirect to 'login' page
+                this.redirectLogin();
                 // =>reset tokens
                 this.setRefreshToken(undefined);
                 this.setToken(undefined);
                 res(false);
             }
         });
+    }
+    /************************************************** */
+    redirectLogin() {
+        if (!this.loginPath) return;
+        this.route.navigateByUrl(this.loginPath);
     }
     /************************************************** */
     async getSuccessResult<T = any>(data: APIRequest<any>, def?: T, showPageLoading = true): Promise<T> {
