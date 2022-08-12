@@ -40,7 +40,7 @@ export interface StrongFBDialogAction<T extends object = object> {
     disabled?: boolean;
     status?: ButtonStatus;
     appearance?: ButtonAppearance;
-    action?: (formValues?: T) => void,
+    action?: (formValues?: T) => Promise<boolean> | boolean | void,
     show?: () => Promise<boolean> | boolean;
     __show?: boolean; // filled auto
     closable?: boolean;

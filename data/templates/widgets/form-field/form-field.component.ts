@@ -29,7 +29,6 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
     }
 
     async normalizeSchema(schema: FormFieldSchema) {
-        if (!schema.status) schema.status = 'default';
         if (!schema.size) schema.size = 'medium';
         // =>if no any fields, load fallback
         if (!schema.field) {
@@ -76,12 +75,24 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
     async changeFormFieldValue(event) {
         // console.log('change value:', event);
         // =>check validators with value
+        let widget = this.formFieldInstance[0].instance;
         if (this.schema.validator) {
             let res = await this.schema.validator.checkValidators(event);
             if (res.isValid) {
                 this.errorMessage = undefined;
+                // =>set success status
+                widget.schema['status'] = 'success';
             } else {
                 this.errorMessage = res.error;
+                // =>reset value in form field
+                if (widget.widgetHeader['_formFieldName']) {
+                    widget.widgetForm['_formFieldValues'][widget.widgetHeader['_formFieldName']] = undefined;
+                }
+                // =>reset value of widget
+                widget.schema['value'] = undefined;
+                // =>set danger status
+                widget.schema['status'] = 'danger';
+
             }
         }
     }

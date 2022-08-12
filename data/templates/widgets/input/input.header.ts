@@ -50,4 +50,9 @@ export class StrongFBInputWidget<FIELDS = { [k: string]: any }> extends StrongFB
         this._formFieldName = name as any;
         return this;
     }
+
+    fullWidth(is = true) {
+        this._schema.fullWidth = is;
+        return this;
+    }
 }

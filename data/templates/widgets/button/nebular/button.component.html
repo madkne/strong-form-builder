@@ -2,7 +2,8 @@
     <button nbButton [size]="schema.size" [shape]="schema.shape" [status]="schema.status"
         [disabled]="schema.disabled ? schema.disabled : undefined" [fullWidth]="schema.fullWidth ? true : undefined"
         [hero]="schema.appearance === 'colorful'" [outline]="schema.appearance === 'outline'"
-        [ghost]="schema.mode === 'icon' || schema.appearance === 'basic'" (click)="clickEvent($event)">
+        [ghost]="schema.mode === 'icon' || schema.appearance === 'basic'" (click)="clickEvent($event)"
+        [nbTooltip]="schema.tooltip" [nbTooltipDisabled]="!schema.tooltip">
         <!-- text mode -->
         <ng-container *ngIf="!schema.mode || schema.mode === 'text'">{{schema.text}}</ng-container>
         <!-- icon before text  mode-->

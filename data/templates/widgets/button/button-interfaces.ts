@@ -44,6 +44,8 @@ export interface ButtonSchema {
      */
     mode?: ButtonMode;
 
+    tooltip?: string;
+
     /********************************* */
     /*************EVENTS************** */
     /********************************* */

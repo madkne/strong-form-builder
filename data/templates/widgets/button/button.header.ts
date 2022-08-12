@@ -47,6 +47,11 @@ export class StrongFBButtonWidget extends StrongFBBaseWidgetHeader {
         return this;
     }
 
+    tooltip(text: string) {
+        this._schema.tooltip = text;
+        return this;
+    }
+
     icon(icon: string) {
         this._schema.icon = icon;
         return this;

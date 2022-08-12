@@ -66,4 +66,9 @@ export class StrongFBTextAreaWidget<FIELDS = { [k: string]: any }> extends Stron
         this._schema.maxHeight = height;
         return this;
     }
+
+    fullWidth(is = true) {
+        this._schema.fullWidth = is;
+        return this;
+    }
 }

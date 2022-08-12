@@ -13,6 +13,7 @@ import { StrongFBHttpService } from './StrongFB-http.service';
 export class StrongFBService {
     protected _viewContainerRef: ViewContainerRef;
     protected _rtl = false;
+    protected _scripts: { src: string; loaded?: boolean; }[] = [];
 
     constructor(
         protected _http: StrongFBHttpService,
@@ -82,4 +83,43 @@ export class StrongFBService {
     }
 
 
+
+    loadScript(src: string) {
+        return new Promise((resolve, reject) => {
+            let scriptObject = this._scripts.find(i => i.src == src);
+            if (!scriptObject) {
+                this._scripts.push({
+                    src,
+                    loaded: false,
+                });
+                scriptObject = this._scripts[this._scripts.length - 1];
+            }
+            //resolve if already loaded
+            if (scriptObject.loaded) {
+                resolve(scriptObject);
+            }
+            else {
+                //load script
+                let script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = src;
+                if (script['readyState']) {  //IE
+                    script['onreadystatechange'] = () => {
+                        if (script['readyState'] === "loaded" || script['readyState'] === "complete") {
+                            script['onreadystatechange'] = null;
+                            scriptObject.loaded = true;
+                            resolve(scriptObject);
+                        }
+                    };
+                } else {  //Others
+                    script.onload = () => {
+                        scriptObject.loaded = true;
+                        resolve(scriptObject);
+                    };
+                }
+                script.onerror = (error: any) => resolve(scriptObject);
+                document.getElementsByTagName('head')[0].appendChild(script);
+            }
+        });
+    }
 }

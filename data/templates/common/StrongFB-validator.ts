@@ -105,6 +105,17 @@ export class StrongFBValidator {
         return value >= min;
     }
 
+    protected validateRequired(value: string | number) {
+        if (value === undefined || value === null) {
+            return false;
+        }
+        if (typeof value === 'string' && value === '') {
+            return false;
+        }
+
+        return true;
+    }
+
 
     get defaultErrorMessages() {
         return {
@@ -120,6 +131,10 @@ export class StrongFBValidator {
     }
 
     async checkValidators(value: string | number): Promise<{ isValid: boolean; error?: string }> {
+        // =>required validation
+        if (this._schema.find(i => i.name === 'required') && !this.validateRequired(value)) {
+            return { isValid: false, error: this._schema.find(i => i.name === 'required').error };
+        }
         if (typeof value === 'string') {
             // =>email validation
             if (this._schema.find(i => i.name === 'email') && !this.validateEmail(value)) {

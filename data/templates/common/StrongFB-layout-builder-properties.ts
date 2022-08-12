@@ -19,7 +19,7 @@ export class StrongFBLayoutBuilderProperties<WIDGET extends string = string> {
     widget(widget: StrongFBLayoutBuilderWidgetFunction | StrongFBLayoutBuilderWidgetFunction[]) {
         if (!Array.isArray(widget)) widget = [widget];
         if (!this._schema.widgets) this._schema.widgets = [];
-        this._schema.widgets = [...widget];
+        this._schema.widgets.push(...widget);
         return this;
     }
 
@@ -32,7 +32,7 @@ export class StrongFBLayoutBuilderProperties<WIDGET extends string = string> {
     styleClass(clas: string | string[]) {
         if (!Array.isArray(clas)) clas = [clas];
         if (!this._schema.classes) this._schema.classes = [];
-        this._schema.classes = [...clas];
+        this._schema.classes.push(...clas);
         return this;
     }
 
@@ -51,7 +51,7 @@ export class StrongFBLayoutBuilderProperties<WIDGET extends string = string> {
     layout(layout: StrongFBLayoutBuilder<WIDGET> | StrongFBLayoutBuilder<WIDGET>[]) {
         if (!Array.isArray(layout)) layout = [layout];
         if (!this._schema.layouts) this._schema.layouts = [];
-        this._schema.layouts = [...layout];
+        this._schema.layouts.push(...layout);
         return this;
     }
 

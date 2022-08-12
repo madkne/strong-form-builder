@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { SFB_warn } from '../../common/StrongFB-common';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
@@ -15,6 +15,9 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
     simpleRows: object[] = [];
     displayRows: object[] = [];
 
+    constructor(protected override elRef: ElementRef, protected cdr: ChangeDetectorRef) {
+        super(elRef)
+    }
 
 
     override async onInit() {
@@ -42,13 +45,16 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
             let displayRow = {};
             for (const col of this.schema.columns) {
                 if (col.type === 'actions') displayRow[col.name] = [];
+                else if (col.type === 'tagsList') {
+                    displayRow[col.name] = [];
+                }
                 else {
                     displayRow[col.name] = '...';
                 }
             }
             // =>init display rows
             for (const row of this.simpleRows) {
-                this.displayRows.push(displayRow);
+                this.displayRows.push(JSON.parse(JSON.stringify(displayRow)));
             }
             // =>set display rows as async
             this.initDisplayRows();
@@ -90,13 +96,14 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
                 }
                 // =>check for column map function
                 else if (col.mapValue) {
-                    this.displayRows[i][col.name] = await col.mapValue.call(this.widgetForm, this.simpleRows[i], i, this.widgetHeader);;
+                    this.displayRows[i][col.name] = await col.mapValue.call(this.widgetForm, this.simpleRows[i], i, this.widgetHeader);
                 }
                 // =>set simple row value
                 else {
                     this.displayRows[i][col.name] = this.simpleRows[i][col.name] || '';
                 }
             }
+            this.cdr.detectChanges();
         }
     }
 

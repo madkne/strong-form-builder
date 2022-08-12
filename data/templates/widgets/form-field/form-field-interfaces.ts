@@ -3,14 +3,16 @@ import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { ButtonSchema } from "../button/button-interfaces";
 import { StrongFBButtonWidget } from "../button/button.header";
 import { StrongFBInputWidget } from "../input/input.header";
+import { StrongFBSelectWidget } from "../select/select.header";
+import { StrongFBTagsListWidget } from "../tags-list/tags-list.header";
+import { StrongFBTextAreaWidget } from "../textarea/textarea.header";
 
 
 
 export type FormFieldSize = 'small' | 'medium' | 'large';
 
-export type FormFieldStatus = 'default' | 'primary' | 'info' | 'success' | 'warning' | 'danger';
 
-export type FormFieldType = StrongFBInputWidget;
+export type FormFieldType = StrongFBInputWidget | StrongFBTextAreaWidget | StrongFBSelectWidget | StrongFBTagsListWidget;
 
 export interface FormFieldSchema {
 
@@ -18,10 +20,7 @@ export interface FormFieldSchema {
      * @default medium
      */
     size?: FormFieldSize;
-    /**
-     * @default default
-     */
-    status?: FormFieldStatus;
+
     /**
      * @default false
      */

@@ -125,6 +125,12 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
                 form['_usedWidgets'][widget['_name']] = widget;
                 form['_usedWidgetComponents'][widget['_name']] = component;
             }
+            // getting the component's HTML
+            let widgetElement: HTMLElement = <HTMLElement>component.location.nativeElement;
+            for (const key of Object.keys(widget['_commonStyles'])) {
+                widgetElement.style[key] = widget['_commonStyles'][key];
+            }
+
         }
         return widgetComponents;
     }

@@ -3,7 +3,7 @@ import { StrongFBValidator } from "../../common/StrongFB-validator";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBButtonWidget } from "../button/button.header";
 import { StrongFBInputWidget } from "../input/input.header";
-import { FormFieldSchema, FormFieldSize, FormFieldStatus, FormFieldType } from "./form-field-interfaces";
+import { FormFieldSchema, FormFieldSize, FormFieldType } from "./form-field-interfaces";
 import { StrongFBFormFieldWidgetComponent } from "./form-field.component";
 
 
@@ -17,14 +17,9 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
     }
 
     override get widgetName(): string {
-        return 'input';
+        return 'form-field';
     }
 
-
-    status(status: FormFieldStatus) {
-        this._schema.status = status;
-        return this;
-    }
 
     disabled(is = true) {
         this._schema.disabled = is;
@@ -55,6 +50,7 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
         this._schema.validator = validator;
         return this;
     }
+
     // value<T = string>(text: T) {
     //     this._schema.value = text as any;
     //     return this;

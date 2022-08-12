@@ -1,0 +1,19 @@
+<ng-container *ngIf="schema">
+    <nb-form-field>
+        <nb-tag-list [id]="widgetId" (tagRemove)="onTagRemove($event)">
+            <nb-tag [status]="schema.status" [appearance]="schema.appearance" *ngFor="let tag of schema.value"
+                [text]="tag" [removable]="schema.removable">
+            </nb-tag>
+            <input [separatorKeys]="getSeparatorKeys()" type="text" *ngIf="schema.addable" nbTagInput
+                (tagAdd)="onTagAdd($event.value)" [fullWidth]="schema.fullWidth">
+        </nb-tag-list>
+
+        <!-- <nb-icon nbSuffix icon="search" pack="eva"></nb-icon> -->
+    </nb-form-field>
+
+    <!-- <nb-autocomplete *ngIf="schema.autoCompleteOptions" #autocomplete (selectedChange)="onTagAdd($event)">
+        <nb-option *ngFor="let option of schema.autoCompleteOptions" [value]="option.value">{{ option.text }}
+        </nb-option>
+    </nb-autocomplete> -->
+
+</ng-container>

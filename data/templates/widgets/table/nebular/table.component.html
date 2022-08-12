@@ -16,16 +16,15 @@
                             <div *ngIf="!rowCol.type || rowCol.type === 'string'">
                                 {{row[rowCol.name]}}
                             </div>
-                            <!-- tag, tagsList types -->
-                            <nb-tag-list *ngIf="rowCol.type == 'tag' || rowCol.type === 'tagsList'">
-                                <!-- tag type -->
-                                <nb-tag *ngIf="rowCol.type == 'tag'" appearance="filled" [text]="row[rowCol.name].value"
+                            <!-- tag type -->
+                            <nb-tag-list *ngIf="rowCol.type == 'tag'">
+                                <nb-tag appearance="filled" [text]="row[rowCol.name].value"
                                     [status]="row[rowCol.name].status ? row[rowCol.name].status : 'basic'"></nb-tag>
-                                <!-- tagsList type -->
-                                <ng-container *ngIf="rowCol.type == 'tagsList'">
-                                    <nb-tag appearance="filled" *ngFor="let tag of row[rowCol.name]" [text]="tag.value"
-                                        [status]="tag.status ? tag.status : 'basic'"></nb-tag>
-                                </ng-container>
+                            </nb-tag-list>
+                            <!-- tagsList type -->
+                            <nb-tag-list *ngIf="rowCol.type == 'tagsList' && row[rowCol.name].length > 0">
+                                <nb-tag appearance="filled" *ngFor="let tag of row[rowCol.name]" [text]="tag.value"
+                                    [status]="tag.status ? tag.status : 'basic'"></nb-tag>
                             </nb-tag-list>
                             <!-- actions type -->
                             <ng-container *ngIf="rowCol.type === 'actions'">
