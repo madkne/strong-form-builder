@@ -10,7 +10,7 @@ also you can define layouts and create completely a page with it.
 
 |Name|supported?|
 |----|--------|
-|Nebular| **passed**|
+|Nebular| **passed (10/10)**|
 |ngPrime| *pending*|
 
 ## Install & Use
@@ -28,12 +28,13 @@ also you can define layouts and create completely a page with it.
 |1|button|YES|-|
 |2|card|YES|-|
 |3|dialog|YES|-|
-|4|form-field|YES|supported `input`, `select`, `textarea`, `tags-list` widgets|
+|4|form-field|YES|supported `input`, `select`, `textarea`, `tags-list`, `radio-box` widgets|
 |5|input|YES|-
 |6|select|YES|-
 |7|table|YES|supported load by api|
 |8|tags-list|YES|-
 |9|textarea|YES|-
+|10|radio-box|YES|-
 
 ## Author
 created by madkne and was built by DAT 0.5.9

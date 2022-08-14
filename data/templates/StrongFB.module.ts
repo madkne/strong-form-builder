@@ -11,6 +11,7 @@ import { StrongFBFormFieldWidgetComponent } from "./widgets/form-field/form-fiel
 import { StrongFBFormComponent } from "./widgets/form/form.component";
 import { StrongFBInputWidgetComponent } from "./widgets/input/input.component";
 import { StrongFBLayoutComponent } from "./widgets/layout/layout.component";
+import { StrongFBRadioBoxWidgetComponent } from "./widgets/radio-box/radio-box.component";
 import { StrongFBSelectWidgetComponent } from "./widgets/select/select.component";
 import { StrongFBTabledWidgetComponent } from "./widgets/table/table.component";
 import { StrongFBTagsListWidgetComponent } from "./widgets/tags-list/tags-list.component";
@@ -29,6 +30,7 @@ import { StrongFBTextAreaWidgetComponent } from "./widgets/textarea/textarea.com
         StrongFBTextAreaWidgetComponent,
         StrongFBSelectWidgetComponent,
         StrongFBTagsListWidgetComponent,
+        StrongFBRadioBoxWidgetComponent,
     ],
     imports: [
         StrongFBSharedModule,

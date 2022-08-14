@@ -1,0 +1,7 @@
+<ng-container *ngIf="schema">
+    <nb-radio-group [ngClass]="[schema.optionsDirection]"  (ngModelChange)="changeEvent($event.value)" [(ngModel)]="schema.value" [status]="schema.status">
+            <nb-radio *ngFor="let item of schema.options" [disabled]="item.disabled" [value]="item.value">{{item.text}}</nb-radio>
+          </nb-radio-group>
+
+
+</ng-container>
