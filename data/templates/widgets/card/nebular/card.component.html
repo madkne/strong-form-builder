@@ -1,6 +1,10 @@
 <nb-card *ngIf="widgetHeader?.schema">
     <nb-card-header *ngIf="widgetHeader.schema.header">
         <ng-container *ngIf="widgetHeader.schema.header.text">{{widgetHeader.schema.header.text}}</ng-container>
+        <ng-container *ngIf="widgetHeader.schema.header.layout">
+            <strong-layout-builder [form]="widgetForm" [layout]="widgetHeader.schema.header.layout">
+            </strong-layout-builder>
+        </ng-container>
 
     </nb-card-header>
     <nb-card-body *ngIf="widgetHeader.schema.content">

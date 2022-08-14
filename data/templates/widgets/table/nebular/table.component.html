@@ -46,6 +46,34 @@
                     </tr>
                 </tbody>
             </table>
+            <!-- pagination -->
+            <div class="pagination" *ngIf="schema.mapApiPagination">
+                <!-- prev buttons -->
+                <nb-button-group shape="semi-round">
+                    <button (click)="goToPage(1)" nbButtonToggle *ngIf="page > 2  && displayPages.first">
+                        <nb-icon icon="arrowhead-left-outline"></nb-icon>
+                    </button>
+                    <button (click)="goToPage(page - 1)" nbButtonToggle *ngIf="page > 1 && displayPages.prev">
+                        <nb-icon icon="arrow-ios-back-outline"></nb-icon>
+                    </button>
+                    <ng-container *ngFor="let p of displayPages.pages">
+                        <button *ngIf="p !== '...'" (click)="goToPage(p)" [pressed]="page== p"
+                            nbButtonToggle>{{p}}</button>
+                        <button *ngIf="p === '...'" disabled outline nbButtonToggle>...</button>
+                    </ng-container>
+
+                    <!-- next buttons -->
+                    <button (click)="goToPage(page+1)" nbButtonToggle
+                        *ngIf="page < schema.mapApiPagination.__pageCountResponse && displayPages.next">
+                        <nb-icon icon="arrow-ios-forward-outline"></nb-icon>
+                    </button>
+                    <button (click)="goToPage(schema.mapApiPagination.__pageCountResponse)" nbButtonToggle
+                        *ngIf="page < schema.mapApiPagination.__pageCountResponse - 1 && displayPages.last">
+                        <nb-icon icon="arrowhead-right-outline"></nb-icon>
+                    </button>
+                </nb-button-group>
+
+            </div>
         </nb-card-body>
     </nb-card>
 </ng-container>

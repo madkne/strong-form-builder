@@ -26,6 +26,10 @@ export function SFB_error(message?: any, ...optionalParams: any[]) {
     );
 }
 
+export function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+
 export function hashCode(value: string): string {
     let hash = 0, i, chr;
     for (i = 0; i < value.length; i++) {

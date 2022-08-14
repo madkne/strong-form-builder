@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { SFB_warn } from '../../common/StrongFB-common';
+import { clone, SFB_warn } from '../../common/StrongFB-common';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
 import { TableColumnAction, TableColumnDynamicActionsType, TableSchema } from './table-interfaces';
@@ -14,6 +14,7 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
     override schema: TableSchema;
     simpleRows: object[] = [];
     displayRows: object[] = [];
+    page = 1;
 
     constructor(protected override elRef: ElementRef, protected cdr: ChangeDetectorRef) {
         super(elRef)
@@ -38,7 +39,7 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
         this.displayRows = [];
         // =>load rows by api
         if (this.schema.loadRowsByApi) {
-            let res = await this.widgetForm.http.sendPromise(this.schema.loadRowsByApi.options);
+            let res = await this.callApi();
             // =>call 'response' function
             this.simpleRows = await this.schema.loadRowsByApi.response.call(this.widgetForm, res.result, res.error, this.widgetHeader);
             // =>set loading for display rows
@@ -63,15 +64,59 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
         //TODO:
     }
 
-    async normalizeSchema(schema: TableSchema) {
+
+    protected async callApi() {
+        // =>add pagination
+        if (this.schema.mapApiPagination) {
+            // =>GET method
+            if (this.schema.loadRowsByApi.options.method === 'GET') {
+                this.schema.loadRowsByApi.options.params = {};
+                this.schema.loadRowsByApi.options.params[this.schema.mapApiPagination.pageParam] = this.page;
+                this.schema.loadRowsByApi.options.params[this.schema.mapApiPagination.pageSizeParam] = this.schema.mapApiPagination.pageSize;
+            }
+            //TODO: post
+        }
+        // =>call api
+        let res = await this.widgetForm.http.sendPromise(this.schema.loadRowsByApi.options);
+        // =>parse pagination from response
+        if (this.schema.mapApiPagination) {
+            if (res && res.result) {
+                // =>parse page count
+                let sp = this.schema.mapApiPagination.pageCountResponse.split('.');
+                let pageSize = clone(res.result);
+                for (const key of sp) {
+                    if (pageSize[key]) {
+                        pageSize = pageSize[key];
+                    }
+                }
+                this.schema.mapApiPagination.__pageCountResponse = Number(pageSize);
+                // console.log('page count:', this.schema.mapApiPagination.__pageCountResponse, pageSize);
+            }
+            this.calcDisplayPagination();
+        }
+
+        return res;
+    }
+
+    protected async normalizeSchema(schema: TableSchema) {
         if (!schema.columns) schema.columns = [];
         if (!schema.columnActions) schema.columnActions = {};
-
+        if (schema.mapApiPagination) {
+            if (!schema.mapApiPagination.pageSize) {
+                schema.mapApiPagination.pageSize = 10;
+            }
+            if (!schema.mapApiPagination.pageSizeParam) {
+                schema.mapApiPagination.pageSizeParam = 'page_size';
+            }
+            if (!schema.mapApiPagination.pageParam) {
+                schema.mapApiPagination.pageParam = 'page';
+            }
+        }
 
         return schema;
     }
 
-    async initDisplayRows() {
+    protected async initDisplayRows() {
         for (let i = 0; i < this.simpleRows.length; i++) {
             const simpleRow = this.simpleRows[i];
             for (const col of this.schema.columns) {
@@ -111,4 +156,87 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
         if (!button.action) return;
         button.action.call(this.widgetForm, this.simpleRows[rowIndex], rowIndex, this.widgetHeader);
     }
+
+    goToPage(page: number) {
+        this.page = page;
+        this.loadRows();
+    }
+
+    displayPages = {
+        first: true,
+        prev: true,
+        pages: [],
+        next: true,
+        last: true,
+
+    }
+    calcDisplayPagination() {
+        /**
+         * 1 2 3 4 5
+         * < [1] 2 .. 4 5 > (5)
+         * < 1 2 .. [5] .. 9 > (9)
+         * < 1 .. [8] 9 10 > (10)
+         */
+        let count = this.schema.mapApiPagination.__pageCountResponse;
+        this.displayPages = {
+            first: false,
+            prev: false,
+            pages: [],
+            next: false,
+            last: false,
+
+        }
+        // count less than 5
+        if (count < 5) {
+            for (let i = 0; i < 5; i++) {
+                this.displayPages.pages.push(i);
+            }
+            return true;
+        }
+        this.displayPages.prev = true;
+        this.displayPages.next = true;
+        this.displayPages.first = true;
+        this.displayPages.last = true;
+        if (this.page > 2 && count - this.page > 3) {
+            this.displayPages.pages.push(1);
+            this.displayPages.pages.push(2);
+            this.displayPages.pages.push('...');
+            this.displayPages.pages.push(this.page);
+            this.displayPages.first = false;
+        }
+        else if (this.page > 1 && count != this.page) {
+            this.displayPages.pages.push('...');
+            this.displayPages.pages.push(this.page);
+        }
+
+        else if (count != this.page) {
+            this.displayPages.first = false;
+            this.displayPages.pages.push(this.page);
+
+        }
+
+
+        if (count == this.page) {
+            this.displayPages.pages.push('...');
+            this.displayPages.pages.push(count - 1);
+            this.displayPages.pages.push(count);
+            this.displayPages.last = false;
+        }
+        else if (count - this.page < 3) {
+            for (let i = this.page + 1; i <= count; i++) {
+                this.displayPages.pages.push(i);
+            }
+            this.displayPages.last = false;
+        } else {
+            this.displayPages.pages.push(this.page + 1);
+            this.displayPages.pages.push('...');
+            this.displayPages.pages.push(count - 1);
+            this.displayPages.pages.push(count);
+            this.displayPages.last = false;
+
+        }
+
+        return true;
+    }
 }
+

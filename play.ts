@@ -2,7 +2,7 @@ import { info, success, clear } from "@dat/lib/log";
 import { InitCommand } from "./src/commands/init";
 import { cli } from '@dat/lib/argvs';
 
-const VERSION = '0.54';
+const VERSION = '0.55';
 export async function main(): Promise<number> {
    clear();
    info(`--------------- StrongFormBuilder - version ${VERSION} ---------------`);

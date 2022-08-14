@@ -2,7 +2,7 @@ import { APIRequest } from "../../common/StrongFB-interfaces";
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBButtonWidget } from "../button/button.header";
-import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableLoadRowsResponse, TableSchema } from "./table-interfaces";
+import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableLoadRowsResponse, TableMapApiPagination, TableSchema } from "./table-interfaces";
 import { StrongFBTabledWidgetComponent } from "./table.component";
 import { BehaviorSubject } from 'rxjs';
 
@@ -110,6 +110,11 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
                 return [];
             },
         };
+        return this;
+    }
+
+    mapPaginationByApi(pagination: TableMapApiPagination) {
+        this._schema.mapApiPagination = pagination;
         return this;
     }
 

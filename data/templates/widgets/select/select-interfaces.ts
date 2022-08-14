@@ -16,7 +16,7 @@ export interface SelectOption {
     value: string;
 }
 
-export type SelectLoadOptions = (self?: StrongFBSelectWidget) => Promise<SelectOption> | SelectOption;
+export type SelectLoadOptions = (self?: StrongFBSelectWidget) => Promise<SelectOption[]> | SelectOption[];
 
 export interface SelectSchema {
     /**

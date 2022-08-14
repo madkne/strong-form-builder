@@ -21,6 +21,7 @@ import {
   NbStepperModule,
   NbDialogModule,
   NbAutocompleteModule,
+  NbButtonGroupModule,
 } from '@nebular/theme';
 
 @NgModule({
@@ -47,6 +48,7 @@ import {
     NbStepperModule,
     NbDialogModule.forRoot(),
     NbAutocompleteModule,
+    NbButtonGroupModule,
 
   ],
   providers: [],
@@ -72,6 +74,7 @@ import {
     NbStepperModule,
     NbDialogModule,
     NbAutocompleteModule,
+    NbButtonGroupModule,
   ],
 })
 export class StrongFBSharedModule { }

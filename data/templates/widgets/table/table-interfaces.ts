@@ -28,6 +28,34 @@ export interface TableColumn<N extends string = string, R extends object = objec
     mapValue?: TableColumnMapValue<TableColumnMapValueType, R>;
 }
 
+export interface TableMapApiPagination {
+    /**
+     * @default 10
+     */
+    pageSize?: number;
+    /**
+     * field name in api response like 'meta.pagination.count'
+     */
+    pageCountResponse: string;
+    /**
+     * page size in api param
+     * @default page_size
+     */
+    pageSizeParam?: string;
+    /**
+     * page in api param
+     * @default page
+     */
+    pageParam?: string;
+
+    /**
+     * auto filled
+     * no need to filled!
+     */
+    __pageCountResponse?: number;
+
+}
+
 export type TableColumnMapValue<T = TableColumnMapValueType, R extends object = object> = (row?: R, index?: number, self?: StrongFBTableWidget) => Promise<T> | T
 
 export type TableLoadRowsResponse<ROW extends object = object> = (apiResponse: any[], error?: HttpErrorResponse, self?: StrongFBTableWidget) => Promise<ROW[]> | ROW[];
@@ -53,6 +81,7 @@ export interface TableColumnAction<R extends object = object> {
      */
     disabled?: boolean;
     action: (row?: R, index?: number, self?: StrongFBTableWidget) => any;
+
 }
 
 export interface TableSchema<COL extends string = string, ROW extends object = object> {
@@ -62,4 +91,5 @@ export interface TableSchema<COL extends string = string, ROW extends object = o
         response: TableLoadRowsResponse<ROW>;
     };
     columnActions?: { [k in COL]?: TableColumnAction<ROW>[] | TableColumnDynamicActionsType };
+    mapApiPagination?: TableMapApiPagination;
 }
