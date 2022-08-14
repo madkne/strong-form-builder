@@ -1,7 +1,6 @@
+
 import { APIRequest } from "../../common/StrongFB-interfaces";
-import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
-import { StrongFBButtonWidget } from "../button/button.header";
 import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableLoadRowsResponse, TableMapApiPagination, TableSchema } from "./table-interfaces";
 import { StrongFBTabledWidgetComponent } from "./table.component";
 import { BehaviorSubject } from 'rxjs';
@@ -9,7 +8,10 @@ import { BehaviorSubject } from 'rxjs';
 
 
 
-
+/**
+ * table widget
+ * @summary table widget with pagination
+ */
 export class StrongFBTableWidget<COL extends string = string, ROW extends object = object> extends StrongFBBaseWidgetHeader<TableSchema<COL>> {
 
     private _updateRows$ = new BehaviorSubject<boolean>(true);

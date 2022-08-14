@@ -1,8 +1,9 @@
 import { info, success, clear } from "@dat/lib/log";
 import { InitCommand } from "./src/commands/init";
 import { cli } from '@dat/lib/argvs';
+import { GenerateDocumentsCommand } from "./src/commands/gen_docs";
 
-const VERSION = '0.56';
+const VERSION = '0.57';
 export async function main(): Promise<number> {
    clear();
    info(`--------------- StrongFormBuilder - version ${VERSION} ---------------`);
@@ -17,7 +18,7 @@ export async function main(): Promise<number> {
    `);
    // =>load commands
    InitCommand
-
+   GenerateDocumentsCommand
 
    await cli();
 

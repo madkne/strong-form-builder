@@ -1,6 +1,5 @@
 import { APIRequest } from "../../common/StrongFB-interfaces";
-import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
-import { ButtonAppearance, ButtonSchema, ButtonStatus } from "../button/button-interfaces";
+import { ButtonAppearance, ButtonStatus } from "../button/button-interfaces";
 import { StrongFBTableWidget } from "./table.header";
 import { HttpErrorResponse } from "@angular/common/http";
 
