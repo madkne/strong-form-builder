@@ -10,7 +10,7 @@ also you can define layouts and create completely a page with it.
 
 |Name|supported?|
 |----|--------|
-|Nebular| **passed (10/10)**|
+|Nebular| **processing**|
 |ngPrime| *pending*|
 
 ## Install & Use

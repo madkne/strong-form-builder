@@ -1,13 +1,26 @@
 # Overview
 
 ## Introduction
-**StrongFB** (Strong Form Builder) is a Form builder for angular projects with any used UI frameworks. More features of StrongFB :
+**StrongFB** (Strong Form Builder) is a Form builder for angular projects with any used UI frameworks. 
+
+it can dynamically use a ui framework on your project and you can update your StrongFB core files.
+
+also you can define layouts and create completely a page with it.
+
+More features of StrongFB :
 
 1. Easy to use and easy to learn
 2. Fast and powerful
 3. written on node.js, typescript
 4. cli support
 5. supports UI frameworks (like nebular)
+
+## supported UI frameworks
+
+|Name|supported?|
+|----|--------|
+|Nebular| **processing**|
+|ngPrime| *pending*|
 
 
 ## Contributing
