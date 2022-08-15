@@ -1,4 +1,5 @@
-import { StrongFBValidatorSchema } from "./StrongFB-interfaces";
+import { StrongFBFormClass } from "./StrongFB-base";
+import { StrongFBCustomValidatorFunctionType, StrongFBValidatorSchema } from "./StrongFB-interfaces";
 import { StrongFBValidatorName } from "./StrongFB-types";
 
 
@@ -6,6 +7,12 @@ import { StrongFBValidatorName } from "./StrongFB-types";
 export class StrongFBValidator {
 
     private _schema: StrongFBValidatorSchema[] = [];
+
+    private _widgetForm: StrongFBFormClass;
+
+    constructor(form?: StrongFBFormClass) {
+        this._widgetForm = form;
+    }
 
     get schema() {
         return this._schema;
@@ -18,6 +25,15 @@ export class StrongFBValidator {
         });
         return this;
     }
+
+    number(error?: string) {
+        this._schema.push({
+            name: 'number',
+            error: error || this.defaultErrorMessages.number,
+        });
+        return this;
+    }
+
     maxLength(len: number, error?: string) {
         this._schema.push({
             name: 'maxLength',
@@ -74,6 +90,15 @@ export class StrongFBValidator {
         return this;
     }
 
+    custom(validatorFunction: StrongFBCustomValidatorFunctionType, error?: string) {
+        this._schema.push({
+            name: 'custom',
+            value: validatorFunction,
+            error: error || this.defaultErrorMessages.custom,
+        });
+        return this;
+    }
+
     protected validateEmail(email: string) {
         let matches = String(email)
             .toLowerCase()
@@ -105,6 +130,10 @@ export class StrongFBValidator {
         return value >= min;
     }
 
+    protected validateNumber(value: string) {
+        return /^\d+$/.test(String(value));
+    }
+
     protected validateRequired(value: string | number) {
         if (value === undefined || value === null) {
             return false;
@@ -114,6 +143,14 @@ export class StrongFBValidator {
         }
 
         return true;
+    }
+
+    protected async validateCustom(func: StrongFBCustomValidatorFunctionType, value: any) {
+        let thisCall = this;
+        if (this._widgetForm) {
+            thisCall = this._widgetForm as any;
+        }
+        return await func.call(thisCall, value);
     }
 
 
@@ -126,7 +163,9 @@ export class StrongFBValidator {
             min: 'The number is too small',
             maxLength: 'The maximum number of characters is not respected',
             minLength: 'The minimum number of characters is not met',
-            required: 'required field'
+            required: 'required field',
+            number: 'number field',
+            custom: 'field value is invalid'
         } as { [k in StrongFBValidatorName]: string };
     }
 
@@ -134,6 +173,14 @@ export class StrongFBValidator {
         // =>required validation
         if (this._schema.find(i => i.name === 'required') && !this.validateRequired(value)) {
             return { isValid: false, error: this._schema.find(i => i.name === 'required').error };
+        }
+        // =>number validation
+        if (this._schema.find(i => i.name === 'number') && !this.validateNumber(String(value))) {
+            return { isValid: false, error: this._schema.find(i => i.name === 'number').error };
+        }
+        // =>custom validation
+        if (this._schema.find(i => i.name === 'custom') && !this.validateCustom(this._schema.find(i => i.name === 'custom').value, value)) {
+            return { isValid: false, error: this._schema.find(i => i.name === 'custom').error };
         }
         if (typeof value === 'string') {
             // =>email validation

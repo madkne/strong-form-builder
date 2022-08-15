@@ -4,6 +4,7 @@
 * [Installation](/installation.md)
 * [Concepts](/concepts/concepts.md)
     * [Layouts](/concepts/layouts.md)
+    * [Validators](/concepts/validators.md)
 * [Command Line](/cli/cli.md)
 * [Widgets](/widgets/widgets.md)
     - [Table](/widgets/table.md)

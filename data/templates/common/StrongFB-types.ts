@@ -40,4 +40,4 @@ export type ScreenMode = 'desktop' | 'tablet' | 'mobile';
 
 export type NotifyMode = 'success' | 'failure' | 'info' | 'warning';
 
-export type StrongFBValidatorName = 'required' | 'maxLength' | 'minLength' | 'acceptPattern' | 'rejectPattern' | 'email' | 'min' | 'max';
+export type StrongFBValidatorName = 'required' | 'maxLength' | 'minLength' | 'acceptPattern' | 'rejectPattern' | 'email' | 'min' | 'max' | 'number' | 'custom';
