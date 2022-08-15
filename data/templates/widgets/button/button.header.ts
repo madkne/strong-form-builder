@@ -57,6 +57,11 @@ export class StrongFBButtonWidget extends StrongFBBaseWidgetHeader {
         return this;
     }
 
+    fullWidth(is = true) {
+        this._schema.fullWidth = is;
+        return this;
+    }
+
     /********************************* */
     /*************EVENTS************** */
     /********************************* */
