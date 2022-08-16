@@ -2,7 +2,7 @@
 
 * [Overview](/overview.md)
 * [Installation](/installation.md)
-* [Concepts](/concepts/concepts.md)
+* Concepts
     * [Layouts](/concepts/layouts.md)
     * [Validators](/concepts/validators.md)
 * [Command Line](/cli/cli.md)
@@ -11,6 +11,7 @@
     - [Form Field](/widgets/form_field.md)
 * Samples
     - [login page](/samples/login_page.md)
+    - [table page](/samples/table_page.md)
 
 
 

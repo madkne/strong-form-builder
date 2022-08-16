@@ -2,7 +2,7 @@
 
 <!-- ![logo](_media/icon.svg) -->
 
-# Strong Form Builder <small>0.5</small>
+# Strong Form Builder <small>0.6</small>
 
 > A nice form builder for angular projects
 
@@ -10,5 +10,4 @@
 - implement al need widgets
 - Supports multiple UI frameworks
 
-<!-- [GitHub](https://github.com/docsifyjs/docsify/)
-[Get Started](#docsify) -->
+[Installation](/installation.md)
