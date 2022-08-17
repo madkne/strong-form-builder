@@ -1,4 +1,3 @@
-<!-- docs/_sidebar.md -->
 
 * [Overview](/overview.md)
 * [Installation](/installation.md)

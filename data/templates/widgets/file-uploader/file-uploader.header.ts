@@ -2,7 +2,7 @@ import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBFileUploaderWidgetComponent } from "./file-uploader.component";
 import { BehaviorSubject } from 'rxjs';
-import { FileUploaderErrorKey, FileUploaderMessageKey, FileUploaderSchema, FileUploaderServerSendFileType, mimeTypes } from "./file-uploader-interfaces";
+import { FileUploaderErrorKey, FileUploaderFileStruct, FileUploaderFileUploadedEventCallback, FileUploaderMessageKey, FileUploaderSchema, FileUploaderServerSendFileType, mimeTypes } from "./file-uploader-interfaces";
 
 
 
@@ -69,12 +69,19 @@ export class StrongFBFileUploaderWidget<FIELDS = { [k: string]: any }> extends S
         return this;
     }
 
+    removeFilesAfterUploaded(is = true) {
+        this._schema.removeFilesAfterUploaded = true;
+        return this
+    }
 
 
     /********************************* */
     /*************EVENTS************** */
     /********************************* */
-
+    fileUploadedEvent(callback: FileUploaderFileUploadedEventCallback) {
+        this._schema.fileUploadedEvent = callback;
+        return this;
+    }
 
 
 

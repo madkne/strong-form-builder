@@ -1,4 +1,4 @@
-import { HttpProgressEvent, HttpSentEvent } from "@angular/common/http";
+import { HttpProgressEvent, HttpResponse, HttpSentEvent } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { StrongFBFileUploaderWidget } from "./file-uploader.header";
 
@@ -20,13 +20,15 @@ export interface FileUploaderFileStruct {
     url?: string;
 }
 
+export type FileUploaderFileUploadedEventCallback = (file: FileUploaderFileStruct, event: HttpResponse<any>, self?: StrongFBFileUploaderWidget) => any;
+
 export type mimeTypes = '*' | 'audio/mp3' | 'audio/wav' | 'audio/mpeg' | 'image/png' | 'image/jpeg' | 'image/gif' | 'video/mp4' | 'video/webm' | 'application/xml' | 'application/json' | 'text/plain' | 'application/zip' | 'application/gzip' | 'application/x-7z-compressed' | 'application/vnd.rar' | 'application/x-sega-cd-rom' | 'application/vnd.android.package-archive' | 'image/*';
 
 export type FileUploaderErrorKey = 'upload_max_size_limit' | 'upload_max_files_limit';
 
 export type FileUploaderMessageKey = 'uploading' | 'upload_complete' | 'starting';
 
-export type FileUploaderServerSendFileType<R extends HttpProgressEvent = HttpProgressEvent> = (file: File, self?: StrongFBFileUploaderWidget) => Observable<R>;
+export type FileUploaderServerSendFileType<R extends HttpProgressEvent = HttpProgressEvent> = (file: File) => Observable<R>;
 
 
 export interface FileUploaderSchema {
@@ -102,5 +104,6 @@ export interface FileUploaderSchema {
     /********************************* */
     /*************EVENTS************** */
     /********************************* */
+    fileUploadedEvent?: FileUploaderFileUploadedEventCallback;
 
 }
