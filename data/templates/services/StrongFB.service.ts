@@ -3,33 +3,72 @@ import { Injectable, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { StrongFBFormClass } from '../common/StrongFB-base';
-import { StrongFBDialogAction } from '../common/StrongFB-interfaces';
+import { StrongFBConfigOptions, StrongFBDialogAction } from '../common/StrongFB-interfaces';
 import { StrongFBDialogComponent } from '../widgets/dialog/dialog.component';
 import { StrongFBHttpService } from './StrongFB-http.service';
+import { StrongFBLocaleService } from './StrongFB-locale.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class StrongFBService {
     protected _viewContainerRef: ViewContainerRef;
-    protected _rtl = false;
     protected _scripts: { src: string; loaded?: boolean; }[] = [];
+
+    protected defaultOptions: StrongFBConfigOptions = {
+        localStorageTokenKey: 'access_token',
+        localStorageRefreshTokenKey: 'refresh_token',
+        apiEndPoint: 'http:localhost:8081/api',
+        authenticationHeaderName: 'Authentication',
+        loginUrl: '/login',
+        getRefreshTokenApi: async (http: StrongFBHttpService) => {
+            return {
+                access_token: '',
+                refresh_token: '',
+            }
+        },
+        language: 'en',
+        viewContainerRef: null,
+    }
+    /********************************* */
 
     constructor(
         protected _http: StrongFBHttpService,
         protected _router: Router,
+        protected _locale: StrongFBLocaleService,
     ) {
 
     }
+    /********************************* */
+    config(options: StrongFBConfigOptions) {
+        if (!options) options = {} as any;
+        // =>merge with default options
+        for (const key of Object.keys(this.defaultOptions)) {
+            if (options[key] === undefined) {
+                options[key] = this.defaultOptions[key];
+            }
+        }
 
-    config(options: {
-        _viewContainerRef: ViewContainerRef,
-        rtl?: boolean;
-    }) {
-        this._viewContainerRef = options._viewContainerRef;
-        if (options.rtl) this._rtl = options.rtl;
+        // =>set http options
+        this._http.configs({
+            updateInterval: 1000,
+            tokenKey: options.localStorageTokenKey,
+            refreshTokenKey: options.localStorageRefreshTokenKey,
+            apiEndpoint: options.apiEndPoint,
+            authenticationHeaderName: options.authenticationHeaderName,
+            loginPath: options.loginUrl,
+            getRefreshTokenApi: options.getRefreshTokenApi,
+        });
+        // =>set locale options
+        this._locale.setLang(options.language);
+        // =>set service options
+        this._viewContainerRef = options.viewContainerRef;
+
     }
+    /********************************* */
+
     // async loadFormOnNgContainer(container: ViewContainerRef: form: StrongFBBase) {
+    /********************************* */
 
     // }
     /**
@@ -39,18 +78,18 @@ export class StrongFBService {
      */
     async loadFormClass(form: any, data?: object): Promise<StrongFBFormClass> {
         let formInstance = new form(this._http, this, {
-            rtl: this._rtl,
+            rtl: this._locale.getLangInfo()?.direction === 'rtl',
             initData: data,
         }) as StrongFBFormClass;
 
         return formInstance;
     }
+    /********************************* */
 
     goToPage(path: string) {
         return this._router.navigateByUrl(path);
     }
-
-
+    /********************************* */
     async dialog<T extends object = object>(form: any, options: {
         title?: string;
         description?: string;
@@ -81,9 +120,11 @@ export class StrongFBService {
         // }
         return component;
     }
-
-
-
+    /********************************* */
+    locale() {
+        return this._locale;
+    }
+    /********************************* */
     loadScript(src: string) {
         return new Promise((resolve, reject) => {
             let scriptObject = this._scripts.find(i => i.src == src);
@@ -122,4 +163,6 @@ export class StrongFBService {
             }
         });
     }
+    /********************************* */
+
 }

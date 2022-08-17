@@ -68,13 +68,14 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
     /********************************** */
 
     async copyTemplates() {
-
         // =>copy common files
         await copyDirectory(path.join(this.templatesPath, 'common'), path.join(this.sourceAppStrongFBPath, 'common'));
         // =>copy forms files
         await copyDirectory(path.join(this.templatesPath, 'forms'), path.join(this.sourceAppStrongFBPath, 'forms'));
         // =>copy services file
         await copyDirectory(path.join(this.templatesPath, 'services'), path.join(this.sourceAppStrongFBPath, 'services'));
+        // =>copy locales file
+        await copyDirectory(path.join(this.templatesPath, 'locales'), path.join(this.sourceAppStrongFBPath, 'locales'));
         // =>copy widgets file
         await this.copyWidgetsTemplates();
         // =>copy shared module by ui framework
@@ -142,6 +143,20 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
         projectTsConfig['compilerOptions']['strict'] = false;
         // =>save tsconfig
         fs.writeFileSync(path.join(this.source, 'tsconfig.json'), JSON.stringify(projectTsConfig, null, 2));
+
+        // =>add properties to tsconfig.app of project
+        let projectTsConfigApp = fs.readFileSync(path.join(this.source, 'tsconfig.app.json')).toString();
+        if (projectTsConfigApp.startsWith('/*')) {
+            let lines = projectTsConfigApp.split('\n');
+            lines.shift();
+            projectTsConfigApp = lines.join('\n');
+        }
+        projectTsConfigApp = JSON.parse(projectTsConfigApp);
+        if (!projectTsConfigApp['include'].includes("src/app/StrongFB/**/*.ts")) {
+            projectTsConfigApp['include'].push("src/app/StrongFB/**/*.ts");
+        }
+        // =>save tsconfig
+        fs.writeFileSync(path.join(this.source, 'tsconfig.app.json'), JSON.stringify(projectTsConfigApp, null, 2));
     }
     /********************************** */
     async addRequiredPackages() {
@@ -149,6 +164,22 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
         let exists = true;
         // =>read package.json of project
         let projectPackageJson = JSON.parse(fs.readFileSync(path.join(this.source, 'package.json')).toString());
+        // =>choose language, if not
+        if (!projectPackageJson['languages']) {
+            let selectLangOption = await select('choose project language', ['en', 'fa', 'all'], 'en');
+            let langs = [selectLangOption];
+            if (selectLangOption === 'all') {
+                langs = ['en', 'fa'];
+            }
+            if (langs.includes('fa')) {
+                packages['jalali-moment'] = '^3.3.11';
+            }
+            if (langs.includes('en')) {
+                packages['moment'] = '^2.29.3';
+            }
+            // =>save languages
+            projectPackageJson['languages'] = langs;
+        }
         // =>check exist all packages before
         for (const pack of Object.keys(packages)) {
             if (!projectPackageJson['dependencies'][pack] && !projectPackageJson['devDependencies'][pack]) {
@@ -157,6 +188,7 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
                 projectPackageJson['dependencies'][pack] = packages[pack];
             }
         }
+        // console.log('packs:', packages, exists);
         // =>save package.json
         fs.writeFileSync(path.join(this.source, 'package.json'), JSON.stringify(projectPackageJson, null, 2));
         // =>if not exist any packages, reinstall npm

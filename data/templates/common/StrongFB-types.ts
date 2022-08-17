@@ -41,3 +41,33 @@ export type ScreenMode = 'desktop' | 'tablet' | 'mobile';
 export type NotifyMode = 'success' | 'failure' | 'info' | 'warning';
 
 export type StrongFBValidatorName = 'required' | 'maxLength' | 'minLength' | 'acceptPattern' | 'rejectPattern' | 'email' | 'min' | 'max' | 'number' | 'custom';
+
+export type AvailableLanguage = 'fa' | 'en';
+
+export type Direction = 'rtl' | 'ltr';
+
+export type LocaleCalendar = 'jalali' | 'gregorian' | 'auto';
+
+export type LocaleNamespace = 'units' | 'common';
+
+/**************************** */
+/*********CONSTANTS********** */
+/**************************** */
+
+export const AvailableLanguages: AvailableLanguage[] = ['fa', 'en'];
+
+export const AudioMimeTypes = ['audio/mp3', 'audio/wav', 'audio/mpeg'];
+export const ImageMimeTypes = ['image/png', 'image/jpeg', 'image/gif'];
+export const VideoMimeTypes = ['video/mp4', 'video/webm'];
+export const TextMimeTypes = ['application/xml', 'application/json', 'text/plain'];
+export const ArchiveMimeTypes = ['application/zip', 'application/gzip', 'application/x-7z-compressed', 'application/vnd.rar'];
+export const ExecuteMimeTypes = ['application/x-sega-cd-rom', 'application/vnd.android.package-archive'];
+
+export type MimeTypes = 'audio/mp3' | 'audio/wav' | 'audio/mpeg' | 'image/png' | 'image/jpeg' | 'image/gif' | 'video/mp4' | 'video/webm' | 'application/xml' | 'application/json' | 'text/plain' | 'application/zip' | 'application/gzip' | 'application/x-7z-compressed' | 'application/vnd.rar' | 'application/x-sega-cd-rom' | 'application/vnd.android.package-archive';
+
+export const ExecuteExtensions = ['exe', 'sh'];
+export const ImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
+export const AudioExtensions = ['mp3', 'wav'];
+export const TextExtensions = ['txt', 'json', 'xml', 'md', 'js', 'css'];
+export const VideoExtensions = ['mp4', 'avi', 'webm'];
+export const ArchiveExtensions = ['zip', 'gz', '7z'];

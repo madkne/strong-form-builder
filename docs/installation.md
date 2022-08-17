@@ -22,6 +22,8 @@ we can use DAT (@dat-tool) for developing StrongFB. so you must first install it
 
 4. finally add some directories in your projects, change your `tsconfig.json` file and install need dependencies (before add in `package.json` file)
 
-5. and DONE!
+5. now, you can to configure `StrongFB`. you can follow [here](./concepts/configs.md)
+
+6. and DONE!
 
 ?> for update your **StrongFB** of project, just need to repeat these steps!

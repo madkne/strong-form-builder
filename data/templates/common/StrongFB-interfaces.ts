@@ -1,6 +1,8 @@
-import { APIStatusCodes, StrongFBValidatorName } from "./StrongFB-types";
+import { APIStatusCodes, AvailableLanguage, Direction, LocaleCalendar, StrongFBValidatorName } from "./StrongFB-types";
 import { HttpErrorResponse } from "@angular/common/http";
 import { ButtonAppearance, ButtonStatus } from "../widgets/button/button-interfaces";
+import { StrongFBHttpService } from "../services/StrongFB-http.service";
+import { ViewContainerRef } from "@angular/core";
 
 
 export interface APIRequest<T = any> {
@@ -56,3 +58,41 @@ export interface StrongFBValidatorSchema {
 }
 
 export type StrongFBCustomValidatorFunctionType = (value: string | number) => Promise<boolean> | boolean;
+
+export interface LanguageInfo {
+    latin: string;
+    code: AvailableLanguage;
+    native?: string;
+    defaultFontName?: string;
+    direction: Direction;
+    timeFormat?: string;
+    dateFormat?: string;
+    calendar?: LocaleCalendar;
+}
+
+
+export interface StrongFBConfigOptions {
+    apiEndPoint: string;
+    viewContainerRef: ViewContainerRef;
+    /**
+     * @default 'access_token'
+     */
+    localStorageTokenKey?: string;
+    /**
+     * @default 'refresh_token'
+     */
+    localStorageRefreshTokenKey?: string;
+    /**
+     * @default 'Authentication'
+     */
+    authenticationHeaderName?: string;
+    /**
+     * @default '/login'
+     */
+    loginUrl?: string;
+    getRefreshTokenApi?: (http: StrongFBHttpService) => Promise<{ access_token: string; refresh_token: string; }>;
+    /**
+     * @default 'en'
+     */
+    language?: AvailableLanguage;
+}

@@ -7,6 +7,12 @@
                 - StrongFB.service.ts
                 - StrongFB-http.service.ts
                 - StrongFB-transmit.service.ts
+                - StrongFB-locale.service.ts
+            - locales/
+                - en/
+                    - info.ts
+                    - units.ts
+                ...
             - widgets/
                 - input/
                     - input.component.html

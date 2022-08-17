@@ -3,7 +3,7 @@ import { InitCommand } from "./src/commands/init";
 import { cli } from '@dat/lib/argvs';
 import { GenerateDocumentsCommand } from "./src/commands/gen_docs";
 
-const VERSION = '0.65';
+const VERSION = '0.68';
 export async function main(): Promise<number> {
    clear();
    info(`--------------- StrongFormBuilder - version ${VERSION} ---------------`);
@@ -23,4 +23,4 @@ export async function main(): Promise<number> {
    await cli();
 
    return 0;
-}
+}  
