@@ -67,7 +67,7 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
             file.status = 'uploading';
             this.fileStartUploadingEvent.emit(file);
             // =>try to upload file
-            this.schema.server.sendFile(file.file).pipe(takeUntil(this.destroy$)).subscribe(event => {
+            this.schema.server.sendFile.call(this.widgetForm, file.file, this.widgetHeader).pipe(takeUntil(this.destroy$)).subscribe(event => {
                 // log('upload event:', event);
                 // =>if progress uploading
                 if (event && event.type !== undefined && event.type === HttpEventType.UploadProgress) {

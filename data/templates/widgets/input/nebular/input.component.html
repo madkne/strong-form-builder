@@ -2,5 +2,5 @@
     <input nbInput [type]="schema.type" [status]="schema.status" [fullWidth]="schema.fullWidth ? true : undefined"
         [disabled]="schema.disabled? true : undefined" [shape]="schema.shape" [fieldSize]="schema.size"
         [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId" [(ngModel)]="schema.value"
-        (ngModelChange)="changeValue($event)" />
+        (ngModelChange)="changeValue($event)" (keyup)="keyupEvent($event)" />
 </ng-container>

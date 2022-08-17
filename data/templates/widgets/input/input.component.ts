@@ -42,4 +42,15 @@ export class StrongFBInputWidgetComponent extends StrongFBBaseWidget<InputSchema
         }
         this.ngModelChange.emit(this.schema.value);
     }
+
+    keyupEvent(event: KeyboardEvent) {
+        if (!this.schema.keyEvents) return;
+        // console.log('key event:', event);
+        for (const key of this.schema.keyEvents) {
+            if (key.keyType !== 'keyup' || key.keyNumber !== event.keyCode || !key.callback) continue;
+
+            key.callback.call(this.widgetForm, event, this.widgetHeader);
+            break;
+        }
+    }
 }

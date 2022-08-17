@@ -1,3 +1,4 @@
+import { StrongFBInputWidget } from "./input.header";
 
 
 export type InputType = 'text' | 'password' | 'search' | 'email' | 'number';
@@ -5,6 +6,12 @@ export type InputType = 'text' | 'password' | 'search' | 'email' | 'number';
 export type InputSize = 'small' | 'medium' | 'large';
 
 export type InputStatus = 'basic' | 'primary' | 'info' | 'success' | 'warning' | 'danger';
+
+export type InputKeyEvent = {
+    keyNumber: number;
+    keyType: 'keyup';
+    callback: (event: KeyboardEvent, self?: StrongFBInputWidget) => any;
+}
 
 export interface InputSchema {
     /**
@@ -33,6 +40,9 @@ export interface InputSchema {
      */
     disabled?: boolean;
     value?: string | number;
-
+    /********************************* */
+    /*************EVENTS************** */
+    /********************************* */
+    keyEvents?: InputKeyEvent[];
 
 }

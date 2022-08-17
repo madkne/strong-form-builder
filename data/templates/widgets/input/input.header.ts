@@ -55,4 +55,20 @@ export class StrongFBInputWidget<FIELDS = { [k: string]: any }> extends StrongFB
         this._schema.fullWidth = is;
         return this;
     }
+
+    get keyup() {
+        if (!this._schema.keyEvents) {
+            this._schema.keyEvents = [];
+        }
+        return {
+            enter: (callback: (event: KeyboardEvent, self?: StrongFBInputWidget) => any) => {
+                this._schema.keyEvents.push({
+                    keyNumber: 13,
+                    callback,
+                    keyType: 'keyup',
+                });
+                return this;
+            }
+        }
+    }
 }
