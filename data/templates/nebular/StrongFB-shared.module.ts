@@ -23,6 +23,7 @@ import {
   NbAutocompleteModule,
   NbButtonGroupModule,
   NbRadioModule,
+  NbProgressBarModule,
 } from '@nebular/theme';
 
 @NgModule({
@@ -51,6 +52,7 @@ import {
     NbAutocompleteModule,
     NbButtonGroupModule,
     NbRadioModule,
+    NbProgressBarModule,
 
   ],
   providers: [],
@@ -78,6 +80,7 @@ import {
     NbAutocompleteModule,
     NbButtonGroupModule,
     NbRadioModule,
+    NbProgressBarModule,
   ],
 })
 export class StrongFBSharedModule { }

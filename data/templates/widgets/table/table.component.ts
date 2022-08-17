@@ -188,7 +188,7 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
         }
         // count less than 5
         if (count < 5) {
-            for (let i = 0; i < 5; i++) {
+            for (let i = 1; i <= count; i++) {
                 this.displayPages.pages.push(i);
             }
             return true;

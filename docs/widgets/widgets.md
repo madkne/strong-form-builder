@@ -3,8 +3,8 @@
 
 ## supported widgets
 
-|#|Widget|Nebular supported|description|
-|---|-------|----|-----------|
+|**#**|**Widget**|**Nebular supported**|**description**|
+|---|:-------:|:----:|:-----------:|
 |1|button|YES|-|
 |2|card|YES|-|
 |3|dialog|YES|-|
@@ -13,5 +13,6 @@
 |6|select|YES|-
 |7|table|YES|supported load by api|
 |8|tags-list|YES|-
-|9|textarea|YES|-
-|10|radio-box|YES|-
+|9|textarea|YES|-|
+|10|radio-box|YES|-|
+|11|file-uploader|YES|file browsing and uploading|

@@ -1,0 +1,62 @@
+<!-- <ng-container *ngIf="schema">
+    <nb-select [size]="schema.size" [shape]="schema.shape" [status]="schema.status" [id]="widgetId"
+        [disabled]="schema.disabled ? schema.disabled : undefined" [fullWidth]="schema.fullWidth ? true : undefined"
+        [hero]="schema.appearance === 'colorful'" [outline]="schema.appearance === 'outline'"
+        [placeholder]="schema.placeholder" [(selected)]="schema.value" (selectedChange)="changeEvent($event)">
+        <nb-option *ngFor="let opt of options" [value]="opt.value">{{opt.text}}</nb-option>
+    </nb-select>
+
+
+</ng-container> -->
+
+
+<div class="file-picker-root" *ngIf="schema">
+    <div class="file-picker-drop-label">
+        <input [id]="widgetId" class="file-picker-browser" [placeholder]="schema.placeholder" type="file"
+            [accept]="schema.accept ? getFileAcceptRaw() : undefined" [(ngModel)]="schema.value"
+            (change)="fileBrowserChange($event)" [multiple]="schema.multiple ? true : undefined" />
+        <label [for]="widgetId" aria-hidden="true">{{ schema.placeholder }} </label>
+    </div>
+    <!-- uploading files -->
+    <nb-card class="file-picker-scroller" *ngIf="filePickerFiles.length > 0">
+        <nb-card-body>
+            <div class="file-picker-list">
+                <nb-card [status]="file.color" *ngFor="let file of filePickerFiles" class="file-picker-file">
+                    <nb-card-body>
+                        <div class="file-picker-file-content">
+                            <div class="title">
+                                <div class="t1">{{ file.name }}</div>
+                                <span>{{ convertBytesToHumanly(file.size) }}</span>
+                            </div>
+                            <div *ngIf="schema.server" class="status">
+                                <!-- error -->
+                                <span *ngIf="file.status === 'failed'">{{ file.error }}</span>
+                                <!-- uploading -->
+                                <ng-container *ngIf="file.status === 'uploading'">
+                                    <div>{{ schema.messages.uploading }}</div>
+                                    <nb-progress-bar size="tiny" [value]="file.progress" [displayValue]="true">
+                                    </nb-progress-bar>
+                                </ng-container>
+                                <!-- complete -->
+                                <ng-container *ngIf="file.status === 'complete'">
+                                    <div>{{ schema.messages.upload_complete }}</div>
+                                </ng-container>
+                                <!-- start -->
+                                <ng-container *ngIf="file.status === 'start'">
+                                    <div>{{ schema.messages.starting }}</div>
+                                </ng-container>
+                            </div>
+                            <div class="actions">
+                                <button nbButton status="danger" (click)="removeFile(file)">
+                                    <nb-icon icon="close"></nb-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </nb-card-body>
+    </nb-card>
+    <!-- global error -->
+    <p class="file-picker-error" *ngIf="globalError" (click)="globalError = undefined">{{ globalError }}</p>
+</div>
