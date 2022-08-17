@@ -17,6 +17,7 @@ import { StrongFBSelectWidgetComponent } from "./widgets/select/select.component
 import { StrongFBTabledWidgetComponent } from "./widgets/table/table.component";
 import { StrongFBTagsListWidgetComponent } from "./widgets/tags-list/tags-list.component";
 import { StrongFBTextAreaWidgetComponent } from "./widgets/textarea/textarea.component";
+import { StrongFBToggleWidgetComponent } from "./widgets/toggle/toggle.component";
 
 @NgModule({
     declarations: [
@@ -32,7 +33,8 @@ import { StrongFBTextAreaWidgetComponent } from "./widgets/textarea/textarea.com
         StrongFBSelectWidgetComponent,
         StrongFBTagsListWidgetComponent,
         StrongFBRadioBoxWidgetComponent,
-        StrongFBFileUploaderWidgetComponent
+        StrongFBFileUploaderWidgetComponent,
+        StrongFBToggleWidgetComponent,
     ],
     imports: [
         StrongFBSharedModule,

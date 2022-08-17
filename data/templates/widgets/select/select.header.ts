@@ -83,6 +83,10 @@ export class StrongFBSelectWidget<FIELDS = { [k: string]: any }> extends StrongF
         return this;
     }
 
+    multiple(is = true) {
+        this._schema.multiple = is;
+        return this
+    }
 
     /********************************* */
     /*************EVENTS************** */

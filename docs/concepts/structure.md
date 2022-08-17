@@ -1,0 +1,36 @@
+# Directory Structure
+
+- src/
+    - app/
+        - StrongFB/
+            - services/
+                - StrongFB.service.ts
+                - StrongFB-http.service.ts
+                - StrongFB-transmit.service.ts
+            - widgets/
+                - input/
+                    - input.component.html
+                    - input.component.scss
+                    - input.component.ts
+                    - input.type.ts
+                    - input.header.ts
+                - ...
+                - README.md
+            - common/
+                - StrongFB-base.ts
+                - StrongFB-common.ts
+                - StrongFB-types.ts
+                - StrongFB-interfaces.ts
+                - StrongFB-layout-builder.ts
+                - StrongFB-layout-builder-properties.ts
+                - StrongFB-validator.ts
+                - StrongFB-widget-header.ts
+                - StrongFB-widget.ts
+            - forms/
+                - login.form.ts
+                - ...
+            - StrongFB-shared.module.ts
+            - StrongFB.module.ts
+        - ...
+- StrongFB-cli/
+

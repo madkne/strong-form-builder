@@ -11,7 +11,7 @@ these widgets supported by form field widget as a field:
 4. **tags list** `StrongFBTagsListWidget`
 5. **radio box** `StrongFBRadioBoxWidget`
 6. **file uploader** `StrongFBFileUploaderWidget`
-
+7. **toggle** `StrongFBToggleWidget`
 
 
 ## methods

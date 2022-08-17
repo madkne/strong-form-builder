@@ -2,7 +2,8 @@
     <nb-select [size]="schema.size" [shape]="schema.shape" [status]="schema.status" [id]="widgetId"
         [disabled]="schema.disabled ? schema.disabled : undefined" [fullWidth]="schema.fullWidth ? true : undefined"
         [hero]="schema.appearance === 'colorful'" [outline]="schema.appearance === 'outline'"
-        [placeholder]="schema.placeholder" [(selected)]="schema.value" (selectedChange)="changeEvent($event)">
+        [placeholder]="schema.placeholder" [(selected)]="schema.value" (selectedChange)="changeEvent($event)"
+        [multiple]="schema.multiple ? schema.multiple : undefined">
         <nb-option *ngFor="let opt of options" [value]="opt.value">{{opt.text}}</nb-option>
     </nb-select>
 
