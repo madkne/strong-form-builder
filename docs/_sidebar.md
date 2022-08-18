@@ -7,6 +7,9 @@
     * [Directory Structure](/concepts/structure.md)
     * [Configuration](/concepts/configs.md)
     * [Localization](/concepts/locales.md)
+    * [Form Base](/concepts/form_base.md)
+    * Services
+        - [StrongFB Service](/concepts/services/main.md)
 * [Command Line](/cli/cli.md)
 * [Widgets](/widgets/widgets.md)
     - [Table](/widgets/table.md)

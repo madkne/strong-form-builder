@@ -4,6 +4,7 @@ import { StrongFBFormClass } from '../../common/StrongFB-base';
 import { StrongFBLayoutBuilder } from '../../common/StrongFB-layout-builder';
 import { StrongFBLayoutBuilderSchema } from '../../common/StrongFB-layout-builder-types';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
+import { StrongFBLocaleService } from '../../services/StrongFB-locale.service';
 
 @Component({
     selector: 'strong-layout-builder',
@@ -17,7 +18,7 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
     // protected override  showLoading = false;
 
 
-    constructor(protected override elRef: ElementRef) {
+    constructor(protected override elRef: ElementRef, protected locale: StrongFBLocaleService) {
         super(elRef);
     }
     @Input() form: StrongFBFormClass;
@@ -33,13 +34,13 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
         this.layoutLoaded = true;
         this.layout['_update$'].pipe(takeUntil(this.destroy$)).subscribe(it => {
             if (!it) return;
-            // console.log('layout:', this.layout);
-            this.layoutSchema = this.layout.schema;
-            // =>load widgets, if exist
-            if ((this.layoutSchema.widgets && this.layoutSchema.widgets.length > 0) || (this.layoutSchema.widgetHeaders && this.layoutSchema.widgetHeaders.length > 0)) {
-                this.loadWidgets();
-            }
-        })
+            this.updateLayout();
+        });
+
+        this.locale.languageChanged.pipe(takeUntil(this.destroy$)).subscribe(it => {
+            if (!it) return;
+            this.updateLayout();
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -47,6 +48,15 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
             this.onInit();
 
 
+        }
+    }
+
+    updateLayout() {
+        // console.log('layout:', this.layout);
+        this.layoutSchema = this.layout.schema;
+        // =>load widgets, if exist
+        if ((this.layoutSchema.widgets && this.layoutSchema.widgets.length > 0) || (this.layoutSchema.widgetHeaders && this.layoutSchema.widgetHeaders.length > 0)) {
+            this.loadWidgets();
         }
     }
 

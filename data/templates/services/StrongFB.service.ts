@@ -1,12 +1,16 @@
 
 import { Injectable, ViewContainerRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { StrongFBFormClass } from '../common/StrongFB-base';
 import { StrongFBConfigOptions, StrongFBDialogAction } from '../common/StrongFB-interfaces';
 import { StrongFBDialogComponent } from '../widgets/dialog/dialog.component';
 import { StrongFBHttpService } from './StrongFB-http.service';
 import { StrongFBLocaleService } from './StrongFB-locale.service';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
+
+import { NotifyCssAnimationStyle, NotifyMode } from '../common/StrongFB-types';
 
 @Injectable({
     providedIn: 'root'
@@ -36,6 +40,7 @@ export class StrongFBService {
         protected _http: StrongFBHttpService,
         protected _router: Router,
         protected _locale: StrongFBLocaleService,
+        protected _activeRoute: ActivatedRoute,
     ) {
 
     }
@@ -71,6 +76,12 @@ export class StrongFBService {
         // =>set service options
         this._viewContainerRef = options.viewContainerRef;
 
+    }
+    /********************************* */
+    getUrlParam<T = string>(key: string, def?: T) {
+        let value = this._activeRoute.snapshot.paramMap.get(key);
+        if (value === undefined || value === null) return def;
+        return value;
     }
     /********************************* */
 
@@ -171,5 +182,80 @@ export class StrongFBService {
         });
     }
     /********************************* */
+    notify(options: {
+        mode?: NotifyMode;
+        text: string;
+        callback?: () => any;
+        timeout?: number;
+        cssAnimationStyle?: NotifyCssAnimationStyle;
+        rtl?: boolean;
+        clickToClose?: boolean;
+    }) {
+        // =>set defaults
+        if (!options.mode) options.mode = 'info';
+        if (!options.callback) options.callback = () => { };
+        if (!options.timeout) options.timeout = 3000;
+        if (!options.cssAnimationStyle) options.cssAnimationStyle = 'fade';
+        if (options.rtl === undefined) options.rtl = this.locale().getLangInfo()?.direction === 'rtl';
+        if (options.clickToClose === undefined) options.clickToClose = true;
+        // =>show notification
+        Notify[options.mode](options.text, options.callback, {
+            cssAnimationStyle: options.cssAnimationStyle,
+            timeout: options.timeout,
+            rtl: options.rtl,
+            clickToClose: options.clickToClose,
+        });
+    }
+    /********************************* */
+    confirm(options: {
+        title: string;
+        text: string;
+        rtl?: boolean;
+        type?: 'confirm' | 'prompt';
+        cssAnimationStyle?: NotifyCssAnimationStyle;
+
+        okButtonText?: string;
+        cancelButtonText?: string;
+        okButtonCallback?: (value?: string) => void;
+        cancelButtonCallback?: (value?: string) => void;
+        inputPlaceholder?: string;
+    }) {
+        // =>set defaults
+        if (options.rtl === undefined) options.rtl = this.locale().getLangInfo()?.direction === 'rtl';
+        if (!options.type) options.type = 'confirm';
+        if (!options.cssAnimationStyle) options.cssAnimationStyle = 'fade';
+        if (!options.okButtonText) options.okButtonText = this.locale().trans('common', 'ok');
+        if (!options.cancelButtonText) options.cancelButtonText = this.locale().trans('common', 'cancel');
+
+        // =>show confirm
+        if (options.type === 'confirm') {
+            Confirm.show(
+                options.title,
+                options.text,
+                options.okButtonText,
+                options.cancelButtonText,
+                options.okButtonCallback,
+                options.cancelButtonCallback,
+                {
+                    rtl: options.rtl,
+                    cssAnimationStyle: options.cssAnimationStyle as any,
+                }
+            );
+        } else if (options.type === 'prompt') {
+            Confirm.ask(
+                options.title,
+                options.text,
+                options.inputPlaceholder,
+                options.okButtonText,
+                options.cancelButtonText,
+                options.okButtonCallback,
+                options.cancelButtonCallback,
+                {
+                    rtl: options.rtl,
+                    cssAnimationStyle: options.cssAnimationStyle as any,
+                }
+            );
+        }
+    }
 
 }

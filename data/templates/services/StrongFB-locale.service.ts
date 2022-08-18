@@ -40,7 +40,7 @@ export class StrongFBLocaleService<CN extends string = string> {
     protected allCustomLocales: CustomLocales;
 
 
-    public langLoaded = new BehaviorSubject<boolean>(false);
+    public languageChanged = new BehaviorSubject<AvailableLanguage>(undefined);
 
     /*************************************************************** */
     constructor(private transmit: StrongFBTransmitService) {
@@ -74,7 +74,7 @@ export class StrongFBLocaleService<CN extends string = string> {
             await this.loadNamespace(namespace);
 
         }
-        this.langLoaded.next(true);
+        this.languageChanged.next(this.lang);
         // =>load default font
         // this.setMainFont();
     }

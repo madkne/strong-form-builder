@@ -1,9 +1,9 @@
 import { StrongFBHttpService } from "../services/StrongFB-http.service";
 import { StrongFBLayoutBuilder } from "./StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
-import { BehaviorSubject } from 'rxjs'
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { NotifyMode } from "./StrongFB-types";
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs'
+
+import { NotifyCssAnimationStyle, NotifyMode } from "./StrongFB-types";
 import { StrongFBFormOptions } from "./StrongFB-interfaces";
 import { StrongFBService } from "../services/StrongFB.service";
 import { StrongFBLocaleService } from "../services/StrongFB-locale.service";
@@ -17,7 +17,7 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
     private _formFieldValuesUpdated$ = new BehaviorSubject<boolean>(true);
     private _options: StrongFBFormOptions;
     private _service: StrongFBService;
-
+    protected destroy$ = new Subject<boolean>();
 
     public defaultLocaleNamespace: CUSTOM_LOCALES;
 
@@ -54,17 +54,48 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         return this._formFieldValues as any;
     }
 
-    notify(text: string, mode: NotifyMode = 'info', timeout = 3000, cssAnimationStyle: 'fade' | 'zoom' | 'from-right' | 'from-top' | 'from-bottom' | 'from-left' = 'fade') {
-        let options = {
-            rtl: this._options.rtl,
+    notify(text: string, mode: NotifyMode = 'info', timeout = 3000, cssAnimationStyle: NotifyCssAnimationStyle = 'fade') {
+        this.service.notify({
+            mode,
+            text,
             timeout,
-            clickToClose: true,
             cssAnimationStyle,
-        };
-        if (this._options.fontFamily) {
-            options['fontFamily'] = this._options.fontFamily;
-        }
-        Notify[mode](text, options);
+        });
+    }
+
+    async confirm(title: string, text: string): Promise<boolean> {
+        return new Promise((res) => {
+            this.service.confirm({
+                title,
+                text,
+                type: 'confirm',
+                cssAnimationStyle: 'fade',
+                okButtonCallback: () => {
+                    res(true);
+                },
+                cancelButtonCallback: () => {
+                    res(false);
+                }
+            });
+        });
+    }
+
+    async prompt(title: string, text: string, defaultValue?: string): Promise<string> {
+        return new Promise((res) => {
+            this.service.confirm({
+                title,
+                text,
+                type: 'prompt',
+                inputPlaceholder: defaultValue,
+                cssAnimationStyle: 'fade',
+                okButtonCallback: (value) => {
+                    res(value);
+                },
+                cancelButtonCallback: (value) => {
+                    res(value);
+                }
+            });
+        });
     }
 
     /**

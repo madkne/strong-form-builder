@@ -2,12 +2,12 @@
 
 <!-- ![logo](_media/icon.svg) -->
 
-# Strong Form Builder <small>0.6</small>
+# Strong Form Builder <small>0.7</small>
 
-> A nice form builder for angular projects
+> A nice and strong form builder for angular projects
 
 - Simple and lightweight
-- implement al need widgets
+- implement all need widgets
 - Supports multiple UI frameworks
 
 [Installation](/installation.md)

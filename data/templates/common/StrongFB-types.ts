@@ -51,6 +51,11 @@ export type LocaleCalendar = 'jalali' | 'gregorian' | 'auto';
 export type LocaleNamespace = 'units' | 'common' | 'info';
 
 export type CustomLocales = { [k in AvailableLanguage]?: { [k1: string]: { [k2: string]: string } } };
+
+
+export type NotifyCssAnimationStyle = 'fade' | 'zoom' | 'from-right' | 'from-top' | 'from-bottom' | 'from-left';
+
+
 /**************************** */
 /*********CONSTANTS********** */
 /**************************** */

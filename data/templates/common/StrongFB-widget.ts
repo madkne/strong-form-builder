@@ -77,8 +77,13 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
 
     // =>Called once, before the instance is destroyed.
     ngOnDestroy(): void {
+        this.onDestroy();
         this.destroy$.next(true);
         this.destroy$.complete();
+    }
+    /******************************************* */
+    onDestroy() {
+        //TODO: fill by child
     }
     /******************************************* */
     async loadDynamicWidgets(container: ViewContainerRef, widgetsSchema: {

@@ -1,4 +1,4 @@
-# Strong Form Builder (StrongFB) - **v0.6**
+# Strong Form Builder (StrongFB) - **v0.7**
 
 StrongFB is a form builder for angular projects that use top ui frameworks widgets like **nebular**.
 

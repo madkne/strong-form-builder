@@ -233,6 +233,25 @@ export class StrongFBHttpService {
         });
     }
     /************************************************** */
+
+    async put(path: string, body?: object) {
+        return this.sendPromise({
+            method: 'PUT',
+            path,
+            body: body,
+        });
+    }
+    /************************************************** */
+
+    async delete(path: string, params?: object, noAuth = false) {
+        return this.sendPromise({
+            method: 'DELETE',
+            path,
+            params: params as any,
+            noAuth,
+        });
+    }
+    /************************************************** */
     async refreshToken(): Promise<boolean> {
         return new Promise(async (res) => {
             // =>check last refresh token (less than 30 seconds)
