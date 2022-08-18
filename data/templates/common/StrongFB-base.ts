@@ -6,8 +6,9 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { NotifyMode } from "./StrongFB-types";
 import { StrongFBFormOptions } from "./StrongFB-interfaces";
 import { StrongFBService } from "../services/StrongFB.service";
+import { StrongFBLocaleService } from "../services/StrongFB-locale.service";
 
-export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS extends object = object, INIT_FIELDS extends object = FORM_FIELDS> {
+export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS extends object = object, INIT_FIELDS extends object = FORM_FIELDS, CUSTOM_LOCALES extends string = string> {
     private _callOnInit = false;
     private _usedWidgets: { [k in WIDGET]?: StrongFBBaseWidgetHeader } = {};
     private _usedWidgetComponents: { [k in WIDGET]?: any } = {};
@@ -16,6 +17,9 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
     private _formFieldValuesUpdated$ = new BehaviorSubject<boolean>(true);
     private _options: StrongFBFormOptions;
     private _service: StrongFBService;
+
+
+    public defaultLocaleNamespace: CUSTOM_LOCALES;
 
     constructor(_http: StrongFBHttpService, _service: StrongFBService, _options: StrongFBFormOptions<INIT_FIELDS> = {
         rtl: false,
@@ -63,6 +67,17 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         Notify[mode](text, options);
     }
 
+    /**
+     * translate a word with custom locales
+     * must be override 'defaultLocaleNamespace'
+     * @param key 
+     * @param params 
+     */
+    __(key: string, params?: object) {
+        if (!this.defaultLocaleNamespace) return key;
+        return this.locale.__(this.defaultLocaleNamespace, key, params);
+    }
+
     get layout(): StrongFBLayoutBuilder {
         return this.layoutBuilder();
     }
@@ -74,6 +89,11 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
     get http(): StrongFBHttpService {
         return this._http;
     }
+
+    get locale(): StrongFBLocaleService<CUSTOM_LOCALES> {
+        return this.service.locale();
+    }
+
     get service(): StrongFBService {
         return this._service;
     }

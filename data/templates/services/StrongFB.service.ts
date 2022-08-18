@@ -60,7 +60,14 @@ export class StrongFBService {
             getRefreshTokenApi: options.getRefreshTokenApi,
         });
         // =>set locale options
-        this._locale.setLang(options.language);
+        if (!this._locale.getLocalStorageLang()) {
+            this._locale.setLang(options.language);
+        }
+        if (options.customLocales) {
+            this._locale.setConfigs({
+                customLocales: options.customLocales,
+            })
+        }
         // =>set service options
         this._viewContainerRef = options.viewContainerRef;
 

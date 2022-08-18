@@ -6,6 +6,7 @@
     * [Validators](/concepts/validators.md)
     * [Directory Structure](/concepts/structure.md)
     * [Configuration](/concepts/configs.md)
+    * [Localization](/concepts/locales.md)
 * [Command Line](/cli/cli.md)
 * [Widgets](/widgets/widgets.md)
     - [Table](/widgets/table.md)
