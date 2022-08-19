@@ -29,6 +29,9 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
     }
 
     async normalizeSchema(schema: FormFieldSchema) {
+        if (this.schema.validator && !this.schema.validator['_widgetForm']) {
+            this.schema.validator['_widgetForm'] = this.widgetForm;
+        }
         if (!schema.size) schema.size = 'medium';
         // =>if no any fields, load fallback
         if (!schema.field) {
@@ -42,6 +45,7 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
         if (this.schema.field) {
             schema.__suffixButtonWidget = await (() => this.schema.suffixButton).call(this.widgetForm);
         }
+
 
         return schema;
     }
@@ -77,7 +81,7 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
         // =>check validators with value
         let widget = this.formFieldInstance[0].instance;
         if (this.schema.validator) {
-            let res = await this.schema.validator.checkValidators(event);
+            let res = await this.schema.validator.checkValidators(event, this.widgetForm);
             if (res.isValid) {
                 this.errorMessage = undefined;
                 // =>set success status

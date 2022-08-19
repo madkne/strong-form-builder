@@ -8,7 +8,7 @@ export class StrongFBValidator {
 
     private _schema: StrongFBValidatorSchema[] = [];
 
-    private _widgetForm: StrongFBFormClass;
+    protected _widgetForm: StrongFBFormClass;
 
     constructor(form?: StrongFBFormClass) {
         this._widgetForm = form;
@@ -21,7 +21,7 @@ export class StrongFBValidator {
     required(error?: string) {
         this._schema.push({
             name: 'required',
-            error: error || this.defaultErrorMessages.required,
+            error: error,
         });
         return this;
     }
@@ -29,7 +29,7 @@ export class StrongFBValidator {
     number(error?: string) {
         this._schema.push({
             name: 'number',
-            error: error || this.defaultErrorMessages.number,
+            error: error,
         });
         return this;
     }
@@ -38,7 +38,7 @@ export class StrongFBValidator {
         this._schema.push({
             name: 'maxLength',
             value: len,
-            error: error || this.defaultErrorMessages.maxLength,
+            error: error,
         });
         return this;
     }
@@ -46,14 +46,14 @@ export class StrongFBValidator {
         this._schema.push({
             name: 'minLength',
             value: len,
-            error: error || this.defaultErrorMessages.minLength,
+            error: error,
         });
         return this;
     }
     email(error?: string) {
         this._schema.push({
             name: 'email',
-            error: error || this.defaultErrorMessages.email,
+            error: error,
         });
         return this;
     }
@@ -61,7 +61,7 @@ export class StrongFBValidator {
         this._schema.push({
             name: 'acceptPattern',
             value: pattern,
-            error: error || this.defaultErrorMessages.acceptPattern,
+            error,
         });
         return this;
     }
@@ -69,7 +69,7 @@ export class StrongFBValidator {
         this._schema.push({
             name: 'rejectPattern',
             value: pattern,
-            error: error || this.defaultErrorMessages.rejectPattern,
+            error: error,
         });
         return this;
     }
@@ -77,7 +77,7 @@ export class StrongFBValidator {
         this._schema.push({
             name: 'min',
             value: len,
-            error: error || this.defaultErrorMessages.min,
+            error: error,
         });
         return this;
     }
@@ -85,7 +85,7 @@ export class StrongFBValidator {
         this._schema.push({
             name: 'max',
             value: len,
-            error: error || this.defaultErrorMessages.max,
+            error: error,
         });
         return this;
     }
@@ -94,7 +94,7 @@ export class StrongFBValidator {
         this._schema.push({
             name: 'custom',
             value: validatorFunction,
-            error: error || this.defaultErrorMessages.custom,
+            error: error,
         });
         return this;
     }
@@ -154,8 +154,11 @@ export class StrongFBValidator {
     }
 
 
-    get defaultErrorMessages() {
-        return {
+    protected getErrorMessages(type: StrongFBValidatorName) {
+        let customError = this._schema.find(i => i.name === type)?.error;
+        if (customError) return customError;
+
+        let messages = {
             email: 'bad email format',
             acceptPattern: 'invalid input',
             rejectPattern: 'invalid input',
@@ -167,53 +170,58 @@ export class StrongFBValidator {
             number: 'number field',
             custom: 'field value is invalid'
         } as { [k in StrongFBValidatorName]: string };
+
+
+        return this._widgetForm?.locale?.trans('msgs', messages[type]) ?? messages[type];
     }
 
-    async checkValidators(value: string | number): Promise<{ isValid: boolean; error?: string }> {
+    async checkValidators(value: string | number, form?: any): Promise<{ isValid: boolean; error?: string }> {
+        // if (form) this._widgetForm = form;
+
         // =>required validation
         if (this._schema.find(i => i.name === 'required') && !this.validateRequired(value)) {
-            return { isValid: false, error: this._schema.find(i => i.name === 'required').error };
+            return { isValid: false, error: this.getErrorMessages('required') };
         }
         // =>number validation
         if (this._schema.find(i => i.name === 'number') && !this.validateNumber(String(value))) {
-            return { isValid: false, error: this._schema.find(i => i.name === 'number').error };
+            return { isValid: false, error: this.getErrorMessages('number') };
         }
         // =>custom validation
         if (this._schema.find(i => i.name === 'custom') && !this.validateCustom(this._schema.find(i => i.name === 'custom').value, value)) {
-            return { isValid: false, error: this._schema.find(i => i.name === 'custom').error };
+            return { isValid: false, error: this.getErrorMessages('custom') };
         }
         if (typeof value === 'string') {
             // =>email validation
             if (this._schema.find(i => i.name === 'email') && !this.validateEmail(value)) {
-                return { isValid: false, error: this._schema.find(i => i.name === 'email').error };
+                return { isValid: false, error: this.getErrorMessages('email') };
             }
             // =>maxLength validation
             if (this._schema.find(i => i.name === 'maxLength') && !this.validateMaxLength(this._schema.find(i => i.name === 'maxLength').value, value)) {
-                return { isValid: false, error: this._schema.find(i => i.name === 'maxLength').error };
+                return { isValid: false, error: this.getErrorMessages('maxLength') };
             }
             // =>minLength validation
             if (this._schema.find(i => i.name === 'minLength') && !this.validateMinLength(this._schema.find(i => i.name === 'minLength').value, value)) {
-                return { isValid: false, error: this._schema.find(i => i.name === 'minLength').error };
+                return { isValid: false, error: this.getErrorMessages('minLength') };
             }
         }
         if (typeof value === 'number') {
             // =>max validation
             if (this._schema.find(i => i.name === 'max') && !this.validateMax(this._schema.find(i => i.name === 'max').value, value)) {
-                return { isValid: false, error: this._schema.find(i => i.name === 'max').error };
+                return { isValid: false, error: this.getErrorMessages('max') };
             }
             // =>min validation
             if (this._schema.find(i => i.name === 'min') && !this.validateMin(this._schema.find(i => i.name === 'min').value, value)) {
-                return { isValid: false, error: this._schema.find(i => i.name === 'min').error };
+                return { isValid: false, error: this.getErrorMessages('min') };
             }
         }
 
         // =>accept validation
         if (this._schema.find(i => i.name === 'acceptPattern') && !this.validateAcceptPattern(this._schema.find(i => i.name === 'acceptPattern').value, value)) {
-            return { isValid: false, error: this._schema.find(i => i.name === 'acceptPattern').error };
+            return { isValid: false, error: this.getErrorMessages('acceptPattern') };
         }
         // =>reject validation
         if (this._schema.find(i => i.name === 'rejectPattern') && !this.validateAcceptPattern(this._schema.find(i => i.name === 'rejectPattern').value, value)) {
-            return { isValid: false, error: this._schema.find(i => i.name === 'rejectPattern').error };
+            return { isValid: false, error: this.getErrorMessages('rejectPattern') };
         }
 
 

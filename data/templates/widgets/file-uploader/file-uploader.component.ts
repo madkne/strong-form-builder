@@ -3,6 +3,7 @@ import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { FileUploaderErrorKey, FileUploaderFileStruct, FileUploaderMessageKey, FileUploaderSchema } from './file-uploader-interfaces';
 import { interval, Observable, takeUntil } from 'rxjs';
 import { HttpEventType } from '@angular/common/http';
+import { StrongFBLocaleService } from '../../services/StrongFB-locale.service';
 
 @Component({
     selector: 'file-uploader-widget',
@@ -31,18 +32,22 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
     override schema: FileUploaderSchema;
 
     protected defaultErrors: { [k in FileUploaderErrorKey]?: string } = {
-        upload_max_size_limit: 'max file size limit is $1 (your file size is $2)',
-        upload_max_files_limit: 'max files limit is $1'
+        upload_max_size_limit: this.locale.trans('msgs', 'max file size limit is $1 (your file size is $2)'),
+        upload_max_files_limit: this.locale.trans('msgs', 'max files limit is $1'),
+        error_on_uploading: this.locale.trans('msgs', 'Error occurred while uploading file')
     };
 
     protected defaultMessages: { [k in FileUploaderMessageKey]?: string } = {
-        upload_complete: 'Upload Completed',
-        uploading: 'uploading ...',
-        starting: 'starting ...',
+        upload_complete: this.locale.trans('msgs', 'Upload Completed'),
+        uploading: this.locale.trans('msgs', 'uploading ...'),
+        starting: this.locale.trans('msgs', 'starting ...'),
     }
     /********************************** */
 
-    constructor(protected detectChanges: ChangeDetectorRef, protected elref: ElementRef) {
+    constructor(
+        protected detectChanges: ChangeDetectorRef,
+        protected elref: ElementRef,
+        public locale: StrongFBLocaleService) {
         super(elref);
     }
     /********************************** */
@@ -92,7 +97,7 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
 
 
             }, (error) => {
-                file.error = 'Error occurred while uploading file';
+                file.error = this.makeFileError('error_on_uploading');
                 this.errorEvent.emit(file);
             });
 
@@ -101,7 +106,7 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
     /********************************** */
 
     normalizeSchema(schema: FileUploaderSchema) {
-        if (!schema.placeholder) schema.placeholder = 'Upload files here...';
+        if (!schema.placeholder) schema.placeholder = this.locale.trans('msgs', 'Upload files here...');
         if (schema.multiple === undefined) schema.multiple = false;
         // if (!schema.status) schema.status = 'basic';
         if (!schema.maxFiles) schema.maxFiles = 1;
@@ -133,6 +138,7 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
         if (index < 0) return;
         this.removeFileEvent.emit(file);
         this.filePickerFiles.splice(index, 1);
+        this.schema.value = undefined;
         this.detectChanges.detectChanges();
         this.fileUploaderChange(this.filePickerFiles.map(i => i.file));
     }
@@ -169,7 +175,7 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
             let error;
             // =>check max file size
             if (file.size > this.schema.maxSize) {
-                error = this.makeFileError('upload_max_size_limit', [this.convertBytesToHumanly(this.schema.maxSize), this.convertBytesToHumanly(file.size)]);
+                error = this.makeFileError('upload_max_size_limit', [this.locale.humanlySize(this.schema.maxSize), this.locale.humanlySize(file.size)]);
 
             }
             // =>check max files
@@ -197,6 +203,7 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
                 status: error ? 'failed' : 'start',
                 color: error ? 'danger' : 'basic', //'#c44e47' : '#595e68',
                 progress: 0,
+                imageSrc: file.type.startsWith('image/') ? URL.createObjectURL(file) : undefined,
             });
             this.addFileEvent.emit(this.filePickerFiles[this.filePickerFiles.length - 1]);
             // =>in not any error
@@ -230,14 +237,5 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
         return message;
     }
     /********************************** */
-    convertBytesToHumanly(bytes: number, units = ['Bytes', 'KB', 'MB', 'GB', 'TB']) {
-        let size = bytes.toString();
-        // tslint:disable-next-line: prefer-for-of
-        for (let i = 0; i < units.length; i++) {
-            if (bytes < 1000) { return size + ' ' + units[i]; }
-            bytes /= 1000;
-            size = bytes.toFixed(1);
-        }
-        return size + ' ' + units[units.length - 1];
-    }
+
 }

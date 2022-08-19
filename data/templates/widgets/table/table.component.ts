@@ -35,6 +35,7 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
     }
 
     async loadRows() {
+        this.displayLoading(true);
         this.simpleRows = [];
         this.displayRows = [];
         // =>load rows by api
@@ -62,6 +63,8 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
         }
         // =>load rows by local
         //TODO:
+        this.displayLoading(false);
+
     }
 
 

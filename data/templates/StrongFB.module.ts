@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { SanitizerUrlPipe } from "./pipes/SanitizerUrlPipe.pipe";
 
 import { StrongFBSharedModule } from "./StrongFB-shared.module";
 import { StrongFBButtonWidgetComponent } from "./widgets/button/button.component";
@@ -35,6 +36,7 @@ import { StrongFBToggleWidgetComponent } from "./widgets/toggle/toggle.component
         StrongFBRadioBoxWidgetComponent,
         StrongFBFileUploaderWidgetComponent,
         StrongFBToggleWidgetComponent,
+        SanitizerUrlPipe,
     ],
     imports: [
         StrongFBSharedModule,

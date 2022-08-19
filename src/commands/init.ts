@@ -76,6 +76,8 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
         await copyDirectory(path.join(this.templatesPath, 'services'), path.join(this.sourceAppStrongFBPath, 'services'));
         // =>copy locales file
         await copyDirectory(path.join(this.templatesPath, 'locales'), path.join(this.sourceAppStrongFBPath, 'locales'));
+        // =>copy pipes file
+        await copyDirectory(path.join(this.templatesPath, 'pipes'), path.join(this.sourceAppStrongFBPath, 'pipes'));
         // =>copy widgets file
         await this.copyWidgetsTemplates();
         // =>copy shared module by ui framework

@@ -1,3 +1,4 @@
+import { BehaviorSubject } from "rxjs";
 
 
 export class StrongFBBaseWidgetHeader<SCHEMA extends object = object, WIDGET_NAME extends string = string> {
@@ -9,6 +10,8 @@ export class StrongFBBaseWidgetHeader<SCHEMA extends object = object, WIDGET_NAM
     protected _name: string;
 
     protected _commonStyles: object = {};
+
+    protected _isLoading = new BehaviorSubject<boolean>(undefined);
 
     get schema() {
         return this._schema;
@@ -24,6 +27,11 @@ export class StrongFBBaseWidgetHeader<SCHEMA extends object = object, WIDGET_NAM
 
     name(name: WIDGET_NAME) {
         this._name = name;
+        return this;
+    }
+
+    loading(is = true) {
+        this._isLoading.next(is);
         return this;
     }
 

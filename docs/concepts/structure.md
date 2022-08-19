@@ -12,7 +12,9 @@
                 - en/
                     - info.ts
                     - units.ts
-                ...
+                - ...
+            - pipes/
+                - SanitizerUrlPipe.pipe.ts
             - widgets/
                 - input/
                     - input.component.html

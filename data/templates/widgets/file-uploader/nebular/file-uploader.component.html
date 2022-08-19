@@ -1,15 +1,3 @@
-<!-- <ng-container *ngIf="schema">
-    <nb-select [size]="schema.size" [shape]="schema.shape" [status]="schema.status" [id]="widgetId"
-        [disabled]="schema.disabled ? schema.disabled : undefined" [fullWidth]="schema.fullWidth ? true : undefined"
-        [hero]="schema.appearance === 'colorful'" [outline]="schema.appearance === 'outline'"
-        [placeholder]="schema.placeholder" [(selected)]="schema.value" (selectedChange)="changeEvent($event)">
-        <nb-option *ngFor="let opt of options" [value]="opt.value">{{opt.text}}</nb-option>
-    </nb-select>
-
-
-</ng-container> -->
-
-
 <div class="file-picker-root" *ngIf="schema">
     <div class="file-picker-drop-label">
         <input [id]="widgetId" class="file-picker-browser" [placeholder]="schema.placeholder" type="file"
@@ -23,10 +11,13 @@
             <div class="file-picker-list">
                 <nb-card [status]="file.color" *ngFor="let file of filePickerFiles" class="file-picker-file">
                     <nb-card-body>
-                        <div class="file-picker-file-content">
+                        <div class="file-picker-file-content" [ngStyle]="{'direction': locale.direction.getValue()}">
+                            <div class="preview">
+                                <img *ngIf="file.imageSrc" [src]="file.imageSrc | sanitizerUrl">
+                            </div>
                             <div class="title">
                                 <div class="t1">{{ file.name }}</div>
-                                <span>{{ convertBytesToHumanly(file.size) }}</span>
+                                <span>{{ locale.humanlySize(file.size) }}</span>
                             </div>
                             <div *ngIf="schema.server" class="status">
                                 <!-- error -->

@@ -30,6 +30,7 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
     layoutLoaded = false;
 
     override async onInit() {
+
         if (!this.layout || this.layoutLoaded) return;
         this.layoutLoaded = true;
         this.layout['_update$'].pipe(takeUntil(this.destroy$)).subscribe(it => {
@@ -41,6 +42,8 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
             if (!it) return;
             this.updateLayout();
         });
+
+
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -51,13 +54,15 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
         }
     }
 
-    updateLayout() {
+    async updateLayout() {
+        this.displayLoading();
         // console.log('layout:', this.layout);
         this.layoutSchema = this.layout.schema;
         // =>load widgets, if exist
         if ((this.layoutSchema.widgets && this.layoutSchema.widgets.length > 0) || (this.layoutSchema.widgetHeaders && this.layoutSchema.widgetHeaders.length > 0)) {
-            this.loadWidgets();
+            await this.loadWidgets();
         }
+        this.displayLoading(false);
     }
 
 
@@ -70,7 +75,7 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
             await this.loadDynamicWidgets(this.WidgetsSection, { widgets: this.layoutSchema.widgets, widgetHeaders: this.layoutSchema.widgetHeaders }, this.form);
 
             clearInterval(setContainerInterval);
-        }, 100);
+        }, 10);
         // this.viewContainerRef.createComponent()
     }
 

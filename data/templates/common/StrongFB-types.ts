@@ -48,7 +48,7 @@ export type Direction = 'rtl' | 'ltr';
 
 export type LocaleCalendar = 'jalali' | 'gregorian' | 'auto';
 
-export type LocaleNamespace = 'units' | 'common' | 'info';
+export type LocaleNamespace = 'units' | 'common' | 'info' | 'msgs';
 
 export type CustomLocales = { [k in AvailableLanguage]?: { [k1: string]: { [k2: string]: string } } };
 

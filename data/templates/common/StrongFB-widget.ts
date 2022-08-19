@@ -27,20 +27,17 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
     constructor(protected elRef: ElementRef) {
         this._widgetId = 'strong_fb_widget_' + new Date().getTime() + '_' + Math.ceil(Math.random() * 10000);
         // =>add loading
-        if (this.showLoading) {
-            let componentLoading = setInterval(() => {
-                if (this.viewInit$.getValue()) {
-                    clearInterval(componentLoading);
-                    return;
-                }
-                if (!this.elRef) return;
-                this.displayComponentLoading = true;
-                this.elRef.nativeElement.id = this._widgetId;
-                Block.dots([this.elRef.nativeElement]);
-                console.log('loading on:', this.elRef.nativeElement)
-                clearInterval(componentLoading);
-            }, 1);
-        }
+        // if (this.showLoading) {
+        //     let componentLoading = setInterval(() => {
+        //         if (this.viewInit$.getValue()) {
+        //             clearInterval(componentLoading);
+        //             return;
+        //         }
+        //         this.displayLoading(true);
+        //         // console.log('loading on:', this.elRef.nativeElement)
+        //         clearInterval(componentLoading);
+        //     }, 1);
+        // }
     }
 
     get widgetId() {
@@ -53,15 +50,39 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
     ngOnInit(): void {
         //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
         //Add 'implements OnInit' to the class.
-
+        // =>listen on loading
+        let widgetComponentLoading = setInterval(() => {
+            if (!this.widgetHeader || !this.widgetHeader['_isLoading']) return;
+            this.widgetHeader['_isLoading'].pipe(takeUntil(this.destroy$)).subscribe(it => {
+                if (it === undefined) return;
+                this.displayLoading(it);
+            });
+            clearInterval(widgetComponentLoading);
+        }, 10);
 
 
         this.onInit();
     }
     /******************************************* */
+    protected displayLoading(is = true) {
+        try {
+            if (is) {
+                if (!this.elRef || !this.elRef.nativeElement) return;
+                this.displayComponentLoading = true;
+                this.elRef.nativeElement.id = this._widgetId;
+                if (!document.getElementById(this._widgetId)) return;
+                Block.circle([this.elRef.nativeElement]);
+            } else {
+                this.displayComponentLoading = false;
+                if (!document.getElementById(this._widgetId)) return;
+                Block.remove('#' + this._widgetId);
+            }
+        } catch (e) { }
+    }
+    /******************************************* */
 
     async onInit() {
-
+        //TODO: fill by child
     }
     /******************************************* */
     listenOnFormFieldChange(valueField: keyof SCHEMA) {
@@ -146,12 +167,11 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
     ngAfterViewInit(): void {
         this.viewInit$.next(true);
         // =>remove loading
-        if (this.showLoading && this.displayComponentLoading) {
-            console.log('after view init', this.elRef)
-            //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-            Block.remove('#' + this._widgetId);
-            // this.viewInit$.complete();
-        }
+        // if (this.showLoading && this.displayComponentLoading) {
+        //     console.log('after view init', this.elRef)
+        //     this.displayLoading(false);
+        //     // this.viewInit$.complete();
+        // }
         // Block.remove([this.elRef.nativeElement]);
         this.afterViewInit();
     }
