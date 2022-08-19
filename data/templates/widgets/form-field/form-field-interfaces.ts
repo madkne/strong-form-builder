@@ -1,3 +1,4 @@
+import { StrongFBValidatorName } from "../../common/StrongFB-types";
 import { StrongFBValidator } from "../../common/StrongFB-validator";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { ButtonSchema } from "../button/button-interfaces";
@@ -10,6 +11,7 @@ import { StrongFBSelectWidget } from "../select/select.header";
 import { StrongFBTagsListWidget } from "../tags-list/tags-list.header";
 import { StrongFBTextAreaWidget } from "../textarea/textarea.header";
 import { StrongFBToggleWidget } from "../toggle/toggle.header";
+import { StrongFBFormFieldWidget } from "./form-field.header";
 
 
 
@@ -25,6 +27,8 @@ export type FormFieldType =
     StrongFBFileUploaderWidget |
     StrongFBToggleWidget |
     StrongFBEditorWidget;
+
+export type FormFieldErrorCallback = (name: StrongFBValidatorName, value?: any, self?: StrongFBFormFieldWidget) => any;
 
 export interface FormFieldSchema {
 
@@ -70,5 +74,9 @@ export interface FormFieldSchema {
 
 
     __suffixButtonWidget?: StrongFBBaseWidgetHeader<ButtonSchema>;
+
+    formFieldErrorCallback?: FormFieldErrorCallback;
+
+    formFieldHasError?: StrongFBValidatorName;
 
 }

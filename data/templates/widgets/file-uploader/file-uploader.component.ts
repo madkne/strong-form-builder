@@ -12,7 +12,7 @@ import { StrongFBLocaleService } from '../../services/StrongFB-locale.service';
 })
 export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<FileUploaderSchema> {
 
-    @Output() ngModelChange = new EventEmitter<File[]>();
+    @Output() override ngModelChange = new EventEmitter<File[]>();
 
     @Output() addFileEvent = new EventEmitter<FileUploaderFileStruct>();
 
@@ -146,12 +146,8 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
     /********************************** */
     /********************************** */
     fileUploaderChange(event: File[]) {
-        // =>set value to form field
-        if (this.widgetHeader['_formFieldName']) {
-            this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = event;
-        }
-        // console.log('change:', event)
-        this.ngModelChange.emit(event);
+        this.schema._value = event;
+        this.updateFormField('_value');
     }
     /********************************** */
     fileBrowserChange(event: MouseEvent | any) {

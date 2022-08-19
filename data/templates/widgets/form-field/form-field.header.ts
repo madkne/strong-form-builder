@@ -1,9 +1,10 @@
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
+import { StrongFBValidatorName } from "../../common/StrongFB-types";
 import { StrongFBValidator } from "../../common/StrongFB-validator";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBButtonWidget } from "../button/button.header";
 import { StrongFBInputWidget } from "../input/input.header";
-import { FormFieldSchema, FormFieldSize, FormFieldType } from "./form-field-interfaces";
+import { FormFieldErrorCallback, FormFieldSchema, FormFieldSize, FormFieldType } from "./form-field-interfaces";
 import { StrongFBFormFieldWidgetComponent } from "./form-field.component";
 
 
@@ -11,6 +12,7 @@ import { StrongFBFormFieldWidgetComponent } from "./form-field.component";
 export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldSchema> {
 
     protected override _schema: FormFieldSchema = {};
+
 
     override get component(): any {
         return StrongFBFormFieldWidgetComponent;
@@ -55,5 +57,14 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
     //     this._schema.value = text as any;
     //     return this;
     // }
+
+    /**
+     * @param callback 
+     * @returns 
+     */
+    formFieldError(callback: FormFieldErrorCallback) {
+        this._schema.formFieldErrorCallback = callback;
+        return this;
+    }
 
 }

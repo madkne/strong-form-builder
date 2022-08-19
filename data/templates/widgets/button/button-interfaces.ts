@@ -45,6 +45,10 @@ export interface ButtonSchema {
     mode?: ButtonMode;
 
     tooltip?: string;
+    /**
+     * @default false
+     */
+    disabledForFormFields?: string[];
 
     /********************************* */
     /*************EVENTS************** */

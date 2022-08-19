@@ -101,6 +101,8 @@ export interface FileUploaderSchema {
     messages?: { [k in FileUploaderMessageKey]?: string };
 
 
+    _value?: File[];
+
 
 
     /********************************* */

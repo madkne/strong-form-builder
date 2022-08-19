@@ -62,6 +62,17 @@ export class StrongFBButtonWidget extends StrongFBBaseWidgetHeader {
         return this;
     }
 
+    /**
+     * 
+     * @param formFieldNames if not set, scan all  fields with form field name
+     * @returns 
+     */
+    disabledForFormFields<T extends string = string>(formFieldNames?: T[]) {
+        if (!formFieldNames) formFieldNames = ['*'] as any;
+        this._schema.disabledForFormFields = formFieldNames;
+        return this;
+    }
+
     /********************************* */
     /*************EVENTS************** */
     /********************************* */
@@ -69,6 +80,8 @@ export class StrongFBButtonWidget extends StrongFBBaseWidgetHeader {
         this._schema.click = click;
         return this;
     }
+
+
 
 
 

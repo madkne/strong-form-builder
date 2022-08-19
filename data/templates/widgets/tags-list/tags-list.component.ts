@@ -11,7 +11,7 @@ import { NbTagComponent, NbTagInputDirective } from '@nebular/theme';
 })
 export class StrongFBTagsListWidgetComponent extends StrongFBBaseWidget<TagsListSchema> {
 
-    @Output() ngModelChange = new EventEmitter<string[]>();
+    @Output() override ngModelChange = new EventEmitter<string[]>();
 
     @ViewChild(NbTagInputDirective, { read: ElementRef }) tagInput: ElementRef<HTMLInputElement>;
 
@@ -94,11 +94,7 @@ export class StrongFBTagsListWidgetComponent extends StrongFBBaseWidget<TagsList
     }
 
     changeValue() {
-        // =>set value to form field
-        if (this.widgetHeader['_formFieldName']) {
-            this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema.value;
-        }
-        this.ngModelChange.emit(this.schema.value);
+        this.updateFormField('value');
     }
 
     // changeEvent(event: string | string[]) {

@@ -1,7 +1,7 @@
 import { StrongFBFormClass } from "./StrongFB-base";
 import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
 import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
-import { AfterViewInit, Component, ElementRef, Inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewContainerRef } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewContainerRef } from "@angular/core";
 import { StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderWidgetFunction } from "./StrongFB-layout-builder-types";
 import { Block } from 'notiflix/build/notiflix-block-aio';
 import { SFB_info } from "./StrongFB-common";
@@ -21,6 +21,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
     protected viewInit$ = new BehaviorSubject<boolean>(false);
     protected displayComponentLoading = false;
 
+    @Output() ngModelChange = new EventEmitter<any>();
     public schema: SCHEMA;
 
     /******************************************* */
@@ -89,6 +90,10 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
         //TODO: fill by child
     }
     /******************************************* */
+    /**
+     * just for form fields
+     * @param valueField 
+     */
     listenOnFormFieldChange(valueField: keyof SCHEMA) {
         this.widgetForm['_formFieldValuesUpdated$'].pipe(takeUntil(this.destroy$)).subscribe(it => {
             if (!it) return;
@@ -97,6 +102,19 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
                 this.schema[valueField] = this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']];
             }
         })
+    }
+    /******************************************* */
+    /**
+    * just for form fields
+    * @param valueField 
+    */
+    updateFormField(valueField: keyof SCHEMA) {
+        // =>set value to form field
+        if (this.widgetHeader['_formFieldName']) {
+            this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema[valueField];
+        }
+        this.ngModelChange.emit(this.schema[valueField]);
+        this.widgetForm['_formFieldValuesUpdated$'].next(true);
     }
     /******************************************* */
 

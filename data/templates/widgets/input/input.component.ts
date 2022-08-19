@@ -11,7 +11,7 @@ import { syncSchema } from './convertor';
 export class StrongFBInputWidgetComponent extends StrongFBBaseWidget<InputSchema> {
 
     override schema: InputSchema;
-    @Output() ngModelChange = new EventEmitter<string | number>();
+    @Output() override ngModelChange = new EventEmitter<string | number>();
 
 
     override async onInit() {
@@ -36,11 +36,7 @@ export class StrongFBInputWidgetComponent extends StrongFBBaseWidget<InputSchema
     }
 
     changeValue(event) {
-        // =>set value to form field
-        if (this.widgetHeader['_formFieldName']) {
-            this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema.value;
-        }
-        this.ngModelChange.emit(this.schema.value);
+        this.updateFormField('value');
     }
 
     keyupEvent(event: KeyboardEvent) {

@@ -9,7 +9,7 @@ import { ToggleSchema } from './toggle-interfaces';
 export class StrongFBToggleWidgetComponent extends StrongFBBaseWidget<ToggleSchema> {
 
     override schema: ToggleSchema;
-    @Output() ngModelChange = new EventEmitter<boolean>();
+    @Output() override ngModelChange = new EventEmitter<boolean>();
 
 
     override async onInit() {
@@ -29,10 +29,6 @@ export class StrongFBToggleWidgetComponent extends StrongFBBaseWidget<ToggleSche
     }
 
     changeValue(event) {
-        // =>set value to form field
-        if (this.widgetHeader['_formFieldName']) {
-            this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema.value;
-        }
-        this.ngModelChange.emit(this.schema.value);
+        this.updateFormField('value');
     }
 }

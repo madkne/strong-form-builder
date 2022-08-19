@@ -10,7 +10,7 @@ import { TextAreaSchema } from './textarea-interfaces';
 export class StrongFBTextAreaWidgetComponent extends StrongFBBaseWidget<TextAreaSchema> {
 
     override schema: TextAreaSchema;
-    @Output() ngModelChange = new EventEmitter<string | number>();
+    @Output() override ngModelChange = new EventEmitter<string>();
 
 
     override async onInit() {
@@ -36,10 +36,6 @@ export class StrongFBTextAreaWidgetComponent extends StrongFBBaseWidget<TextArea
     }
 
     changeValue(event) {
-        // =>set value to form field
-        if (this.widgetHeader['_formFieldName']) {
-            this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema.value;
-        }
-        this.ngModelChange.emit(this.schema.value);
+        this.updateFormField('value');
     }
 }

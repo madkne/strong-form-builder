@@ -54,7 +54,13 @@ export interface StrongFBValidatorSchema {
     name: StrongFBValidatorName;
     value?: any;
     error?: string;
-    hint?: string;
+    // hint?: string;
+}
+
+export interface StrongFBCheckValidatorsResponse {
+    isValid: boolean;
+    error?: string;
+    name?: StrongFBValidatorName;
 }
 
 export type StrongFBCustomValidatorFunctionType = (value: string | number) => Promise<boolean> | boolean;

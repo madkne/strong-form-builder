@@ -1,5 +1,5 @@
 import { StrongFBFormClass } from "./StrongFB-base";
-import { StrongFBCustomValidatorFunctionType, StrongFBValidatorSchema } from "./StrongFB-interfaces";
+import { StrongFBCheckValidatorsResponse, StrongFBCustomValidatorFunctionType, StrongFBValidatorSchema } from "./StrongFB-interfaces";
 import { StrongFBValidatorName } from "./StrongFB-types";
 
 
@@ -175,53 +175,53 @@ export class StrongFBValidator {
         return this._widgetForm?.locale?.trans('msgs', messages[type]) ?? messages[type];
     }
 
-    async checkValidators(value: string | number, form?: any): Promise<{ isValid: boolean; error?: string }> {
+    async checkValidators(value: string | number, form?: any): Promise<StrongFBCheckValidatorsResponse> {
         // if (form) this._widgetForm = form;
 
         // =>required validation
         if (this._schema.find(i => i.name === 'required') && !this.validateRequired(value)) {
-            return { isValid: false, error: this.getErrorMessages('required') };
+            return { isValid: false, error: this.getErrorMessages('required'), name: 'required' };
         }
         // =>number validation
         if (this._schema.find(i => i.name === 'number') && !this.validateNumber(String(value))) {
-            return { isValid: false, error: this.getErrorMessages('number') };
+            return { isValid: false, error: this.getErrorMessages('number'), name: 'number' };
         }
         // =>custom validation
         if (this._schema.find(i => i.name === 'custom') && !this.validateCustom(this._schema.find(i => i.name === 'custom').value, value)) {
-            return { isValid: false, error: this.getErrorMessages('custom') };
+            return { isValid: false, error: this.getErrorMessages('custom'), name: 'custom' };
         }
         if (typeof value === 'string') {
             // =>email validation
             if (this._schema.find(i => i.name === 'email') && !this.validateEmail(value)) {
-                return { isValid: false, error: this.getErrorMessages('email') };
+                return { isValid: false, error: this.getErrorMessages('email'), name: 'email' };
             }
             // =>maxLength validation
             if (this._schema.find(i => i.name === 'maxLength') && !this.validateMaxLength(this._schema.find(i => i.name === 'maxLength').value, value)) {
-                return { isValid: false, error: this.getErrorMessages('maxLength') };
+                return { isValid: false, error: this.getErrorMessages('maxLength'), name: 'maxLength' };
             }
             // =>minLength validation
             if (this._schema.find(i => i.name === 'minLength') && !this.validateMinLength(this._schema.find(i => i.name === 'minLength').value, value)) {
-                return { isValid: false, error: this.getErrorMessages('minLength') };
+                return { isValid: false, error: this.getErrorMessages('minLength'), name: 'minLength' };
             }
         }
         if (typeof value === 'number') {
             // =>max validation
             if (this._schema.find(i => i.name === 'max') && !this.validateMax(this._schema.find(i => i.name === 'max').value, value)) {
-                return { isValid: false, error: this.getErrorMessages('max') };
+                return { isValid: false, error: this.getErrorMessages('max'), name: 'max' };
             }
             // =>min validation
             if (this._schema.find(i => i.name === 'min') && !this.validateMin(this._schema.find(i => i.name === 'min').value, value)) {
-                return { isValid: false, error: this.getErrorMessages('min') };
+                return { isValid: false, error: this.getErrorMessages('min'), name: 'min' };
             }
         }
 
         // =>accept validation
         if (this._schema.find(i => i.name === 'acceptPattern') && !this.validateAcceptPattern(this._schema.find(i => i.name === 'acceptPattern').value, value)) {
-            return { isValid: false, error: this.getErrorMessages('acceptPattern') };
+            return { isValid: false, error: this.getErrorMessages('acceptPattern'), name: 'acceptPattern' };
         }
         // =>reject validation
         if (this._schema.find(i => i.name === 'rejectPattern') && !this.validateAcceptPattern(this._schema.find(i => i.name === 'rejectPattern').value, value)) {
-            return { isValid: false, error: this.getErrorMessages('rejectPattern') };
+            return { isValid: false, error: this.getErrorMessages('rejectPattern'), name: 'rejectPattern' };
         }
 
 

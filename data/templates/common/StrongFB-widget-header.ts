@@ -51,4 +51,5 @@ export class StrongFBBaseWidgetHeader<SCHEMA extends object = object, WIDGET_NAM
 
         return this;
     }
+
 }

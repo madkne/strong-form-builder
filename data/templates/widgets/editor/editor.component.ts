@@ -16,7 +16,7 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
     editorId: string;
     editor;
     override schema: EditorSchema;
-    @Output() ngModelChange = new EventEmitter<string | number>();
+    @Output() override ngModelChange = new EventEmitter<string | number>();
 
     constructor(
         protected override elRef: ElementRef,
@@ -114,10 +114,6 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
         } else if (this.schema.type === 'wysiwyg') {
             this.schema.value = this.editor.getHTML();
         }
-        // =>set value to form field
-        if (this.widgetHeader['_formFieldName']) {
-            this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema.value;
-        }
-        this.ngModelChange.emit(this.schema.value);
+        this.updateFormField('value');
     }
 }

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ComponentRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { SFB_warn } from '../../common/StrongFB-common';
+import { StrongFBValidatorName } from '../../common/StrongFB-types';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
 import { StrongFBInputWidget } from '../input/input.header';
@@ -65,6 +66,13 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
             this.fieldIsLoaded = true;
             // =>listen on ngModelChange
             this.formFieldInstance[0].instance['ngModelChange'].pipe(takeUntil(this.destroy$)).subscribe(it => this.changeFormFieldValue(it));
+            // =>if field is required
+            //FIXME: may be set default value on field nad must be check it!
+            if (this.schema.validator && this.schema.validator.schema.find(i => i.name === 'required') && !this.schema.formFieldHasError) {
+                this.formFieldError('required', undefined);
+                this.widgetForm['_formFieldValuesUpdated$'].next(true);
+            }
+
             clearInterval(setContainerInterval);
         }, 100);
 
@@ -80,6 +88,7 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
         // console.log('change value:', event);
         // =>check validators with value
         let widget = this.formFieldInstance[0].instance;
+        this.schema.formFieldHasError = undefined;
         if (this.schema.validator) {
             let res = await this.schema.validator.checkValidators(event, this.widgetForm);
             if (res.isValid) {
@@ -87,17 +96,30 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
                 // =>set success status
                 widget.schema['status'] = 'success';
             } else {
-                this.errorMessage = res.error;
+                this.formFieldError(res.name, event, res.error);
                 // =>reset value in form field
                 if (widget.widgetHeader['_formFieldName']) {
                     widget.widgetForm['_formFieldValues'][widget.widgetHeader['_formFieldName']] = undefined;
                 }
+
                 // =>reset value of widget
                 widget.schema['value'] = undefined;
                 // =>set danger status
                 widget.schema['status'] = 'danger';
 
             }
+        }
+    }
+
+    formFieldError(name: StrongFBValidatorName, value: any, error?: string) {
+        this.schema.formFieldHasError = name;
+        this.widgetHeader['_schema']['formFieldHasError'] = name;
+        if (error) {
+            this.errorMessage = error;
+        }
+        // =>raise form field error
+        if (this.schema.formFieldErrorCallback) {
+            this.schema.formFieldErrorCallback.call(this.widgetForm, name, value, this.widgetHeader);
         }
     }
 }
