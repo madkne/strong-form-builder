@@ -8,6 +8,7 @@ import { StrongFBSharedModule } from "./StrongFB-shared.module";
 import { StrongFBButtonWidgetComponent } from "./widgets/button/button.component";
 import { StrongFBCardWidgetComponent } from "./widgets/card/card.component";
 import { StrongFBDialogComponent } from "./widgets/dialog/dialog.component";
+import { StrongFBEditorWidgetComponent } from "./widgets/editor/editor.component";
 import { StrongFBFileUploaderWidgetComponent } from "./widgets/file-uploader/file-uploader.component";
 import { StrongFBFormFieldWidgetComponent } from "./widgets/form-field/form-field.component";
 import { StrongFBFormComponent } from "./widgets/form/form.component";
@@ -36,7 +37,9 @@ import { StrongFBToggleWidgetComponent } from "./widgets/toggle/toggle.component
         StrongFBRadioBoxWidgetComponent,
         StrongFBFileUploaderWidgetComponent,
         StrongFBToggleWidgetComponent,
+        StrongFBEditorWidgetComponent,
         SanitizerUrlPipe,
+
     ],
     imports: [
         StrongFBSharedModule,

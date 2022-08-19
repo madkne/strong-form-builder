@@ -3,7 +3,7 @@
 
 ## supported widgets
 
-|**#**|**Widget**|**Nebular supported**|**description**|**developers**
+|**#**|**Widget**|**Nebular supported**|**description**|**developers**|
 |---|:-------:|:----:|:-----------:|:-------:|
 |1|button|YES|-|madkne|
 |2|card|YES|-|madkne|
@@ -17,3 +17,4 @@
 |10|radio-box|YES|-|madkne|
 |11|file-uploader|YES|file browsing and uploading|madkne|
 |12|toggle|YES|-|rashidi|
+|13|editor|YES|html editor or markdown editor|madkne|

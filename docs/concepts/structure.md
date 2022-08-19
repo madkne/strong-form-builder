@@ -39,6 +39,7 @@
                 - ...
             - StrongFB-shared.module.ts
             - StrongFB.module.ts
+            - StrongFB-helpers.ts
         - ...
 - StrongFB-cli/
 

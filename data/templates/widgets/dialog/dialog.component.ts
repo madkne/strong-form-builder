@@ -6,6 +6,7 @@ import { StrongFBDialogAction } from '../../common/StrongFB-interfaces';
 import { StrongFBLayoutBuilder } from '../../common/StrongFB-layout-builder';
 import { StrongFBLayoutBuilderSchema } from '../../common/StrongFB-layout-builder-types';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
+import { StrongFBLocaleService } from '../../services/StrongFB-locale.service';
 import { StrongFBTransmitService } from '../../services/StrongFB-transmit.service';
 
 @Component({
@@ -32,7 +33,11 @@ export class StrongFBDialogComponent extends StrongFBBaseWidget {
     // protected override  showLoading = false;
     protected _dialogRef: NbDialogRef<StrongFBDialogComponent>;
 
-    constructor(protected override elRef: ElementRef, private dialogService: NbDialogService, private transmit: StrongFBTransmitService) {
+    constructor(
+        protected override elRef: ElementRef,
+        private dialogService: NbDialogService,
+        private transmit: StrongFBTransmitService,
+        private locale: StrongFBLocaleService) {
         super(elRef);
     }
 
@@ -71,7 +76,7 @@ export class StrongFBDialogComponent extends StrongFBBaseWidget {
             }
             // =>if is cancel
             if (act.isCancel) {
-                if (!act.text) act.text = 'cancel';
+                if (!act.text) act.text = this.locale.trans('common', 'cancel');
                 act.status = 'danger';
                 act.closable = true;
             }

@@ -46,4 +46,9 @@ export class StrongFBToggleWidget<FIELDS = { [k: string]: any }> extends StrongF
         this._formFieldName = name as any;
         return this;
     }
+
+    label(text: string) {
+        this._schema.label = text;
+        return this;
+    }
 }

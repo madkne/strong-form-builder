@@ -78,6 +78,9 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
         await copyDirectory(path.join(this.templatesPath, 'locales'), path.join(this.sourceAppStrongFBPath, 'locales'));
         // =>copy pipes file
         await copyDirectory(path.join(this.templatesPath, 'pipes'), path.join(this.sourceAppStrongFBPath, 'pipes'));
+        // =>copy assets file
+        fs.mkdirSync(path.join(this.source, 'src', 'assets', 'StrongFB'), { recursive: true });
+        await copyDirectory(path.join(this.templatesPath, 'assets'), path.join(this.source, 'src', 'assets', 'StrongFB'));
         // =>copy widgets file
         await this.copyWidgetsTemplates();
         // =>copy shared module by ui framework
@@ -162,7 +165,10 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
     }
     /********************************** */
     async addRequiredPackages() {
-        let packages = { 'notiflix': '^3.2.5' };
+        let packages = {
+            'notiflix': '^3.2.5',
+            // '@toast-ui/editor': '^3.1.1'
+        };
         let exists = true;
         // =>read package.json of project
         let projectPackageJson = JSON.parse(fs.readFileSync(path.join(this.source, 'package.json')).toString());

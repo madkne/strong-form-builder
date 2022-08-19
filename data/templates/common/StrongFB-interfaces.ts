@@ -96,4 +96,12 @@ export interface StrongFBConfigOptions {
      */
     language?: AvailableLanguage;
     customLocales?: CustomLocales;
+    /**
+     * @default '/assets/StrongFB'
+     */
+    assetsBaseUrl?: string;
+    /**
+     * @default false
+     */
+    darkTheme?: boolean;
 }

@@ -16,10 +16,14 @@ export interface ToggleSchema {
     /**
      * @default false
      */
-     checked?: boolean;
+    checked?: boolean;
     /**
      * @default false
      */
     disabled?: boolean;
+    /**
+     * @default false
+    */
     value?: boolean;
+    label?: string;
 }

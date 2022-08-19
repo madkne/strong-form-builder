@@ -21,6 +21,10 @@ getUrlParam<T = string>(key: string, def?: T)
 
 used for get query parameter by key from url.
 
+### `activeRoute` getter
+
+pass you an instance of `ActivatedRoute` class.
+
 ### `loadFromClass` method
 
 ```ts
@@ -63,6 +67,14 @@ return an instance of `StrongFBLocaleService` service.
 ### `loadScript` method
 
 used for load dynamically a script file.
+
+### `loadStyleLink` method
+
+used for load dynamically a css file.
+
+### `loadStyleBlock` method
+
+used for add dynamically css block codes.
 
 ### `notify` method
 

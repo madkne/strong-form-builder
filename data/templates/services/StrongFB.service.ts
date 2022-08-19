@@ -8,9 +8,10 @@ import { StrongFBDialogComponent } from '../widgets/dialog/dialog.component';
 import { StrongFBHttpService } from './StrongFB-http.service';
 import { StrongFBLocaleService } from './StrongFB-locale.service';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
+import { Confirm, IConfirmOptions } from 'notiflix/build/notiflix-confirm-aio';
 
 import { NotifyCssAnimationStyle, NotifyMode } from '../common/StrongFB-types';
+import { StrongFBHelper } from '../StrongFB-helpers';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +19,8 @@ import { NotifyCssAnimationStyle, NotifyMode } from '../common/StrongFB-types';
 export class StrongFBService {
     protected _viewContainerRef: ViewContainerRef;
     protected _scripts: { src: string; loaded?: boolean; }[] = [];
+    protected _assetsBaseUrl: string;
+    protected _darkTheme: boolean;
 
     protected defaultOptions: StrongFBConfigOptions = {
         localStorageTokenKey: 'access_token',
@@ -25,6 +28,7 @@ export class StrongFBService {
         apiEndPoint: 'http:localhost:8081/api',
         authenticationHeaderName: 'Authentication',
         loginUrl: '/login',
+        assetsBaseUrl: '/assets/StrongFB',
         getRefreshTokenApi: async (http: StrongFBHttpService) => {
             return {
                 access_token: '',
@@ -33,6 +37,7 @@ export class StrongFBService {
         },
         language: 'en',
         viewContainerRef: null,
+        darkTheme: false,
     }
     /********************************* */
 
@@ -75,13 +80,24 @@ export class StrongFBService {
         }
         // =>set service options
         this._viewContainerRef = options.viewContainerRef;
+        this._assetsBaseUrl = options.assetsBaseUrl;
+        this._darkTheme = options.darkTheme;
 
     }
     /********************************* */
+    assetsUrl(path: string) {
+        if (!this._assetsBaseUrl.endsWith('/')) this._assetsBaseUrl += '/';
+        return this._assetsBaseUrl + path;
+    }
+    /********************************* */
     getUrlParam<T = string>(key: string, def?: T) {
-        let value = this._activeRoute.snapshot.paramMap.get(key);
+        let value = this._activeRoute.snapshot.queryParamMap.get(key);
         if (value === undefined || value === null) return def;
         return value;
+    }
+    /********************************* */
+    get activeRoute() {
+        return this.activeRoute;
     }
     /********************************* */
 
@@ -103,7 +119,6 @@ export class StrongFBService {
         return formInstance;
     }
     /********************************* */
-
     goToPage(path: string) {
         return this._router.navigateByUrl(path);
     }
@@ -143,7 +158,7 @@ export class StrongFBService {
         return this._locale;
     }
     /********************************* */
-    loadScript(src: string) {
+    async loadScript(src: string) {
         return new Promise((resolve, reject) => {
             let scriptObject = this._scripts.find(i => i.src == src);
             if (!scriptObject) {
@@ -227,6 +242,14 @@ export class StrongFBService {
         if (!options.okButtonText) options.okButtonText = this.locale().trans('common', 'ok');
         if (!options.cancelButtonText) options.cancelButtonText = this.locale().trans('common', 'cancel');
 
+        // =>set confirm options
+        let confirmOptions: IConfirmOptions = {
+            rtl: options.rtl,
+            cssAnimationStyle: options.cssAnimationStyle as any,
+            backgroundColor: StrongFBHelper.notifyBackgroundColor(),
+            messageColor: StrongFBHelper.notifyTextColor(),
+            titleColor: StrongFBHelper.notifyTitleColor(),
+        }
         // =>show confirm
         if (options.type === 'confirm') {
             Confirm.show(
@@ -236,10 +259,7 @@ export class StrongFBService {
                 options.cancelButtonText,
                 options.okButtonCallback,
                 options.cancelButtonCallback,
-                {
-                    rtl: options.rtl,
-                    cssAnimationStyle: options.cssAnimationStyle as any,
-                }
+                confirmOptions,
             );
         } else if (options.type === 'prompt') {
             Confirm.ask(
@@ -250,12 +270,25 @@ export class StrongFBService {
                 options.cancelButtonText,
                 options.okButtonCallback,
                 options.cancelButtonCallback,
-                {
-                    rtl: options.rtl,
-                    cssAnimationStyle: options.cssAnimationStyle as any,
-                }
+                confirmOptions,
             );
         }
+    }
+    /********************************* */
+    async loadStyleLink(srcUrl: string) {
+        const head = document.getElementsByTagName('head')[0];
+        const style = document.createElement('link');
+        style.id = 'css-styling';
+        style.rel = 'stylesheet';
+        style.href = `${srcUrl}`;
+        head.appendChild(style);
+    }
+    /********************************* */
+    async loadStyleBlock(block: string) {
+        const head = document.getElementsByTagName('head')[0];
+        const style = document.createElement('style');
+        style.innerHTML = block;
+        head.appendChild(style);
     }
 
 }

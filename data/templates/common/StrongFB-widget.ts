@@ -5,6 +5,7 @@ import { AfterViewInit, Component, ElementRef, Inject, Input, OnChanges, OnDestr
 import { StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderWidgetFunction } from "./StrongFB-layout-builder-types";
 import { Block } from 'notiflix/build/notiflix-block-aio';
 import { SFB_info } from "./StrongFB-common";
+import { StrongFBHelper } from "../StrongFB-helpers";
 
 
 @Component({
@@ -71,7 +72,10 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
                 this.displayComponentLoading = true;
                 this.elRef.nativeElement.id = this._widgetId;
                 if (!document.getElementById(this._widgetId)) return;
-                Block.circle([this.elRef.nativeElement]);
+                Block.circle([this.elRef.nativeElement], '', {
+                    backgroundColor: StrongFBHelper.notifyBackgroundColor(),
+                    svgColor: StrongFBHelper.loadingTextColor()
+                });
             } else {
                 this.displayComponentLoading = false;
                 if (!document.getElementById(this._widgetId)) return;
