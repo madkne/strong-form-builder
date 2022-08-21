@@ -97,6 +97,14 @@ return new StrongFBButtonWidget().name('loginButton').text(this.__('login'))
 
 return a instance of `StrongFBLayoutBuilder`
 
+### `injectService` method
+
+```ts
+injectService<R = any ,T = string>(name: T): R
+```
+
+get a service name (before add it into configs) and pass you the service instance.
+
 
 
 ## Variables

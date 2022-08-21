@@ -73,7 +73,9 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
         if (this.schema.mapApiPagination) {
             // =>GET method
             if (this.schema.loadRowsByApi.options.method === 'GET') {
-                this.schema.loadRowsByApi.options.params = {};
+                if (this.schema.loadRowsByApi.options.params === undefined) {
+                    this.schema.loadRowsByApi.options.params = {};
+                }
                 this.schema.loadRowsByApi.options.params[this.schema.mapApiPagination.pageParam] = this.page;
                 this.schema.loadRowsByApi.options.params[this.schema.mapApiPagination.pageSizeParam] = this.schema.mapApiPagination.pageSize;
             }

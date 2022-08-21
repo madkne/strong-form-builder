@@ -82,3 +82,4 @@ export class AppComponent implements AfterViewInit {
 | customLocales | object | NO | - | define custom locales [more info](./locales.md) | 
 | assetsBaseUrl | string | NO | `'/assets/StrongFB'` | set base url for StrongFB assets | 
 | darkTheme | boolean | NO | false | set dark theme for widgets like editor widget |
+| injectServices | object | NO | {} | you can inject your custom services and use them later on forms |

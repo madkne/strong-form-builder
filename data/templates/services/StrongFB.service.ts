@@ -21,6 +21,7 @@ export class StrongFBService {
     protected _scripts: { src: string; loaded?: boolean; }[] = [];
     protected _assetsBaseUrl: string;
     protected _darkTheme: boolean;
+    protected _injectServices: { [k: string]: any } = {};
 
     protected defaultOptions: StrongFBConfigOptions = {
         localStorageTokenKey: 'access_token',
@@ -38,6 +39,7 @@ export class StrongFBService {
         language: 'en',
         viewContainerRef: null,
         darkTheme: false,
+        injectServices: {},
     }
     /********************************* */
 
@@ -82,6 +84,7 @@ export class StrongFBService {
         this._viewContainerRef = options.viewContainerRef;
         this._assetsBaseUrl = options.assetsBaseUrl;
         this._darkTheme = options.darkTheme;
+        this._injectServices = options.injectServices;
 
     }
     /********************************* */

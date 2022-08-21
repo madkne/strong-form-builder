@@ -54,6 +54,10 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         return this._formFieldValues as any;
     }
 
+    injectService<R = any, T = string>(name: T): R {
+        return this.service['_injectServices'][name as any];
+    }
+
     notify(text: string, mode: NotifyMode = 'info', timeout = 3000, cssAnimationStyle: NotifyCssAnimationStyle = 'fade') {
         this.service.notify({
             mode,

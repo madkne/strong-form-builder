@@ -2,7 +2,7 @@
 
 <!-- ![logo](_media/icon.svg) -->
 
-# Strong Form Builder <small>0.7</small>
+# Strong Form Builder <small>0.8</small>
 
 > A nice and strong form builder for angular projects
 

@@ -110,4 +110,9 @@ export interface StrongFBConfigOptions {
      * @default false
      */
     darkTheme?: boolean;
+    /**
+     * you can inject your custom services and use them later on forms
+     * @default {}
+     */
+    injectServices?: { [k: string]: any };
 }
