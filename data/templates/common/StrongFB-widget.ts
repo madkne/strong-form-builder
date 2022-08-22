@@ -1,6 +1,6 @@
 import { StrongFBFormClass } from "./StrongFB-base";
 import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
-import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
+import { BehaviorSubject, interval, Subject, take, takeUntil } from 'rxjs';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewContainerRef } from "@angular/core";
 import { StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderWidgetFunction } from "./StrongFB-layout-builder-types";
 import { Block } from 'notiflix/build/notiflix-block-aio';
@@ -23,6 +23,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
 
     @Output() ngModelChange = new EventEmitter<any>();
     public schema: SCHEMA;
+    public show = true;
 
     /******************************************* */
 
@@ -61,6 +62,14 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
             });
             clearInterval(widgetComponentLoading);
         }, 10);
+
+        // =>execute every 1s
+        interval(1000).pipe(takeUntil(this.destroy$)).subscribe(async () => {
+            // =>if have show callback function
+            if (this.widgetHeader && this.widgetHeader['_showCallback']) {
+                this.show = await this.widgetHeader['_showCallback'].call(this.widgetForm, this.widgetHeader);
+            }
+        });
 
 
         this.onInit();
@@ -180,7 +189,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
             }
 
         }
-        return widgetComponents;
+        return { widgetComponents, widgetHeaders };
     }
     /******************************************* */
     /**

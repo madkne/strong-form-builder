@@ -1,3 +1,5 @@
+import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
+
 export type TransmitChannelName = 'notification' | 'snackbar-message' | 'page' | 'response' | 'page-loading' | 'screen-mode' | 'dialog-response' | 'dialog-action-click';
 
 export enum APIStatusCodes {
@@ -54,6 +56,8 @@ export type CustomLocales = { [k in AvailableLanguage]?: { [k1: string]: { [k2: 
 
 
 export type NotifyCssAnimationStyle = 'fade' | 'zoom' | 'from-right' | 'from-top' | 'from-bottom' | 'from-left';
+
+export type StrongFBWidgetShowCallback = (self?: StrongFBBaseWidgetHeader) => Promise<boolean> | boolean;
 
 
 /**************************** */

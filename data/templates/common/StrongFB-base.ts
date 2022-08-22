@@ -29,9 +29,16 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         this._options = _options;
     }
     /**
-     * call after layout complete
+     * call before layout init
      */
     onInit() {
+
+    }
+
+    /**
+     * call after layout loaded
+     */
+    onLoaded() {
 
     }
     /**

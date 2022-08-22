@@ -1,4 +1,4 @@
-<ng-container *ngIf="schema">
+<ng-container *ngIf="schema && show">
     <div class="main-editor" [id]="editorId" [ngStyle]="{'minHeight': schema.minHeight, 'maxWidth': schema.maxWidth}">
         {{schema.value}}
     </div>

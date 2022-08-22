@@ -1,4 +1,4 @@
-<ng-container *ngIf="schema">
+<ng-container *ngIf="schema && show">
     <nb-form-field>
         <nb-tag-list [id]="widgetId" (tagRemove)="onTagRemove($event)">
             <nb-tag [status]="schema.status" [appearance]="schema.appearance" *ngFor="let tag of schema.value"

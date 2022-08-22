@@ -1,4 +1,4 @@
-<ng-container *ngIf="schema">
+<ng-container *ngIf="schema && show">
     <div class="main-form-field">
         <label class="label" [for]="fieldId" *ngIf="schema.label">
             {{schema.label}}

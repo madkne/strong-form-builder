@@ -1,9 +1,10 @@
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { StrongFBFormClass } from '../../common/StrongFB-base';
 import { StrongFBLayoutBuilder } from '../../common/StrongFB-layout-builder';
 import { StrongFBLayoutBuilderSchema } from '../../common/StrongFB-layout-builder-types';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
+import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
 import { StrongFBLocaleService } from '../../services/StrongFB-locale.service';
 
 @Component({
@@ -15,7 +16,12 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
     @ViewChild('WidgetsSection', { read: ViewContainerRef }) WidgetsSection: ViewContainerRef;
     widgetsNeedToReload = true;
 
-    // protected override  showLoading = false;
+    @Output() layoutLoadedEvent = new EventEmitter<boolean>();
+
+    protected dynamicWidgets: {
+        widgetComponents: any[];
+        widgetHeaders: StrongFBBaseWidgetHeader<object, string>[];
+    };
 
 
     constructor(protected override elRef: ElementRef, protected locale: StrongFBLocaleService) {
@@ -63,7 +69,14 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
             await this.loadWidgets();
         }
         this.displayLoading(false);
+        this.layoutLoadedEvent.emit(true);
     }
+
+    // async checkForShowWidgets() {
+    //     for (const widget of this.dynamicWidgets.widgetHeaders) {
+    //         if (widget)
+    //     }
+    // }
 
 
 
@@ -72,7 +85,7 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
         this.widgetsNeedToReload = false;
         let setContainerInterval = setInterval(async () => {
             if (!this.WidgetsSection) return;
-            await this.loadDynamicWidgets(this.WidgetsSection, { widgets: this.layoutSchema.widgets, widgetHeaders: this.layoutSchema.widgetHeaders }, this.form);
+            this.dynamicWidgets = await this.loadDynamicWidgets(this.WidgetsSection, { widgets: this.layoutSchema.widgets, widgetHeaders: this.layoutSchema.widgetHeaders }, this.form);
 
             clearInterval(setContainerInterval);
         }, 10);

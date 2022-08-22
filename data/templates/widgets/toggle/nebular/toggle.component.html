@@ -1,4 +1,4 @@
-<ng-container *ngIf="schema">
+<ng-container *ngIf="schema && show">
     <nb-toggle [status]="schema.status" [disabled]="schema.disabled? true : undefined" [(ngModel)]="schema.value"
         [id]="widgetId" (ngModelChange)="changeValue($event)" [labelPosition]="schema.labelPosition"
         [checked]="schema.checked">{{ schema.label }}</nb-toggle>

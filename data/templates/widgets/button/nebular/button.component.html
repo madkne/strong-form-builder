@@ -1,4 +1,4 @@
-<ng-container *ngIf="schema">
+<ng-container *ngIf="schema && show">
     <button nbButton [size]="schema.size" [shape]="schema.shape" [status]="schema.status"
         [disabled]="schema.disabled ? schema.disabled : undefined" [fullWidth]="schema.fullWidth ? true : undefined"
         [hero]="schema.appearance === 'colorful'" [outline]="schema.appearance === 'outline'"

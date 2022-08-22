@@ -1,4 +1,5 @@
 import { BehaviorSubject } from "rxjs";
+import { StrongFBWidgetShowCallback } from "./StrongFB-types";
 
 
 export class StrongFBBaseWidgetHeader<SCHEMA extends object = object, WIDGET_NAME extends string = string> {
@@ -10,6 +11,8 @@ export class StrongFBBaseWidgetHeader<SCHEMA extends object = object, WIDGET_NAM
     protected _name: string;
 
     protected _commonStyles: object = {};
+
+    protected _showCallback: StrongFBWidgetShowCallback;
 
     protected _isLoading = new BehaviorSubject<boolean>(undefined);
 
@@ -49,6 +52,11 @@ export class StrongFBBaseWidgetHeader<SCHEMA extends object = object, WIDGET_NAM
     minWidth(width = '100px') {
         this._commonStyles['min-width'] = width;
 
+        return this;
+    }
+
+    showByCallback(callback: StrongFBWidgetShowCallback) {
+        this._showCallback = callback;
         return this;
     }
 

@@ -1,4 +1,4 @@
-import { cliCommandItem, CliCommand, OnImplement } from '@dat/lib/argvs';
+import { cliCommandItem, CliCommand, OnImplement, CommandArgvItem } from '@dat/lib/argvs';
 import { CommandArgvName, CommandName, UIFrameWorkType } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -6,7 +6,7 @@ import { cwd, copyDirectory, shell } from '@dat/lib/os';
 import { saveRenderFile } from '@dat/lib/template';
 import { detectAngularSourcePath, UIFrameWorks } from '../common';
 import { select, boolean } from '@dat/lib/input';
-import { info, success } from '@dat/lib/log';
+import { info, success, error, warning } from '@dat/lib/log';
 
 @cliCommandItem()
 export class InitCommand extends CliCommand<CommandName, CommandArgvName> implements OnImplement {
@@ -16,6 +16,14 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
     source: string;
     uiFramework: UIFrameWorkType;
     sourceAppStrongFBPath: string;
+    projectPackageJson: {
+        name: string;
+        version: string;
+        dependencies: object;
+        devDependencies: object;
+        languages?: string[];
+        uiFramework?: UIFrameWorkType;
+    };
 
 
     get name(): CommandName {
@@ -29,17 +37,46 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
     get alias(): string {
         return 'i';
     }
+
+    get argvs(): CommandArgvItem<CommandArgvName>[] {
+        return [
+            {
+                name: 'path',
+                description: 'specific path for your angular project',
+                alias: 'p',
+                type: 'string',
+            }
+        ];
+    }
     /********************************** */
     async init() {
         this.cwd = await cwd();
         this.templatesPath = path.join(this.cwd, 'data', 'templates');
         this.samplesPath = path.join(this.cwd, 'data', 'samples');
-
-        // =>detect angular source on parent directory
-        if (!(this.source = await detectAngularSourcePath())) return false;
+        // =>if set path
+        if (this.hasArgv('path')) {
+            this.source = this.getArgv('path');
+        }
+        // =>detect angular source on parent directory, if not set path
+        else {
+            if (!(this.source = await detectAngularSourcePath())) return false;
+        }
+        // =>check exist source
+        if (!fs.existsSync(this.source)) {
+            error(`not found such directory: ${this.source}`);
+            return false;
+        }
         this.sourceAppStrongFBPath = path.join(this.source, 'src', 'app', 'StrongFB');
-        // =>get type ui framework used
-        this.uiFramework = await select('Select UI framework used', UIFrameWorks) as any;
+        // =>read package.json of project
+        this.projectPackageJson = JSON.parse(fs.readFileSync(path.join(this.source, 'package.json')).toString());
+        warning(`Angular Project : ${this.projectPackageJson.name} - version ${this.projectPackageJson.version}`);
+        // =>get type ui framework used, if not
+        if (this.projectPackageJson.uiFramework && UIFrameWorks.includes(this.projectPackageJson.uiFramework)) {
+            this.uiFramework = this.projectPackageJson.uiFramework;
+        } else {
+            this.uiFramework = await select('Select UI framework used', UIFrameWorks) as any;
+            this.projectPackageJson.uiFramework = this.uiFramework;
+        }
 
         return true;
     }
@@ -170,10 +207,9 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
             // '@toast-ui/editor': '^3.1.1'
         };
         let exists = true;
-        // =>read package.json of project
-        let projectPackageJson = JSON.parse(fs.readFileSync(path.join(this.source, 'package.json')).toString());
+
         // =>choose language, if not
-        if (!projectPackageJson['languages']) {
+        if (!this.projectPackageJson.languages) {
             let selectLangOption = await select('choose project language', ['en', 'fa', 'all'], 'en');
             let langs = [selectLangOption];
             if (selectLangOption === 'all') {
@@ -186,19 +222,19 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
                 packages['moment'] = '^2.29.3';
             }
             // =>save languages
-            projectPackageJson['languages'] = langs;
+            this.projectPackageJson.languages = langs;
         }
         // =>check exist all packages before
         for (const pack of Object.keys(packages)) {
-            if (!projectPackageJson['dependencies'][pack] && !projectPackageJson['devDependencies'][pack]) {
+            if (!this.projectPackageJson.dependencies[pack] && !this.projectPackageJson.devDependencies[pack]) {
                 exists = false;
                 // =>if not exist, add it
-                projectPackageJson['dependencies'][pack] = packages[pack];
+                this.projectPackageJson.dependencies[pack] = packages[pack];
             }
         }
         // console.log('packs:', packages, exists);
         // =>save package.json
-        fs.writeFileSync(path.join(this.source, 'package.json'), JSON.stringify(projectPackageJson, null, 2));
+        fs.writeFileSync(path.join(this.source, 'package.json'), JSON.stringify(this.projectPackageJson, null, 2));
         // =>if not exist any packages, reinstall npm
         if (!exists) {
             await shell(`npm i`, this.source);

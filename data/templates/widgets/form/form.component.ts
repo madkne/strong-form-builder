@@ -29,16 +29,17 @@ export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChang
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['form'] && this.form) {
+            // =>call onInit() of form
+            if (!this.form['_callOnInit']) {
+                this.form.onInit();
+            }
             // console.log('form layout:', this.form.layout.generateSchema());
             this.updateForm();
             if (!this.initStart) {
                 this.ngOnInit();
             }
             // this.form.layout.schema.
-            // =>call onInit() of form
-            if (!this.form['_callOnInit']) {
-                this.form.onInit();
-            }
+
         }
     }
 
@@ -49,5 +50,12 @@ export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChang
     override onDestroy() {
         this.form['destroy$'].next(true);
         this.form['destroy$'].complete();
+    }
+
+    mainLayoutLoaded() {
+        // =>call onLoaded() of form
+        if (!this.form.onLoaded) {
+            this.form.onLoaded();
+        }
     }
 }

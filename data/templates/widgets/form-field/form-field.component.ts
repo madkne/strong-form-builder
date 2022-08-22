@@ -62,13 +62,14 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
             if (!this.FieldContainer) return;
             this.FieldContainer.clear();
             // =>load dynamic field
-            this.formFieldInstance = await this.loadDynamicWidgets(this.FieldContainer, { widgets: [() => this.schema.field] });
+            this.formFieldInstance = (await this.loadDynamicWidgets(this.FieldContainer, { widgets: [() => this.schema.field] })).widgetComponents;
             this.fieldIsLoaded = true;
+
             // =>listen on ngModelChange
             this.formFieldInstance[0].instance['ngModelChange'].pipe(takeUntil(this.destroy$)).subscribe(it => this.changeFormFieldValue(it));
             // =>if field is required
             //FIXME: may be set default value on field nad must be check it!
-            if (this.schema.validator && this.schema.validator.schema.find(i => i.name === 'required') && !this.schema.formFieldHasError) {
+            if (this.schema.validator && this.schema.validator.schema.find(i => i.name === 'required') && this.formFieldInstance[0].instance.show && !this.schema.formFieldHasError) {
                 this.formFieldError('required', undefined);
                 this.widgetForm['_formFieldValuesUpdated$'].next(true);
             }

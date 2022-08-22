@@ -20,9 +20,15 @@ all generics are optional. but recommend to fill them and be on the way!
 
 ### `onInit` method
 
-`onInit` method is a method that automatically calls on startup of form by **StrongFB**. (call after layout complete)
+`onInit` is a method that automatically calls on startup of form by **StrongFB**. (call before layout initial)
 
-so you can do your initial stuff on it. like call api or fill fields.
+so you can do your initial stuff on it. like call api.
+
+### `onLoaded` method
+
+`onLoaded` is a method that automatically calls after layout load completed.
+
+so you can update your field properties on it.
 
 ### `findWidgetByName` method
 
