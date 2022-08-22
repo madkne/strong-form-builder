@@ -25,6 +25,10 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
     public schema: SCHEMA;
     public show = true;
 
+    public readyToUse = false;
+
+    protected emitAutoReadyToUse = true;
+
     /******************************************* */
 
     constructor(protected elRef: ElementRef) {
@@ -51,6 +55,9 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
      * instead of override this function, call 'onInit' function
      */
     ngOnInit(): void {
+        if (this.emitAutoReadyToUse) {
+            this.readyToUse = true;
+        }
         //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
         //Add 'implements OnInit' to the class.
         // =>listen on loading

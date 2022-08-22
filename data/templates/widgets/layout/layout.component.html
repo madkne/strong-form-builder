@@ -5,7 +5,8 @@
         [attr.id]="layoutSchema.id ? layoutSchema.id : undefined">
         <!-- show layouts -->
         <ng-container *ngIf="layoutSchema.layouts">
-            <strong-layout-builder *ngFor="let lay of layoutSchema.layouts" [form]="form" [layout]="lay">
+            <strong-layout-builder *ngFor="let lay of layoutSchema.layouts" [form]="form"
+                (layoutLoadedEvent)="childLayoutLoaded(lay['_id'])" [layout]="lay">
             </strong-layout-builder>
         </ng-container>
         <!-- show text -->
@@ -28,7 +29,8 @@
         [attr.id]="layoutSchema.id ? layoutSchema.id : undefined">
         <!-- show layouts -->
         <ng-container *ngIf="layoutSchema.layouts">
-            <strong-layout-builder *ngFor="let lay of layoutSchema.layouts; let i = index" [form]="form" [layout]="lay"
+            <strong-layout-builder *ngFor="let lay of layoutSchema.layouts; let i = index"
+                (layoutLoadedEvent)="childLayoutLoaded(lay['_id'])" [form]="form" [layout]="lay"
                 [ngClass]="layoutSchema['layoutClasses'][i]">
             </strong-layout-builder>
         </ng-container>

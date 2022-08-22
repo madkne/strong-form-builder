@@ -35,6 +35,10 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
 
     layoutLoaded = false;
 
+    protected updatingLayout = false;
+
+    protected layoutsLoaded: { [k: string]: boolean } = {};
+
     override async onInit() {
 
         if (!this.layout || this.layoutLoaded) return;
@@ -61,6 +65,8 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
     }
 
     async updateLayout() {
+        if (this.updatingLayout) return;
+        this.updatingLayout = true;
         this.displayLoading();
         // console.log('layout:', this.layout);
         this.layoutSchema = this.layout.schema;
@@ -69,7 +75,11 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
             await this.loadWidgets();
         }
         this.displayLoading(false);
-        this.layoutLoadedEvent.emit(true);
+        // =>if no any child layouts
+        if (!this.layoutSchema.layouts || this.layoutSchema.layouts.length === 0) {
+            this.layoutLoadedEvent.emit(true);
+        }
+        this.updatingLayout = false;
     }
 
     // async checkForShowWidgets() {
@@ -81,16 +91,42 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
 
 
     async loadWidgets() {
-        if (!this.widgetsNeedToReload) return;
+        if (!this.widgetsNeedToReload) return true;
         this.widgetsNeedToReload = false;
-        let setContainerInterval = setInterval(async () => {
-            if (!this.WidgetsSection) return;
-            this.dynamicWidgets = await this.loadDynamicWidgets(this.WidgetsSection, { widgets: this.layoutSchema.widgets, widgetHeaders: this.layoutSchema.widgetHeaders }, this.form);
+        return new Promise((res) => {
 
-            clearInterval(setContainerInterval);
-        }, 10);
+            let setContainerInterval = setInterval(async () => {
+                if (!this.WidgetsSection) return;
+                this.dynamicWidgets = await this.loadDynamicWidgets(this.WidgetsSection, { widgets: this.layoutSchema.widgets, widgetHeaders: this.layoutSchema.widgetHeaders }, this.form);
+                // =>wait to ready to use all widgets
+                let readyToUseWidgets = setInterval(() => {
+                    let loadAll = true;
+                    for (const wid of this.dynamicWidgets.widgetComponents) {
+                        if (!wid.instance['readyToUse']) {
+                            loadAll = false;
+                            break;
+                        }
+                    }
+                    if (loadAll) {
+                        clearInterval(readyToUseWidgets);
+                        res(true);
+                    }
+                }, 1);
+                clearInterval(setContainerInterval);
+            }, 5);
+        });
+
+
         // this.viewContainerRef.createComponent()
     }
 
+    childLayoutLoaded(layoutId: string) {
+        console.log('layout loaded:', layoutId)
+        this.layoutsLoaded[layoutId] = true;
+
+        if (Object.keys(this.layoutsLoaded).length === this.layoutSchema.layouts.length && this.updatingLayout) {
+            this.layoutLoadedEvent.emit(true);
+        }
+    }
 
 }

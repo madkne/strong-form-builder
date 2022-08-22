@@ -54,7 +54,7 @@ export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChang
 
     mainLayoutLoaded() {
         // =>call onLoaded() of form
-        if (!this.form.onLoaded) {
+        if (this.form.onLoaded) {
             this.form.onLoaded();
         }
     }

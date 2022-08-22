@@ -2,17 +2,21 @@
     <nb-card-header *ngIf="widgetHeader.schema.header">
         <ng-container *ngIf="widgetHeader.schema.header.text">{{widgetHeader.schema.header.text}}</ng-container>
         <ng-container *ngIf="widgetHeader.schema.header.layout">
-            <strong-layout-builder [form]="widgetForm" [layout]="widgetHeader.schema.header.layout">
+            <strong-layout-builder [form]="widgetForm"
+                (layoutLoadedEvent)="childLayoutLoaded(widgetHeader.schema.header.layout['_id'])"
+                [layout]="widgetHeader.schema.header.layout">
             </strong-layout-builder>
         </ng-container>
 
     </nb-card-header>
     <nb-card-body *ngIf="widgetHeader.schema.content">
-        <strong-layout-builder [form]="widgetForm" [layout]="widgetHeader.schema.content.layout">
+        <strong-layout-builder [form]="widgetForm" [layout]="widgetHeader.schema.content.layout"
+            (layoutLoadedEvent)="childLayoutLoaded(widgetHeader.schema.content.layout['_id'])">
         </strong-layout-builder>
     </nb-card-body>
     <nb-card-footer *ngIf="widgetHeader.schema.footer">
-        <strong-layout-builder [form]="widgetForm" [layout]="widgetHeader.schema.footer.layout">
+        <strong-layout-builder [form]="widgetForm" [layout]="widgetHeader.schema.footer.layout"
+            (layoutLoadedEvent)="childLayoutLoaded(widgetHeader.schema.footer.layout['_id'])">
         </strong-layout-builder>
     </nb-card-footer>
 </nb-card>
