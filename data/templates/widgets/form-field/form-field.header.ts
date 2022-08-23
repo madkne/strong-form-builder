@@ -53,6 +53,18 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
         return this;
     }
 
+    /**
+     * call this method after 'field' method
+     * @param val 
+     * @returns 
+     */
+    value<T = string>(val: T) {
+        if (!this._schema.field) return this;
+
+        this._schema.field['_schema']['value'] = val as any;
+        return this;
+    }
+
     // value<T = string>(text: T) {
     //     this._schema.value = text as any;
     //     return this;

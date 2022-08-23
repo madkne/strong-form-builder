@@ -114,7 +114,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
         this.widgetForm['_formFieldValuesUpdated$'].pipe(takeUntil(this.destroy$)).subscribe(it => {
             if (!it) return;
             // =>set value by form field
-            if (this.widgetHeader['_formFieldName']) {
+            if (this.widgetHeader['_formFieldName'] && this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] !== undefined) {
                 this.schema[valueField] = this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']];
             }
         })
