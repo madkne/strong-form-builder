@@ -19,6 +19,7 @@
     - [login page](/samples/login_page.md)
     - [table page](/samples/table_page.md)
     - [dialog sample](/samples/dialog_sample.md)
+    - [dynamic widgets](/samples/dynamic_widgets.md)
 
 
 
