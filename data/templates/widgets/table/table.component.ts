@@ -15,6 +15,8 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
     simpleRows: object[] = [];
     displayRows: object[] = [];
     page = 1;
+    rowsSelectedCount = 0;
+    rowsSelected: { [k: string]: object } = {};
 
     constructor(protected override elRef: ElementRef, protected cdr: ChangeDetectorRef) {
         super(elRef)
@@ -242,6 +244,45 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
         }
 
         return true;
+    }
+
+    protected generateRowSign(row: object) {
+        return String(this.schema.selectable.rowKey.call(this.widgetForm, row, this.widgetHeader));
+        // return 'row_' + JSON.stringify(row);
+    }
+
+    toggleSelectRow(rowIndex: number, event: boolean) {
+        // console.log('select:', rowIndex, event)
+        // =>find row by index
+        let row = this.simpleRows[rowIndex];
+        // =>counter
+        if (event) {
+            // =>check limit
+            if (this.schema.selectable.limit && this.rowsSelectedCount + 1 > this.schema.selectable.limit) {
+                return;
+            }
+            this.rowsSelectedCount++;
+        }
+        else
+            this.rowsSelectedCount--;
+        // =>generate sign
+        let rowSign = this.generateRowSign(row);
+        this.rowsSelected[rowSign] = event ? row : undefined;
+        // =>collect selected rows
+        let selectedRows = [];
+        for (const key of Object.keys(this.rowsSelected)) {
+            if (!this.rowsSelected[key]) continue;
+            selectedRows.push(this.rowsSelected[key]);
+        }
+        // =>call callback function
+        this.schema.selectable.callback.call(this.widgetForm, selectedRows, this.widgetHeader);
+    }
+
+    isRowSelected(rowIndex: number) {
+        let row = this.simpleRows[rowIndex];
+        // =>generate sign
+        let rowSign = this.generateRowSign(row);
+        return this.rowsSelected[rowSign] ?? false;
     }
 }
 

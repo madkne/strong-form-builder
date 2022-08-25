@@ -31,9 +31,34 @@ table {
             td {
                 padding: 0.875rem 1.25rem;
                 border: 1px solid var(--background-basic-color-2);
+
             }
         }
     }
+}
+
+.td-has-checkbox {
+    display: flex;
+    align-items: center;
+
+    nb-checkbox {
+        margin: 0 5px;
+        margin-bottom: -5px;
+    }
+}
+
+.td-selectable {
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover:not(.td-selected) {
+        // background: var(--actions-divider-color);
+        background-color: var(--card-scrollbar-color);
+    }
+}
+
+.td-selected {
+    background: var(--alert-outline-control-color);
 }
 
 .pagination {
