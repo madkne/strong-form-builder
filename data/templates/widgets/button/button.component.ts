@@ -63,7 +63,10 @@ export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSche
         // =>check all fields to valid
         let isValidAllFields = true;
         for (const field of fieldWidgets) {
-            if (field['_schema']['formFieldHasError']) {
+            // =>find component of widget 
+            let widgetComponent = this.widgetForm['_usedWidgetComponents'][field['_name']];
+            // =>check widget has error and shown
+            if (field['_schema']['formFieldHasError'] && widgetComponent && widgetComponent['instance']['show']) {
                 isValidAllFields = false;
                 break;
             }

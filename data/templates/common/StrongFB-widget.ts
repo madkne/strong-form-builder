@@ -4,7 +4,7 @@ import { BehaviorSubject, interval, Subject, take, takeUntil } from 'rxjs';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewContainerRef } from "@angular/core";
 import { StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderWidgetFunction } from "./StrongFB-layout-builder-types";
 import { Block } from 'notiflix/build/notiflix-block-aio';
-import { SFB_info } from "./StrongFB-common";
+import { SFB_info, SFB_warn } from "./StrongFB-common";
 import { StrongFBHelper } from "../StrongFB-helpers";
 
 
@@ -12,7 +12,7 @@ import { StrongFBHelper } from "../StrongFB-helpers";
     selector: 'widget',
     template: '<div></div>'
 })
-export class StrongFBBaseWidget<SCHEMA extends object = object> implements AfterViewInit {
+export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> implements AfterViewInit {
     protected _widgetId: string;
     protected showLoading = true;
     @Input() public widgetHeader: StrongFBBaseWidgetHeader<SCHEMA>;
@@ -22,8 +22,10 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
     protected displayComponentLoading = false;
 
     @Output() ngModelChange = new EventEmitter<any>();
+    protected ngModelValue: any;
     public schema: SCHEMA;
     public show = true;
+    @Output() showChange = new EventEmitter<boolean>();
 
     public readyToUse = false;
 
@@ -58,8 +60,10 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
         if (this.emitAutoReadyToUse) {
             this.readyToUse = true;
         }
-        //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-        //Add 'implements OnInit' to the class.
+        // =>emit ng model change
+        this.ngModelChange.emit(this.ngModelValue);
+        // =>update form field
+        this.widgetForm['_formFieldValuesUpdated$'].next(true);
         // =>listen on loading
         let widgetComponentLoading = setInterval(() => {
             if (!this.widgetHeader || !this.widgetHeader['_isLoading']) return;
@@ -73,8 +77,16 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
         // =>execute every 1s
         interval(1000).pipe(takeUntil(this.destroy$)).subscribe(async () => {
             // =>if have show callback function
-            if (this.widgetHeader && this.widgetHeader['_showCallback']) {
-                this.show = await this.widgetHeader['_showCallback'].call(this.widgetForm, this.widgetHeader);
+            try {
+                if (this.widgetHeader && this.widgetHeader['_showCallback']) {
+                    let beforeStateShow = this.show;
+                    this.show = await this.widgetHeader['_showCallback'].call(this.widgetForm, this.widgetHeader);
+                    if (beforeStateShow !== this.show) {
+                        this.showChange.emit(this.show);
+                    }
+                }
+            } catch (e) {
+                SFB_warn('invalid show callback', e);
             }
         });
 
@@ -129,6 +141,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = object> implements After
         if (this.widgetHeader['_formFieldName']) {
             this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema[valueField];
         }
+        this.ngModelValue = this.schema[valueField];
         this.ngModelChange.emit(this.schema[valueField]);
         this.widgetForm['_formFieldValuesUpdated$'].next(true);
     }

@@ -1,5 +1,5 @@
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
-import { StrongFBValidatorName } from "../../common/StrongFB-types";
+import { StrongFBValidatorName, StrongFBWidgetShowCallback } from "../../common/StrongFB-types";
 import { StrongFBValidator } from "../../common/StrongFB-validator";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBButtonWidget } from "../button/button.header";
@@ -30,6 +30,9 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
 
     field(field: FormFieldType) {
         this._schema.field = field;
+        if (this._showCallback) {
+            this._schema.field.showByCallback(this._showCallback);
+        }
         return this;
     }
 
@@ -78,5 +81,4 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
         this._schema.formFieldErrorCallback = callback;
         return this;
     }
-
 }
