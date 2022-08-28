@@ -20,6 +20,11 @@ export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChang
 
     override async onInit() {
         if (!this.form) return;
+        // =>call onInit() of form
+        if (!this.form['_callOnInit']) {
+            this.form['_callOnInit'] = true;
+            await this.form.onInit();
+        }
         this.initStart = true;
         this.form.service.locale().languageChanged.pipe(takeUntil(this.destroy$)).subscribe(it => {
             if (!it) return;
@@ -29,16 +34,12 @@ export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChang
 
     async ngOnChanges(changes: SimpleChanges) {
         if (changes['form'] && this.form) {
-            // =>call onInit() of form
-            if (!this.form['_callOnInit']) {
-                await this.form.onInit();
-            }
+
             // console.log('form layout:', this.form.layout.generateSchema());
             this.updateForm();
             if (!this.initStart) {
                 this.ngOnInit();
             }
-            // this.form.layout.schema.
 
         }
     }

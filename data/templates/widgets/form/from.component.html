@@ -1,4 +1,4 @@
-<ng-container *ngIf="form">
+<ng-container *ngIf="form && initStart">
 
     <!-- show layouts -->
     <strong-layout-builder [form]="form" [layout]="form.layout" (layoutLoadedEvent)="mainLayoutLoaded()">
