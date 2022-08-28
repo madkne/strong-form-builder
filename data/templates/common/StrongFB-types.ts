@@ -73,7 +73,7 @@ export const TextMimeTypes = ['application/xml', 'application/json', 'text/plain
 export const ArchiveMimeTypes = ['application/zip', 'application/gzip', 'application/x-7z-compressed', 'application/vnd.rar'];
 export const ExecuteMimeTypes = ['application/x-sega-cd-rom', 'application/vnd.android.package-archive'];
 
-export type MimeTypes = 'audio/mp3' | 'audio/wav' | 'audio/mpeg' | 'image/png' | 'image/jpeg' | 'image/gif' | 'video/mp4' | 'video/webm' | 'application/xml' | 'application/json' | 'text/plain' | 'application/zip' | 'application/gzip' | 'application/x-7z-compressed' | 'application/vnd.rar' | 'application/x-sega-cd-rom' | 'application/vnd.android.package-archive';
+export type MimeTypes = '*' | 'audio/mp3' | 'audio/wav' | 'audio/mpeg' | 'image/png' | 'image/jpeg' | 'image/gif' | 'video/mp4' | 'video/webm' | 'video/mpeg' | 'video/ogg' | 'application/xml' | 'application/json' | 'text/plain' | 'application/zip' | 'application/gzip' | 'application/x-7z-compressed' | 'application/vnd.rar' | 'application/x-sega-cd-rom' | 'application/vnd.android.package-archive' | 'image/*' | 'application/pdf' | 'audio/*' | 'video/*' | 'application/x-mpegurl';
 
 export const ExecuteExtensions = ['exe', 'sh'];
 export const ImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
