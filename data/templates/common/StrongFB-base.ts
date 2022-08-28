@@ -74,13 +74,15 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         });
     }
 
-    async confirm(title: string, text: string): Promise<boolean> {
+    async confirm(title: string, text: string, okText?: string, cancelText?: string): Promise<boolean> {
         return new Promise((res) => {
             this.service.confirm({
                 title,
                 text,
                 type: 'confirm',
                 cssAnimationStyle: 'fade',
+                okButtonText: okText,
+                cancelButtonText: cancelText,
                 okButtonCallback: () => {
                     res(true);
                 },
@@ -91,12 +93,14 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         });
     }
 
-    async prompt(title: string, text: string, defaultValue?: string): Promise<string> {
+    async prompt(title: string, text: string, defaultValue?: string, okText?: string, cancelText?: string): Promise<string> {
         return new Promise((res) => {
             this.service.confirm({
                 title,
                 text,
                 type: 'prompt',
+                okButtonText: okText,
+                cancelButtonText: cancelText,
                 inputPlaceholder: defaultValue,
                 cssAnimationStyle: 'fade',
                 okButtonCallback: (value) => {

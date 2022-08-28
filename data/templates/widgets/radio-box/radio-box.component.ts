@@ -29,6 +29,8 @@ export class StrongFBRadioBoxWidgetComponent extends StrongFBBaseWidget<RadioBox
         // =>normalize schema
         this.schema = this.normalizeSchema(this.schema);
 
+        this.listenOnFormFieldChange('value');
+
     }
 
     normalizeSchema(schema: RadioBoxSchema) {

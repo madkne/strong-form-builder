@@ -72,7 +72,7 @@ if you want to notification to user. you can use this.
 ### `confirm` method
 
 ```ts
-async confirm(title: string, text: string): Promise<boolean> 
+async confirm(title: string, text: string, okText?: string, cancelText?: string): Promise<boolean>
 ```
 
 get title and text to show to user and pass you a boolean.
@@ -82,7 +82,7 @@ get title and text to show to user and pass you a boolean.
 ### `propmt` method
 
 ```ts
-async prompt(title: string, text: string, defaultValue?: string): Promise<string>
+async prompt(title: string, text: string, defaultValue?: string, okText?: string, cancelText?: string): Promise<string>
 ```
 
 get title and text to show to user and pass you a string as user answer.

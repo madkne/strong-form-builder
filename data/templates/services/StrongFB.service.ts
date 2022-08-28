@@ -211,18 +211,27 @@ export class StrongFBService {
     }) {
         // =>set defaults
         if (!options.mode) options.mode = 'info';
-        if (!options.callback) options.callback = () => { };
         if (!options.timeout) options.timeout = 3000;
         if (!options.cssAnimationStyle) options.cssAnimationStyle = 'fade';
         if (options.rtl === undefined) options.rtl = this.locale().getLangInfo()?.direction === 'rtl';
         if (options.clickToClose === undefined) options.clickToClose = true;
         // =>show notification
-        Notify[options.mode](options.text, options.callback, {
-            cssAnimationStyle: options.cssAnimationStyle,
-            timeout: options.timeout,
-            rtl: options.rtl,
-            clickToClose: options.clickToClose,
-        });
+        if (options.callback) {
+            Notify[options.mode](options.text, options.callback, {
+                cssAnimationStyle: options.cssAnimationStyle,
+                timeout: options.timeout,
+                rtl: options.rtl,
+                clickToClose: options.clickToClose,
+            });
+        } else {
+            Notify[options.mode](options.text, {
+                cssAnimationStyle: options.cssAnimationStyle,
+                timeout: options.timeout,
+                rtl: options.rtl,
+                clickToClose: options.clickToClose,
+            });
+        }
+
     }
     /********************************* */
     confirm(options: {

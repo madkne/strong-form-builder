@@ -17,6 +17,8 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
     editor;
     override schema: EditorSchema;
     @Output() override ngModelChange = new EventEmitter<string | number>();
+    protected override emitAutoReadyToUse = false;
+
 
     constructor(
         protected override elRef: ElementRef,
@@ -93,6 +95,7 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
                 // },
             });
             this.displayLoading(false);
+            this.readyToUse = true;
             clearInterval(editorLoaded);
         }, 10);
     }

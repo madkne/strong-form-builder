@@ -60,10 +60,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
         if (this.emitAutoReadyToUse) {
             this.readyToUse = true;
         }
-        // =>emit ng model change
-        this.ngModelChange.emit(this.ngModelValue);
-        // =>update form field
-        this.widgetForm['_formFieldValuesUpdated$'].next(true);
+
         // =>listen on loading
         let widgetComponentLoading = setInterval(() => {
             if (!this.widgetHeader || !this.widgetHeader['_isLoading']) return;
@@ -123,6 +120,15 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
      * @param valueField 
      */
     listenOnFormFieldChange(valueField: keyof SCHEMA) {
+        /** on startup */
+        // =>emit ng model change
+        this.ngModelValue = this.schema[valueField];
+        this.ngModelChange.emit(this.ngModelValue);
+        // =>update form field
+        if (this.widgetForm) {
+            this.widgetForm['_formFieldValuesUpdated$'].next(true);
+        }
+        // =>listen on form field update
         this.widgetForm['_formFieldValuesUpdated$'].pipe(takeUntil(this.destroy$)).subscribe(it => {
             if (!it) return;
             // =>set value by form field
@@ -226,10 +232,10 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
         // Block.remove([this.elRef.nativeElement]);
         this.afterViewInit();
     }
-
+    /******************************************* */
 
     afterViewInit() {
-
+        //TODO: fill by child
     }
 
 }

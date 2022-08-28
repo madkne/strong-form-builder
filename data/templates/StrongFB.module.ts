@@ -7,6 +7,7 @@ import { SanitizerUrlPipe } from "./pipes/SanitizerUrlPipe.pipe";
 import { StrongFBSharedModule } from "./StrongFB-shared.module";
 import { StrongFBButtonWidgetComponent } from "./widgets/button/button.component";
 import { StrongFBCardWidgetComponent } from "./widgets/card/card.component";
+import { StrongFBComponentWidgetComponent } from "./widgets/component/component.component";
 import { StrongFBDialogComponent } from "./widgets/dialog/dialog.component";
 import { StrongFBEditorWidgetComponent } from "./widgets/editor/editor.component";
 import { StrongFBFileUploaderWidgetComponent } from "./widgets/file-uploader/file-uploader.component";
@@ -38,6 +39,7 @@ import { StrongFBToggleWidgetComponent } from "./widgets/toggle/toggle.component
         StrongFBFileUploaderWidgetComponent,
         StrongFBToggleWidgetComponent,
         StrongFBEditorWidgetComponent,
+        StrongFBComponentWidgetComponent,
         SanitizerUrlPipe,
 
     ],

@@ -24,6 +24,8 @@ export class StrongFBTagsListWidgetComponent extends StrongFBBaseWidget<TagsList
         // =>normalize schema
         this.schema = await this.normalizeSchema(this.schema);
 
+        this.listenOnFormFieldChange('value');
+
     }
 
 
