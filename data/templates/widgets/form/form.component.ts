@@ -27,11 +27,11 @@ export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChang
         });
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    async ngOnChanges(changes: SimpleChanges) {
         if (changes['form'] && this.form) {
             // =>call onInit() of form
             if (!this.form['_callOnInit']) {
-                this.form.onInit();
+                await this.form.onInit();
             }
             // console.log('form layout:', this.form.layout.generateSchema());
             this.updateForm();

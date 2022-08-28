@@ -31,7 +31,7 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
     /**
      * call before layout init
      */
-    onInit() {
+    async onInit() {
 
     }
 
