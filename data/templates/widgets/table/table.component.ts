@@ -4,6 +4,7 @@ import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
 import { TableColumnAction, TableColumnDynamicActionsType, TableSchema } from './table-interfaces';
 import { takeUntil } from 'rxjs';
+import { StrongFBService } from '../../services/StrongFB.service';
 
 @Component({
     selector: 'table-widget',
@@ -16,9 +17,10 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
     displayRows: object[] = [];
     page = 1;
     rowsSelectedCount = 0;
+    isRtl = false;
     rowsSelected: { [k: string]: object } = {};
 
-    constructor(protected override elRef: ElementRef, protected cdr: ChangeDetectorRef) {
+    constructor(protected override elRef: ElementRef, protected cdr: ChangeDetectorRef, protected srv: StrongFBService) {
         super(elRef)
     }
 
@@ -32,7 +34,9 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
             if (!it) return;
             // =>load rows
             this.loadRows();
-        })
+        });
+        // =>check rtl direction
+        this.isRtl = this.srv.locale().direction.getValue() === 'rtl';
 
     }
 

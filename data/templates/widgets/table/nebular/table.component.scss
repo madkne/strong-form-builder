@@ -67,3 +67,10 @@ table {
     justify-content: center;
     padding: 10px 4px;
 }
+
+.rtl-icon {
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}

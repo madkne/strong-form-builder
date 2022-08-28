@@ -20,13 +20,13 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
     protected destroy$ = new Subject<boolean>();
     protected viewInit$ = new BehaviorSubject<boolean>(false);
     protected displayComponentLoading = false;
+    protected ngModelValue: any;
 
     @Output() ngModelChange = new EventEmitter<any>();
-    protected ngModelValue: any;
-    public schema: SCHEMA;
-    public show = true;
     @Output() showChange = new EventEmitter<boolean>();
 
+    public schema: SCHEMA;
+    public show = true;
     public readyToUse = false;
 
     protected emitAutoReadyToUse = true;
@@ -35,18 +35,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
 
     constructor(protected elRef: ElementRef) {
         this._widgetId = 'strong_fb_widget_' + new Date().getTime() + '_' + Math.ceil(Math.random() * 10000);
-        // =>add loading
-        // if (this.showLoading) {
-        //     let componentLoading = setInterval(() => {
-        //         if (this.viewInit$.getValue()) {
-        //             clearInterval(componentLoading);
-        //             return;
-        //         }
-        //         this.displayLoading(true);
-        //         // console.log('loading on:', this.elRef.nativeElement)
-        //         clearInterval(componentLoading);
-        //     }, 1);
-        // }
+
     }
 
     get widgetId() {
