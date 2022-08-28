@@ -15,6 +15,7 @@
     - [Table](/widgets/table.md)
     - [File Uploader](/widgets/file_uploader.md)
     - [Component](/widgets/component.md)
+    - [Select](/widgets/select.md)
     - [Form Field](/widgets/form_field.md)
 * Samples
     - [login page](/samples/login_page.md)

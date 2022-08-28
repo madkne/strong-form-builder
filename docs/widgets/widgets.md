@@ -10,7 +10,7 @@
 |3|dialog|YES|-|madkne|
 |4|form-field|YES|supported `input`, `select`, `textarea`, ... widgets|madkne|
 |5|input|YES|-|madkne|
-|6|select|YES|supported multi select|madkne, rashidi|
+|6|[select](./select.md)|YES|supported multi select|madkne, rashidi|
 |7|[table](./table.md)|YES|supported load by api|madkne|
 |8|tags-list|YES|-|madkne|
 |9|textarea|YES|-|madkne|

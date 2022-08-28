@@ -79,6 +79,11 @@ get title and text to show to user and pass you a boolean.
 
 ?> if you need to more customize confirm or prompt, you can call `confirm` method of `StrongFBService`.
 
+sample code:
+```ts
+if (!await this.confirm(this.__('Delete User'), this.__('Are you sure to delete this user?'))) return;
+```
+
 ### `propmt` method
 
 ```ts
