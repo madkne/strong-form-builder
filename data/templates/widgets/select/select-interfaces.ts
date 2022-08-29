@@ -9,7 +9,7 @@ export type SelectStatus = 'basic' | 'primary' | 'info' | 'success' | 'warning' 
 export type SelectShape = 'rectangle' | 'round';
 export type SelectAppearance = 'filled' | 'outline' | 'colorful';
 
-export type SelectChangeEvent = (event?: MouseEvent, selected?: string | string[], self?: StrongFBSelectWidget) => Promise<any> | any;
+export type SelectChangeEvent = (selected?: string | string[], self?: StrongFBSelectWidget) => Promise<any> | any;
 
 export interface SelectOption {
     text: string;

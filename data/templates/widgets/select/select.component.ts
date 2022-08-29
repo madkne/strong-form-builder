@@ -56,7 +56,10 @@ export class StrongFBSelectWidgetComponent extends StrongFBBaseWidget<SelectSche
         if (schema.fullWidth === undefined) schema.fullWidth = false;
         if (!schema.appearance) schema.appearance = 'filled';
         if (!schema.placeholder) schema.placeholder = '';
-
+        // =>if selected items
+        if (schema.value) {
+            this.changeEvent(schema.value);
+        }
 
         return schema;
     }

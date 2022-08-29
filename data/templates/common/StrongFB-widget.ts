@@ -69,6 +69,10 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
                     this.show = await this.widgetHeader['_showCallback'].call(this.widgetForm, this.widgetHeader);
                     if (beforeStateShow !== this.show) {
                         this.showChange.emit(this.show);
+                        // =>if show enabled, call onShow method
+                        if (this.show) {
+                            this.onShow();
+                        }
                     }
                 }
             } catch (e) {
@@ -78,6 +82,10 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
 
 
         this.onInit();
+    }
+    /******************************************* */
+    async onShow() {
+        //TODO: fill by child
     }
     /******************************************* */
     protected displayLoading(is = true) {

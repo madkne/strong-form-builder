@@ -30,6 +30,10 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
 
     }
 
+    override async onShow() {
+        this.ngAfterViewInit();
+    }
+
     async normalizeSchema(schema: FormFieldSchema) {
         if (this.schema.validator && !this.schema.validator['_widgetForm']) {
             this.schema.validator['_widgetForm'] = this.widgetForm;
