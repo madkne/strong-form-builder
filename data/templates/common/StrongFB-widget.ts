@@ -144,9 +144,25 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
         if (this.widgetHeader['_formFieldName']) {
             this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema[valueField];
         }
+        this.makeDirtyField();
         this.ngModelValue = this.schema[valueField];
         this.ngModelChange.emit(this.schema[valueField]);
         this.widgetForm['_formFieldValuesUpdated$'].next(true);
+    }
+    /******************************************* */
+    /**
+     * just used for form fields
+     */
+    makeDirtyField() {
+        if (this.widgetHeader['_formFieldName']) {
+            // => if before not dirty
+            let beforeDirty = this.widgetForm.formFieldMeta(this.widgetHeader['_formFieldName'])?.is_dirty;
+            this.widgetForm.setFormFieldMeta(this.widgetHeader['_formFieldName'], { is_dirty: true });
+            // =>if before not dirty, run validator
+            if (beforeDirty !== true) {
+                this.ngModelChange.emit(this.ngModelValue);
+            }
+        }
     }
     /******************************************* */
 

@@ -110,19 +110,32 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
                     isValid: true,
                 };
             }
-
-            // =>set meta data of field
+            let fieldName = widget.widgetHeader['_formFieldName'];
+            let isDirty = true;
+            // =>if field has field name
             if (widget.widgetHeader['_formFieldName']) {
-                widget.widgetForm['_formFieldMetaData'][widget.widgetHeader['_formFieldName']] = {
-                    is_valid: validatorRes.isValid,
-                    error: validatorRes.error,
-                };
+                // =>check dirty value
+                isDirty = widget.widgetForm.formFieldMeta(fieldName)?.is_dirty;
+                // =>set meta data of field
+                widget.widgetForm.setFormFieldMeta(fieldName, { is_valid: validatorRes.isValid });
+                // =>set error of validation, if dirty
+                if (isDirty) {
+                    widget.widgetForm.setFormFieldMeta(fieldName, { error: validatorRes.error });
+                }
             }
+            // =>if value not dirty, ignore!
+            if (!isDirty) {
+                this.widgetForm['_formFieldValuesUpdated$'].next(true);
+                return;
+            }
+            // =>if valid value
             if (validatorRes.isValid) {
                 this.errorMessage = undefined;
                 // =>set success status
                 widget.schema['status'] = 'success';
-            } else {
+            }
+            // =>if invalid value
+            else {
                 this.formFieldError(validatorRes.name, event, validatorRes.error);
                 // =>reset value in form field
                 if (widget.widgetHeader['_formFieldName']) {
@@ -143,6 +156,7 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
                 widget.schema['status'] = 'danger';
 
             }
+
 
         }
     }

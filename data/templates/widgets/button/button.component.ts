@@ -1,5 +1,6 @@
 import { Component, SimpleChanges } from '@angular/core';
 import { delay, takeUntil } from 'rxjs';
+import { FormFieldMetaData } from '../../common/StrongFB-interfaces';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
 import { ButtonSchema } from './button-interfaces';
@@ -32,51 +33,88 @@ export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSche
         if (this.schema.disabledForFormFields) {
             this.scanFormFields();
             // =>listen on every form fields changed
-            this.widgetForm['_formFieldValuesUpdated$'].pipe(takeUntil(this.destroy$)).pipe(delay(5)).subscribe(it => {
+            this.widgetForm['_formFieldValuesUpdated$'].pipe(takeUntil(this.destroy$)).pipe(delay(100)).subscribe(it => {
                 this.scanFormFields();
             });
         }
 
     }
 
-
     async scanFormFields() {
         this.schema.disabled = true;
-        if (!this.widgetForm['_usedWidgets']) return;
+
         // =>get all need form fields
-        let fieldWidgets: StrongFBBaseWidgetHeader[] = [];
+        let fieldsWithMeta: FormFieldMetaData[] = [];
+        let allFormFields = this.widgetForm.formFieldValuesWithMeta();
+
+        let isValidAllFields = true;
         // =>iterate all widgets
-        for (const key of Object.keys(this.widgetForm['_usedWidgets'])) {
-            // =>if not form field
-            if (this.widgetForm['_usedWidgets'][key].widgetName !== 'form-field') continue;
-            let widgetFormName = this.widgetForm['_usedWidgets'][key]['_schema']['field']['_formFieldName'];
-            if (!widgetFormName) continue;
+        for (const field of allFormFields) {
+
             // =>if select all fields
             if (this.schema.disabledForFormFields[0] === '*') {
-                fieldWidgets.push(this.widgetForm['_usedWidgets'][key]);
+                fieldsWithMeta.push(field);
+                // =>check all fields to valid
+                if (field.is_valid === false) {
+                    isValidAllFields = false;
+                    break;
+                }
             }
             // =>if must match fields
-            else if (this.schema.disabledForFormFields.includes(widgetFormName)) {
-                fieldWidgets.push(this.widgetForm['_usedWidgets'][key]);
+            else if (this.schema.disabledForFormFields.includes(field.name)) {
+                fieldsWithMeta.push(field);
+                // =>check all fields to valid
+                if (field.is_valid === false) {
+                    isValidAllFields = false;
+                    break;
+                }
             }
+
         }
-        // =>check all fields to valid
-        let isValidAllFields = true;
-        for (const field of fieldWidgets) {
-            // =>find component of widget 
-            let widgetComponent = this.widgetForm['_usedWidgetComponents'][field['_name']];
-            // =>check widget has error and shown
-            if (field['_schema']['formFieldHasError'] && widgetComponent && widgetComponent['instance']['show']) {
-                isValidAllFields = false;
-                break;
-            }
-        }
+
         // =>enable button
         if (isValidAllFields) {
             this.schema.disabled = false;
         }
-        // console.log('selected widget fields:', fieldWidgets.map(i => i['name']));
     }
+
+    // async scanFormFields() {
+    //     this.schema.disabled = true;
+    //     if (!this.widgetForm['_usedWidgets']) return;
+    //     // =>get all need form fields
+    //     let fieldWidgets: StrongFBBaseWidgetHeader[] = [];
+    //     // =>iterate all widgets
+    //     for (const key of Object.keys(this.widgetForm['_usedWidgets'])) {
+    //         // =>if not form field
+    //         if (this.widgetForm['_usedWidgets'][key].widgetName !== 'form-field') continue;
+    //         let widgetFormName = this.widgetForm['_usedWidgets'][key]['_schema']['field']['_formFieldName'];
+    //         if (!widgetFormName) continue;
+    //         // =>if select all fields
+    //         if (this.schema.disabledForFormFields[0] === '*') {
+    //             fieldWidgets.push(this.widgetForm['_usedWidgets'][key]);
+    //         }
+    //         // =>if must match fields
+    //         else if (this.schema.disabledForFormFields.includes(widgetFormName)) {
+    //             fieldWidgets.push(this.widgetForm['_usedWidgets'][key]);
+    //         }
+    //     }
+    //     // =>check all fields to valid
+    //     let isValidAllFields = true;
+    //     for (const field of fieldWidgets) {
+    //         // =>find component of widget 
+    //         let widgetComponent = this.widgetForm['_usedWidgetComponents'][field['_name']];
+    //         // =>check widget has error and shown
+    //         if (field['_schema']['formFieldHasError'] && widgetComponent && widgetComponent['instance']['show']) {
+    //             isValidAllFields = false;
+    //             break;
+    //         }
+    //     }
+    //     // =>enable button
+    //     if (isValidAllFields) {
+    //         this.schema.disabled = false;
+    //     }
+    //     // console.log('selected widget fields:', fieldWidgets.map(i => i['name']));
+    // }
 
     normalizeSchema(schema: ButtonSchema) {
         if (!schema.size) schema.size = 'medium';

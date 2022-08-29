@@ -4,7 +4,7 @@ import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs'
 
 import { NotifyCssAnimationStyle, NotifyMode } from "./StrongFB-types";
-import { StrongFBFormOptions } from "./StrongFB-interfaces";
+import { FormFieldMetaData, StrongFBFormOptions } from "./StrongFB-interfaces";
 import { StrongFBService } from "../services/StrongFB.service";
 import { StrongFBLocaleService } from "../services/StrongFB-locale.service";
 
@@ -14,7 +14,7 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
     private _usedWidgetComponents: { [k in WIDGET]?: any } = {};
     private _http: StrongFBHttpService;
     private _formFieldValues = {};
-    private _formFieldMetaData = {};
+    private _formFieldMetaData: { [k in keyof FORM_FIELDS]?: FormFieldMetaData } = {};
     private _formFieldValuesUpdated$ = new BehaviorSubject<boolean>(true);
     private _options: StrongFBFormOptions;
     private _service: StrongFBService;
@@ -58,19 +58,38 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         this._formFieldValuesUpdated$.next(true);
     }
 
-    formFieldValues(withMetaData = false): FORM_FIELDS {
-        if (withMetaData) {
-            let fields = [];
-            for (const key of Object.keys(this._formFieldValues)) {
-                fields.push({
-                    value: this._formFieldValues[key],
-                    is_valid: this._formFieldMetaData[key].is_valid,
-                    error: this._formFieldMetaData[key].error,
-                })
-            }
-            return fields as any;
-        }
+    formFieldValues(): FORM_FIELDS {
         return this._formFieldValues as any;
+    }
+
+    formFieldMeta<T = keyof FORM_FIELDS>(name: T): FormFieldMetaData<T> {
+        return this._formFieldMetaData[name as any];
+    }
+
+    setFormFieldMeta<T = keyof FORM_FIELDS>(name: T, meta?: FormFieldMetaData) {
+        if (!this._formFieldMetaData[name as any]) this._formFieldMetaData[name as any] = {};
+        if (!meta) return;
+        for (const key of Object.keys(meta)) {
+            this._formFieldMetaData[name as any][key] = meta[key];
+        }
+    }
+
+    formFieldValuesWithMeta(): FormFieldMetaData<keyof FORM_FIELDS>[] {
+        let fields: FormFieldMetaData<keyof FORM_FIELDS>[] = [];
+        for (const key of Object.keys(this._formFieldValues)) {
+            if (!this._formFieldMetaData[key]) {
+                this._formFieldMetaData[key] = {
+                    name: key as any,
+                    is_valid: true,
+                    value: this._formFieldValues[key],
+                }
+            }
+        }
+
+        for (const key of Object.keys(this._formFieldMetaData)) {
+            fields.push(this._formFieldMetaData[key]);
+        }
+        return fields as any;
     }
 
     injectService<R = any, T = string>(name: T): R {

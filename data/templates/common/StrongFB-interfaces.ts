@@ -117,3 +117,14 @@ export interface StrongFBConfigOptions {
      */
     injectServices?: { [k: string]: any };
 }
+
+export interface FormFieldMetaData<T = string> {
+    name?: T;
+    value?: any;
+    error?: string;
+    is_valid?: boolean;
+    /** 
+     * if user try to change value
+    */
+    is_dirty?: boolean;
+}
