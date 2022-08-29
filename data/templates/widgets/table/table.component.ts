@@ -135,6 +135,7 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
                 this.rowsSelected[rowSign] = row;
                 this.rowsSelectedCount++;
             }
+            this.emitSelectedRows();
         }
 
         return schema;
@@ -284,6 +285,11 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
         // =>generate sign
         let rowSign = this.generateRowSign(row);
         this.rowsSelected[rowSign] = event ? row : undefined;
+
+        this.emitSelectedRows();
+    }
+
+    emitSelectedRows() {
         // =>collect selected rows
         let selectedRows = [];
         for (const key of Object.keys(this.rowsSelected)) {

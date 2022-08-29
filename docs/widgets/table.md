@@ -9,6 +9,7 @@ table widget features:
 3. supports custom column data types (like tag)
 4. supports actions
 5. supports add dynamic actions (by API)
+6. supports select rows
 
 
 ## methods
@@ -135,5 +136,27 @@ updateRows()
 when call it, just refresh all rows.
 
 
+### `selectable` method
 
+```ts
+selectable(selectable: TableSelectable<ROW>)
+```
+
+if you want to enable selecting rows, use this method.
+
+you must declare a **callback** when row selected and **rowKey** function for calculate signature of every row.
+
+you can also define limit for selected rows count (zero is unlimited)
+
+and also you can select some rows on initial of table.
+
+```ts
+export interface TableSelectable<ROW extends object = object> {
+    callback: TableSelectableCallback<ROW>;
+    rowKey: (row: ROW, self?: StrongFBTableWidget) => string;
+    multiple?: boolean;
+    limit?: number;
+    selectedRows?: ROW[];
+}
+```
 
