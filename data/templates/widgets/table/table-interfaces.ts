@@ -97,6 +97,8 @@ export interface TableSelectable<ROW extends object = object> {
      * @default 0 (unlimited to select rows)
      */
     limit?: number;
+    selectedRows?: ROW[];
+
 }
 
 export interface TableSchema<COL extends string = string, ROW extends object = object> {

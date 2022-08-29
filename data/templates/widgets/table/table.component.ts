@@ -123,6 +123,19 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
                 schema.mapApiPagination.pageParam = 'page';
             }
         }
+        this.rowsSelected = {};
+        this.rowsSelectedCount = 0;
+        // =>set selected rows
+        if (schema.selectable?.selectedRows) {
+            for (const row of schema.selectable.selectedRows) {
+                // =>check limit
+                if (!this.checkSelectedLimit()) break;
+                // =>generate sign
+                let rowSign = this.generateRowSign(row);
+                this.rowsSelected[rowSign] = row;
+                this.rowsSelectedCount++;
+            }
+        }
 
         return schema;
     }
@@ -262,9 +275,8 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
         // =>counter
         if (event) {
             // =>check limit
-            if (this.schema.selectable.limit && this.rowsSelectedCount + 1 > this.schema.selectable.limit) {
-                return;
-            }
+            if (!this.checkSelectedLimit()) return;
+
             this.rowsSelectedCount++;
         }
         else
@@ -287,6 +299,13 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
         // =>generate sign
         let rowSign = this.generateRowSign(row);
         return this.rowsSelected[rowSign] ?? false;
+    }
+
+    checkSelectedLimit() {
+        if (!this.schema.selectable.limit) return true;
+        if (this.rowsSelectedCount + 1 > this.schema.selectable.limit) return false;
+
+        return true;
     }
 }
 
