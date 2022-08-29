@@ -101,6 +101,10 @@ export interface TableSelectable<ROW extends object = object> {
 
 }
 
+export interface TableNotFound {
+    html?: string;
+    imageUrl?: string;
+}
 export interface TableSchema<COL extends string = string, ROW extends object = object> {
     columns?: TableColumn<COL, ROW>[];
     loadRowsByApi?: {
@@ -111,4 +115,6 @@ export interface TableSchema<COL extends string = string, ROW extends object = o
     mapApiPagination?: TableMapApiPagination;
 
     selectable?: TableSelectable<ROW>;
+
+    notFound?: TableNotFound;
 }

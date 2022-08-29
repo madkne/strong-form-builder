@@ -121,7 +121,7 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
     }
 
     childLayoutLoaded(layoutId: string) {
-        console.log('layout loaded:', layoutId)
+        // console.log('layout loaded:', layoutId)
         this.layoutsLoaded[layoutId] = true;
 
         if (Object.keys(this.layoutsLoaded).length === this.layoutSchema.layouts.length && this.updatingLayout) {

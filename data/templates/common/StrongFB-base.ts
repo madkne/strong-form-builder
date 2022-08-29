@@ -14,6 +14,7 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
     private _usedWidgetComponents: { [k in WIDGET]?: any } = {};
     private _http: StrongFBHttpService;
     private _formFieldValues = {};
+    private _formFieldMetaData = {};
     private _formFieldValuesUpdated$ = new BehaviorSubject<boolean>(true);
     private _options: StrongFBFormOptions;
     private _service: StrongFBService;
@@ -57,7 +58,18 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         this._formFieldValuesUpdated$.next(true);
     }
 
-    formFieldValues(): FORM_FIELDS {
+    formFieldValues(withMetaData = false): FORM_FIELDS {
+        if (withMetaData) {
+            let fields = [];
+            for (const key of Object.keys(this._formFieldValues)) {
+                fields.push({
+                    value: this._formFieldValues[key],
+                    is_valid: this._formFieldMetaData[key].is_valid,
+                    error: this._formFieldMetaData[key].error,
+                })
+            }
+            return fields as any;
+        }
         return this._formFieldValues as any;
     }
 

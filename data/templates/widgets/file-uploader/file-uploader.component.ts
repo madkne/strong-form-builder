@@ -72,7 +72,12 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
             file.status = 'uploading';
             this.fileStartUploadingEvent.emit(file);
             // =>try to upload file
-            this.schema.server.sendFile(file.file).pipe(takeUntil(this.destroy$)).subscribe(event => {
+            file['upload_subscribe'] = this.schema.server.sendFile(file.file).pipe(takeUntil(this.destroy$)).subscribe(event => {
+                // =>if error occur
+                if (event['ok'] === false && event['status'] >= 400) {
+                    this.emitFileError(file);
+                    return;
+                }
                 // log('upload event:', event);
                 // =>if progress uploading
                 if (event && event.type !== undefined && event.type === HttpEventType.UploadProgress) {
@@ -97,11 +102,24 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
 
 
             }, (error) => {
-                file.error = this.makeFileError('error_on_uploading');
-                this.errorEvent.emit(file);
+                this.emitFileError(file);
             });
 
         });
+    }
+    /********************************** */
+    emitFileError(file: FileUploaderFileStruct, key: FileUploaderErrorKey = 'error_on_uploading', params?: any[]) {
+        file.error = this.makeFileError(key, params);
+        // =>action error
+        this.globalError = file.error;
+        // =>update status of file
+        file.status = 'failed';
+        file.color = 'danger';
+        this.errorEvent.emit(file);
+        if (file['upload_subscribe']?.unsubscribe) {
+            file['upload_subscribe']?.unsubscribe();
+        }
+        this.detectChanges.detectChanges();
     }
     /********************************** */
 
@@ -176,20 +194,17 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
             }
             // =>check max files
             if (this.filePickerFiles.length + 1 > this.schema.maxFiles) {
-                error = this.makeFileError('upload_max_files_limit', [this.schema.maxFiles]);
-                this.errorEvent.emit({
+                this.emitFileError({
                     file,
-                    color: undefined,
                     name: file.name,
                     error,
                     size: file.size,
                     status: 'failed',
+                    color: 'danger',
                     progress: 0,
-                });
-                // =>action error
-                this.globalError = error;
+                    imageSrc: file.type.startsWith('image/') ? URL.createObjectURL(file) : undefined,
+                }, 'upload_max_files_limit', [this.schema.maxFiles]);
                 return;
-
             }
             this.filePickerFiles.push({
                 file,

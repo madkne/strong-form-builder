@@ -74,3 +74,15 @@ table {
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
 }
+
+.not-found {
+    padding: 2em 10%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    img {
+        max-height: 250px;
+        margin-bottom: 5px;
+    }
+}

@@ -1,7 +1,7 @@
 
 import { APIRequest } from "../../common/StrongFB-interfaces";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
-import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableLoadRowsResponse, TableMapApiPagination, TableSchema, TableSelectable, TableSelectableCallback } from "./table-interfaces";
+import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableLoadRowsResponse, TableMapApiPagination, TableNotFound, TableSchema, TableSelectable, TableSelectableCallback } from "./table-interfaces";
 import { StrongFBTabledWidgetComponent } from "./table.component";
 import { BehaviorSubject } from 'rxjs';
 
@@ -126,6 +126,12 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
 
     selectable(selectable: TableSelectable<ROW>) {
         this._schema.selectable = selectable;
+        return this;
+    }
+
+    notFound(notfound?: TableNotFound) {
+        this._schema.notFound = notfound;
+        if (!this._schema.notFound) this._schema.notFound = {};
         return this;
     }
 

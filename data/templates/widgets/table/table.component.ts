@@ -138,6 +138,11 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
             this.emitSelectedRows();
         }
 
+        // =>set not found text
+        if (schema.notFound && !schema.notFound.html) {
+            schema.notFound.html = this.srv.locale().trans('common', 'Not Found!');
+        }
+
         return schema;
     }
 
@@ -185,6 +190,14 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
     goToPage(page: number) {
         this.page = page;
         this.loadRows();
+    }
+
+    isNotFoundEnabled() {
+        if (this.displayComponentLoading) return false;
+        if (!this.schema?.notFound) return false;
+        if (this.page == 1 && this.simpleRows.length === 0) return true;
+
+        return false;
     }
 
     displayPages = {

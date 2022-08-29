@@ -54,12 +54,22 @@ this update not effect on form field values!
 ### `formFieldValues` method
 
 ```ts
-formFieldValues(): FORM_FIELDS
+formFieldValues(withMetaData = false): FORM_FIELDS
 ```
 
 just return all form field values as a object.
 
 used like for onclick of submit button.
+
+also you can enable meta data and receive array of object contains that:
+```json
+[
+    {
+        "value": "hello",
+        "is_valid": true
+    }
+]
+```
 
 ### `notify` method
 

@@ -1,7 +1,7 @@
 <ng-container *ngIf="schema && show">
     <nb-card>
         <nb-card-body>
-            <table>
+            <table *ngIf="!isNotFoundEnabled()">
                 <thead>
                     <tr>
                         <th *ngFor="let col of schema.columns">
@@ -55,7 +55,7 @@
                 </tbody>
             </table>
             <!-- pagination -->
-            <div class="pagination" *ngIf="schema.mapApiPagination">
+            <div class="pagination" *ngIf="schema.mapApiPagination && schema.mapApiPagination.__pageCountResponse">
                 <!-- prev buttons -->
                 <nb-button-group shape="semi-round">
                     <button (click)="goToPage(1)" nbButtonToggle *ngIf="page > 2  && displayPages.first">
@@ -81,6 +81,12 @@
                     </button>
                 </nb-button-group>
 
+            </div>
+
+            <!-- not found -->
+            <div *ngIf="isNotFoundEnabled()" class="not-found">
+                <img *ngIf="schema.notFound.imageUrl" [src]="schema.notFound.imageUrl">
+                <p *ngIf="schema.notFound.html" [innerHtml]="schema.notFound.html"></p>
             </div>
         </nb-card-body>
     </nb-card>

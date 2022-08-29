@@ -75,7 +75,7 @@ export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSche
         if (isValidAllFields) {
             this.schema.disabled = false;
         }
-        console.log('selected widget fields:', fieldWidgets.map(i => i['name']));
+        // console.log('selected widget fields:', fieldWidgets.map(i => i['name']));
     }
 
     normalizeSchema(schema: ButtonSchema) {

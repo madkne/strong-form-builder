@@ -177,51 +177,96 @@ export class StrongFBValidator {
 
     async checkValidators(value: string | number, form?: any): Promise<StrongFBCheckValidatorsResponse> {
         // if (form) this._widgetForm = form;
-
+        // =>find validator object by name
+        const findVObj = (name: StrongFBValidatorName) => this._schema.find(i => i.name === name);
         // =>required validation
-        if (this._schema.find(i => i.name === 'required') && !this.validateRequired(value)) {
-            return { isValid: false, error: this.getErrorMessages('required'), name: 'required' };
+        if (findVObj('required') && !this.validateRequired(value)) {
+            return {
+                isValid: false,
+                error: this.getErrorMessages('required'),
+                name: 'required',
+            };
         }
         // =>number validation
-        if (this._schema.find(i => i.name === 'number') && !this.validateNumber(String(value))) {
-            return { isValid: false, error: this.getErrorMessages('number'), name: 'number' };
+        if (findVObj('number') && !this.validateNumber(String(value))) {
+            return {
+                isValid: false,
+                error: this.getErrorMessages('number'),
+                name: 'number',
+            };
         }
         // =>custom validation
-        if (this._schema.find(i => i.name === 'custom') && !this.validateCustom(this._schema.find(i => i.name === 'custom').value, value)) {
-            return { isValid: false, error: this.getErrorMessages('custom'), name: 'custom' };
+        if (findVObj('custom') && !this.validateCustom(findVObj('custom').value, value)) {
+            return {
+                isValid: false,
+                error: this.getErrorMessages('custom'),
+                name: 'custom',
+            };
         }
         if (typeof value === 'string') {
             // =>email validation
-            if (this._schema.find(i => i.name === 'email') && !this.validateEmail(value)) {
-                return { isValid: false, error: this.getErrorMessages('email'), name: 'email' };
+            if (findVObj('email') && !this.validateEmail(value)) {
+                return {
+                    isValid: false,
+                    error: this.getErrorMessages('email'),
+                    name: 'email',
+                    newValue: value,
+                };
             }
             // =>maxLength validation
-            if (this._schema.find(i => i.name === 'maxLength') && !this.validateMaxLength(this._schema.find(i => i.name === 'maxLength').value, value)) {
-                return { isValid: false, error: this.getErrorMessages('maxLength'), name: 'maxLength' };
+            if (findVObj('maxLength') && !this.validateMaxLength(findVObj('maxLength').value, value)) {
+                return {
+                    isValid: false,
+                    error: this.getErrorMessages('maxLength'),
+                    name: 'maxLength',
+                    newValue: value.substring(0, Number(findVObj('maxLength').value)),
+                };
             }
             // =>minLength validation
-            if (this._schema.find(i => i.name === 'minLength') && !this.validateMinLength(this._schema.find(i => i.name === 'minLength').value, value)) {
-                return { isValid: false, error: this.getErrorMessages('minLength'), name: 'minLength' };
+            if (findVObj('minLength') && !this.validateMinLength(findVObj('minLength').value, value)) {
+                return {
+                    isValid: false,
+                    error: this.getErrorMessages('minLength'),
+                    name: 'minLength',
+                };
             }
         }
         if (typeof value === 'number') {
             // =>max validation
-            if (this._schema.find(i => i.name === 'max') && !this.validateMax(this._schema.find(i => i.name === 'max').value, value)) {
-                return { isValid: false, error: this.getErrorMessages('max'), name: 'max' };
+            if (findVObj('max') && !this.validateMax(findVObj('max').value, value)) {
+                return {
+                    isValid: false,
+                    error: this.getErrorMessages('max'),
+                    name: 'max',
+                    newValue: findVObj('max').value,
+                };
             }
             // =>min validation
-            if (this._schema.find(i => i.name === 'min') && !this.validateMin(this._schema.find(i => i.name === 'min').value, value)) {
-                return { isValid: false, error: this.getErrorMessages('min'), name: 'min' };
+            if (findVObj('min') && !this.validateMin(findVObj('min').value, value)) {
+                return {
+                    isValid: false,
+                    error: this.getErrorMessages('min'),
+                    name: 'min',
+                    newValue: findVObj('min'),
+                };
             }
         }
 
         // =>accept validation
-        if (this._schema.find(i => i.name === 'acceptPattern') && !this.validateAcceptPattern(this._schema.find(i => i.name === 'acceptPattern').value, value)) {
-            return { isValid: false, error: this.getErrorMessages('acceptPattern'), name: 'acceptPattern' };
+        if (findVObj('acceptPattern') && !this.validateAcceptPattern(findVObj('acceptPattern').value, value)) {
+            return {
+                isValid: false,
+                error: this.getErrorMessages('acceptPattern'),
+                name: 'acceptPattern',
+            };
         }
         // =>reject validation
-        if (this._schema.find(i => i.name === 'rejectPattern') && !this.validateAcceptPattern(this._schema.find(i => i.name === 'rejectPattern').value, value)) {
-            return { isValid: false, error: this.getErrorMessages('rejectPattern'), name: 'rejectPattern' };
+        if (findVObj('rejectPattern') && !this.validateAcceptPattern(this._schema.find(i => i.name === 'rejectPattern').value, value)) {
+            return {
+                isValid: false,
+                error: this.getErrorMessages('rejectPattern'),
+                name: 'rejectPattern',
+            };
         }
 
 

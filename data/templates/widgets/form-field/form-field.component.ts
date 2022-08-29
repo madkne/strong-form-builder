@@ -110,6 +110,14 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
                     isValid: true,
                 };
             }
+
+            // =>set meta data of field
+            if (widget.widgetHeader['_formFieldName']) {
+                widget.widgetForm['_formFieldMetaData'][widget.widgetHeader['_formFieldName']] = {
+                    is_valid: validatorRes.isValid,
+                    error: validatorRes.error,
+                };
+            }
             if (validatorRes.isValid) {
                 this.errorMessage = undefined;
                 // =>set success status
@@ -118,14 +126,19 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
                 this.formFieldError(validatorRes.name, event, validatorRes.error);
                 // =>reset value in form field
                 if (widget.widgetHeader['_formFieldName']) {
-                    widget.widgetForm['_formFieldValues'][widget.widgetHeader['_formFieldName']] = undefined;
+                    // =>if set new value
+                    widget.widgetForm['_formFieldValues'][widget.widgetHeader['_formFieldName']] = validatorRes.newValue ? validatorRes.newValue : undefined;
                 }
 
-                // =>reset value of widget
                 if (!widget.schema) {
                     widget.schema = {};
                 }
-                widget.schema['value'] = undefined;
+                // =>reset value of widget or set new value
+                if (validatorRes.newValue) {
+                    widget.schema['value'] = validatorRes.newValue;
+                } else {
+                    widget.schema['value'] = undefined;
+                }
                 // =>set danger status
                 widget.schema['status'] = 'danger';
 
