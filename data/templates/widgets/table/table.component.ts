@@ -61,8 +61,10 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
                 }
             }
             // =>init display rows
-            for (const row of this.simpleRows) {
-                this.displayRows.push(JSON.parse(JSON.stringify(displayRow)));
+            if (this.simpleRows) {
+                for (const row of this.simpleRows) {
+                    this.displayRows.push(JSON.parse(JSON.stringify(displayRow)));
+                }
             }
             // =>set display rows as async
             this.initDisplayRows();
@@ -147,6 +149,7 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
     }
 
     protected async initDisplayRows() {
+        if (!this.simpleRows) return;
         for (let i = 0; i < this.simpleRows.length; i++) {
             const simpleRow = this.simpleRows[i];
             for (const col of this.schema.columns) {
@@ -195,7 +198,7 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
     isNotFoundEnabled() {
         if (this.displayComponentLoading) return false;
         if (!this.schema?.notFound) return false;
-        if (this.page == 1 && this.simpleRows.length === 0) return true;
+        if (this.page == 1 && (!this.simpleRows || this.simpleRows.length === 0)) return true;
 
         return false;
     }
