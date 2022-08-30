@@ -21,6 +21,8 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
     formFieldInstance: ComponentRef<StrongFBBaseWidget>[] = [];
     errorMessage: string;
 
+    protected override emitAutoReadyToUse = false;
+
 
 
     override async onInit() {
@@ -83,7 +85,7 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
             // this.formFieldInstance[0].instance.showChange.pipe(takeUntil(this.destroy$)).subscribe(it => {
             //     this.changeFormFieldValue(this.formFieldInstance[0].instance['ngModelValue']);
             // });
-
+            this.readyToUse = true;
             clearInterval(setContainerInterval);
         }, 100);
 
