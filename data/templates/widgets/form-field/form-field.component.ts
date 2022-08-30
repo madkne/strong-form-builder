@@ -74,6 +74,8 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
             this.formFieldInstance[0].instance['ngModelChange'].pipe(takeUntil(this.destroy$)).subscribe(it => this.changeFormFieldValue(it));
             // =>listen on showChange
             this.showChange.pipe(takeUntil(this.destroy$)).subscribe(it => {
+                // =>set show state
+                this.widgetForm.setFormFieldMeta(this.formFieldInstance[0].instance.widgetHeader['_formFieldName'], { is_show: it });
                 this.changeFormFieldValue(this.formFieldInstance[0].instance['ngModelValue']);
             });
 

@@ -24,7 +24,8 @@ export class StrongFBSelectWidgetComponent extends StrongFBBaseWidget<SelectSche
             if (!it) return;
             // =>load options
             this.loadOptions();
-        })
+        });
+        this.listenOnFormFieldChange('value');
 
     }
 

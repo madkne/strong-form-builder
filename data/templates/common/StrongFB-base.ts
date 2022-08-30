@@ -67,11 +67,15 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
     }
 
     setFormFieldMeta<T = keyof FORM_FIELDS>(name: T, meta?: FormFieldMetaData) {
+        if (name === undefined) return false;
         if (!this._formFieldMetaData[name as any]) this._formFieldMetaData[name as any] = {};
-        if (!meta) return;
+        if (!meta) return true;
         for (const key of Object.keys(meta)) {
             this._formFieldMetaData[name as any][key] = meta[key];
         }
+        // =>set name
+        this._formFieldMetaData[name as any].name = name;
+        return true;
     }
 
     formFieldValuesWithMeta(): FormFieldMetaData<keyof FORM_FIELDS>[] {
@@ -87,6 +91,10 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         }
 
         for (const key of Object.keys(this._formFieldMetaData)) {
+            this._formFieldMetaData[key].name = key;
+            if (this._formFieldValues[key] !== undefined) {
+                this._formFieldMetaData[key].value = this._formFieldValues[key];
+            }
             fields.push(this._formFieldMetaData[key]);
         }
         return fields as any;

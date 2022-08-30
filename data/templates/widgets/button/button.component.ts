@@ -51,25 +51,15 @@ export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSche
         // =>iterate all widgets
         for (const field of allFormFields) {
 
-            // =>if select all fields
-            if (this.schema.disabledForFormFields[0] === '*') {
+            // =>if select all fields or match fields
+            if (this.schema.disabledForFormFields[0] === '*' || this.schema.disabledForFormFields.includes(field.name)) {
                 fieldsWithMeta.push(field);
                 // =>check all fields to valid
-                if (field.is_valid === false) {
+                if (field.is_show !== false && field.is_valid === false) {
                     isValidAllFields = false;
                     break;
                 }
             }
-            // =>if must match fields
-            else if (this.schema.disabledForFormFields.includes(field.name)) {
-                fieldsWithMeta.push(field);
-                // =>check all fields to valid
-                if (field.is_valid === false) {
-                    isValidAllFields = false;
-                    break;
-                }
-            }
-
         }
 
         // =>enable button

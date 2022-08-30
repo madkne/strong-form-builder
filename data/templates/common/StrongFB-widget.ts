@@ -68,6 +68,9 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
                     let beforeStateShow = this.show;
                     this.show = await this.widgetHeader['_showCallback'].call(this.widgetForm, this.widgetHeader);
                     if (beforeStateShow !== this.show) {
+                        // =>set show state
+                        this.widgetForm.setFormFieldMeta(this.widgetHeader['_formFieldName'], { is_show: this.show });
+                        // =>emit show change event
                         this.showChange.emit(this.show);
                         // =>if show enabled, call onShow method
                         if (this.show) {
@@ -144,8 +147,8 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
         if (this.widgetHeader['_formFieldName']) {
             this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema[valueField];
         }
-        this.makeDirtyField();
         this.ngModelValue = this.schema[valueField];
+        this.makeDirtyField();
         this.ngModelChange.emit(this.schema[valueField]);
         this.widgetForm['_formFieldValuesUpdated$'].next(true);
     }
@@ -157,7 +160,10 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
         if (this.widgetHeader['_formFieldName']) {
             // => if before not dirty
             let beforeDirty = this.widgetForm.formFieldMeta(this.widgetHeader['_formFieldName'])?.is_dirty;
-            this.widgetForm.setFormFieldMeta(this.widgetHeader['_formFieldName'], { is_dirty: true });
+            this.widgetForm.setFormFieldMeta(this.widgetHeader['_formFieldName'], {
+                is_dirty: true,
+                is_show: this.show,
+            });
             // =>if before not dirty, run validator
             if (beforeDirty !== true) {
                 this.ngModelChange.emit(this.ngModelValue);

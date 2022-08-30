@@ -123,6 +123,7 @@ export interface FormFieldMetaData<T = string> {
     value?: any;
     error?: string;
     is_valid?: boolean;
+    is_show?: boolean;
     /** 
      * if user try to change value
     */
