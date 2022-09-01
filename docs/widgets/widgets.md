@@ -19,3 +19,4 @@
 |12|toggle|YES|-|rashidi|
 |13|editor|YES|html editor or markdown editor|madkne|
 |14|[component](./component.md)|YES|load dynamic a custom component|madkne|
+|15|tab|YES|-|madkne

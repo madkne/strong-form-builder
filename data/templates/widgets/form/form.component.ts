@@ -49,6 +49,7 @@ export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChang
     }
 
     override onDestroy() {
+        if (!this.form) return;
         this.form['destroy$'].next(true);
         this.form['destroy$'].complete();
     }

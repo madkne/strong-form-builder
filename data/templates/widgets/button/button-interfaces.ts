@@ -4,7 +4,7 @@ import { StrongFBButtonWidget } from "./button.header";
 
 export type ButtonSize = 'small' | 'medium' | 'large';
 
-export type ButtonStatus = 'default' | 'primary' | 'info' | 'success' | 'warning' | 'danger';
+export type ButtonStatus = 'basic' | 'primary' | 'info' | 'success' | 'warning' | 'danger';
 
 export type ButtonShape = 'rectangle' | 'round';
 export type ButtonAppearance = 'fill' | 'outline' | 'colorful' | 'basic';

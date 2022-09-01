@@ -1,0 +1,46 @@
+<nb-tabset *ngIf="schema && show" fullWidth (changeTab)="changeTab($event.tabId)">
+    <nb-tab [style.padding]="!schema.tabPadding ? '0' : undefined" [tabId]="header.name" [active]="header.isActive"
+        [disabled]="header.disabled"
+        [tabIcon]="header.mode === 'icon' || header.mode === 'textWithIcon' ? header.icon : undefined"
+        *ngFor="let header of schema.tabHeaders"
+        [tabTitle]="header.mode === 'text' || header.mode === 'textWithIcon' ? header.title : undefined"
+        [responsive]="header.mode === 'textWithIcon'">
+        <!-- tab content -->
+        <ng-container *ngIf="schema.tabContents[header.name]">
+            <!-- html text -->
+            <p *ngIf="schema.tabContents[header.name].html" [innerHtml]="schema.tabContents[header.name].html"></p>
+            <!-- layout -->
+            <strong-layout-builder *ngIf="schema.tabContents[header.name].layout" [form]="widgetForm"
+                [layout]="schema.tabContents[header.name].layout">
+            </strong-layout-builder>
+            <!-- form -->
+            <strong-form-builder *ngIf="schema.tabContents[header.name].form"
+                [form]="schema.tabContents[header.name].__formInstance"></strong-form-builder>
+        </ng-container>
+
+    </nb-tab>
+</nb-tabset>
+
+
+<!-- <nb-card *ngIf="widgetHeader?.schema">
+    <nb-card-header *ngIf="widgetHeader.schema.header">
+        <ng-container *ngIf="widgetHeader.schema.header.text">{{widgetHeader.schema.header.text}}</ng-container>
+        <ng-container *ngIf="widgetHeader.schema.header.layout">
+            <strong-layout-builder [form]="widgetForm"
+                (layoutLoadedEvent)="childLayoutLoaded(widgetHeader.schema.header.layout['_id'])"
+                [layout]="widgetHeader.schema.header.layout">
+            </strong-layout-builder>
+        </ng-container>
+
+    </nb-card-header>
+    <nb-card-body *ngIf="widgetHeader.schema.content">
+        <strong-layout-builder [form]="widgetForm" [layout]="widgetHeader.schema.content.layout"
+            (layoutLoadedEvent)="childLayoutLoaded(widgetHeader.schema.content.layout['_id'])">
+        </strong-layout-builder>
+    </nb-card-body>
+    <nb-card-footer *ngIf="widgetHeader.schema.footer">
+        <strong-layout-builder [form]="widgetForm" [layout]="widgetHeader.schema.footer.layout"
+            (layoutLoadedEvent)="childLayoutLoaded(widgetHeader.schema.footer.layout['_id'])">
+        </strong-layout-builder>
+    </nb-card-footer>
+</nb-card> -->

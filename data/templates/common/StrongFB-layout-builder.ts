@@ -43,6 +43,20 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
         return this._propertiesClass = new StrongFBLayoutBuilderProperties<WIDGET>(this);
 
     }
+
+    rowReverseBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
+        this._schema.type = 'box';
+        properties = this._makeObject(properties, ['style']);
+        properties.style['display'] = 'flex';
+        properties.style['flex-direction'] = 'row-reverse';
+        properties.style['align-items'] = 'center';
+        this._setBoxCommonProperties(properties);
+
+
+        return this._propertiesClass = new StrongFBLayoutBuilderProperties<WIDGET>(this);
+
+    }
+
     box(properties?: StrongFBLayoutBuilderNormalBoxProperties<WIDGET>) {
         this._schema.type = 'box';
         this._setBoxCommonProperties(properties);

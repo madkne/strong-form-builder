@@ -11,6 +11,8 @@ export class StrongFBCardWidgetComponent extends StrongFBBaseWidget<CardSchema> 
 
     layoutsLoaded: { [k: string]: boolean } = {};
 
+    protected override prefixId = 'card';
+
     protected override emitAutoReadyToUse = false;
 
     override async onInit() {

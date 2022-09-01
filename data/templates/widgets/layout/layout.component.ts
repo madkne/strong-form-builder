@@ -16,6 +16,8 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
     @ViewChild('WidgetsSection', { read: ViewContainerRef }) WidgetsSection: ViewContainerRef;
     widgetsNeedToReload = true;
 
+    protected override prefixId = 'layout';
+
     @Output() layoutLoadedEvent = new EventEmitter<boolean>();
 
     protected dynamicWidgets: {
@@ -124,7 +126,7 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
         // console.log('layout loaded:', layoutId)
         this.layoutsLoaded[layoutId] = true;
 
-        if (Object.keys(this.layoutsLoaded).length === this.layoutSchema.layouts.length && this.updatingLayout) {
+        if (Object.keys(this.layoutsLoaded).length === this.layoutSchema.layouts.length && !this.updatingLayout) {
             this.layoutLoadedEvent.emit(true);
         }
     }

@@ -21,6 +21,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
     protected viewInit$ = new BehaviorSubject<boolean>(false);
     protected displayComponentLoading = false;
     protected ngModelValue: any;
+    protected prefixId = 'unknown';
 
     @Output() ngModelChange = new EventEmitter<any>();
     @Output() showChange = new EventEmitter<boolean>();
@@ -34,7 +35,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
     /******************************************* */
 
     constructor(protected elRef: ElementRef) {
-        this._widgetId = 'strong_fb_widget_' + new Date().getTime() + '_' + Math.ceil(Math.random() * 10000);
+
 
     }
 
@@ -46,6 +47,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
      * instead of override this function, call 'onInit' function
      */
     ngOnInit(): void {
+        this._widgetId = `strong_fb_${this.prefixId}_widget_` + new Date().getTime() + '_' + Math.ceil(Math.random() * 10000);
         if (this.emitAutoReadyToUse) {
             this.readyToUse = true;
         }
@@ -195,6 +197,10 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
         if (widgetsSchema.widgets) {
             for (const widgetFunction of widgetsSchema.widgets) {
                 let widget = await widgetFunction.call(form) as StrongFBBaseWidgetHeader;
+                if (!widget) {
+                    SFB_warn(`can not find widget instance from '${widgetFunction.name}' function`)
+                    continue;
+                }
                 // =>if has function name and no name property
                 if (form[widgetFunction.name] && !widget['_name'] && widget['name']) {
                     widget.name(widgetFunction.name);

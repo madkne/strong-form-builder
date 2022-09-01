@@ -17,6 +17,7 @@ import { StrongFBInputWidgetComponent } from "./widgets/input/input.component";
 import { StrongFBLayoutComponent } from "./widgets/layout/layout.component";
 import { StrongFBRadioBoxWidgetComponent } from "./widgets/radio-box/radio-box.component";
 import { StrongFBSelectWidgetComponent } from "./widgets/select/select.component";
+import { StrongFBTabWidgetComponent } from "./widgets/tab/tab.component";
 import { StrongFBTabledWidgetComponent } from "./widgets/table/table.component";
 import { StrongFBTagsListWidgetComponent } from "./widgets/tags-list/tags-list.component";
 import { StrongFBTextAreaWidgetComponent } from "./widgets/textarea/textarea.component";
@@ -40,6 +41,7 @@ import { StrongFBToggleWidgetComponent } from "./widgets/toggle/toggle.component
         StrongFBToggleWidgetComponent,
         StrongFBEditorWidgetComponent,
         StrongFBComponentWidgetComponent,
+        StrongFBTabWidgetComponent,
         SanitizerUrlPipe,
 
     ],
