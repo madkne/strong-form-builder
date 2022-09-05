@@ -6,14 +6,14 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class StrongFBTransmitService {
+export class StrongFBTransmitService<N extends string = TransmitChannelName> {
 
-  protected channels: { name: TransmitChannelName, channel: BehaviorSubject<any> }[] = [];
+  protected channels: { name: N, channel: BehaviorSubject<any> }[] = [];
 
 
   constructor() { }
 
-  emit<T = any>(name: TransmitChannelName, data: T) {
+  emit<T = any>(name: N, data: T) {
     // =>search for exist channel by name
     const channel = this.channels.find(i => i.name === name);
     if (channel) {
@@ -25,7 +25,7 @@ export class StrongFBTransmitService {
     }
   }
 
-  listen<T = any>(name: TransmitChannelName): BehaviorSubject<T> {
+  listen<T = any>(name: N): BehaviorSubject<T> {
     // =>try to find channel by name
     const channel = this.channels.find(i => i.name === name);
     if (channel) {
@@ -37,7 +37,7 @@ export class StrongFBTransmitService {
     }
   }
 
-  protected add<T>(name: TransmitChannelName, initData: T) {
+  protected add<T>(name: N, initData: T) {
     // log('add new channel:', name);
     this.channels.push({
       name,

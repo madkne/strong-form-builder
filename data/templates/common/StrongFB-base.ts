@@ -3,12 +3,13 @@ import { StrongFBLayoutBuilder } from "./StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs'
 
-import { NotifyCssAnimationStyle, NotifyMode } from "./StrongFB-types";
+import { NotifyCssAnimationStyle, NotifyMode, TransmitChannelName } from "./StrongFB-types";
 import { FormFieldMetaData, StrongFBFormOptions } from "./StrongFB-interfaces";
 import { StrongFBService } from "../services/StrongFB.service";
 import { StrongFBLocaleService } from "../services/StrongFB-locale.service";
+import { StrongFBTransmitService } from "../services/StrongFB-transmit.service";
 
-export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS extends object = object, INIT_FIELDS extends object = FORM_FIELDS, CUSTOM_LOCALES extends string = string> {
+export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS extends object = object, INIT_FIELDS extends object = FORM_FIELDS, CUSTOM_LOCALES extends string = string, TRANSMIT extends string = TransmitChannelName> {
     private _callOnInit = false;
     private _usedWidgets: { [k in WIDGET]?: StrongFBBaseWidgetHeader } = {};
     private _usedWidgetComponents: { [k in WIDGET]?: any } = {};
@@ -19,28 +20,37 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
     private _options: StrongFBFormOptions;
     private _service: StrongFBService;
     protected destroy$ = new Subject<boolean>();
+    protected _transmit: StrongFBTransmitService<TRANSMIT>;
 
     public defaultLocaleNamespace: CUSTOM_LOCALES;
 
-    constructor(_http: StrongFBHttpService, _service: StrongFBService, _options: StrongFBFormOptions<INIT_FIELDS> = {
-        rtl: false,
-    }) {
+    constructor(
+        _http: StrongFBHttpService, _service: StrongFBService,
+        _transmit: StrongFBTransmitService<TRANSMIT>,
+        _options: StrongFBFormOptions<INIT_FIELDS> = {
+            rtl: false,
+        }) {
         this._http = _http;
         this._service = _service;
         this._options = _options;
+        this._transmit = _transmit;
     }
     /**
      * call before layout init
      */
     async onInit() {
-
+        //TODO: call by child
     }
 
     /**
      * call after layout loaded
      */
     onLoaded() {
+        //TODO: call by child
+    }
 
+    get transmit() {
+        return this._transmit;
     }
     /**
      * find a widget before used and init by its function name

@@ -12,6 +12,7 @@ import { Confirm, IConfirmOptions } from 'notiflix/build/notiflix-confirm-aio';
 
 import { NotifyCssAnimationStyle, NotifyMode } from '../common/StrongFB-types';
 import { StrongFBHelper } from '../StrongFB-helpers';
+import { StrongFBTransmitService } from './StrongFB-transmit.service';
 
 @Injectable({
     providedIn: 'root'
@@ -48,6 +49,7 @@ export class StrongFBService {
         protected _router: Router,
         protected _locale: StrongFBLocaleService,
         protected _activeRoute: ActivatedRoute,
+        protected _transmit: StrongFBTransmitService,
     ) {
 
     }
@@ -114,10 +116,15 @@ export class StrongFBService {
      * @returns 
      */
     async loadFormClass(form: any, data?: object): Promise<StrongFBFormClass> {
-        let formInstance = new form(this._http, this, {
-            rtl: this._locale.getLangInfo()?.direction === 'rtl',
-            initData: data,
-        }) as StrongFBFormClass;
+        let formInstance = new form(
+            this._http,
+            this,
+            this._transmit,
+            {
+                rtl: this._locale.getLangInfo()?.direction === 'rtl',
+                initData: data,
+            },
+        ) as StrongFBFormClass;
 
         return formInstance;
     }
