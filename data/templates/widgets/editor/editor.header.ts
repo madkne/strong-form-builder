@@ -1,7 +1,7 @@
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { InputSize, InputStatus, InputType } from "../input/input-interfaces";
-import { EditorSchema, EditorType } from "./editor-interfaces";
+import { EditorProductType, EditorSchema, EditorType } from "./editor-interfaces";
 import { StrongFBEditorWidgetComponent } from "./editor.component";
 
 
@@ -31,6 +31,11 @@ export class StrongFBEditorWidget<FIELDS = { [k: string]: any }> extends StrongF
 
     disabled(is = true) {
         this._schema.disabled = is;
+        return this;
+    }
+
+    editorType(editor: EditorProductType) {
+        this._schema.editorType = editor;
         return this;
     }
 

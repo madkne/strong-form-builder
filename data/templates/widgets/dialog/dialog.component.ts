@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, EventEmitter, SimpleChanges, TemplateRef, ViewChild, Output } from '@angular/core';
+import { Component, ElementRef, Input, EventEmitter, SimpleChanges, TemplateRef, ViewChild, Output, ChangeDetectorRef } from '@angular/core';
 import { NbDialogRef, NbDialogService } from '@nebular/theme';
 import { interval, takeUntil } from 'rxjs';
 import { StrongFBFormClass } from '../../common/StrongFB-base';
@@ -37,8 +37,9 @@ export class StrongFBDialogComponent extends StrongFBBaseWidget {
         protected override elRef: ElementRef,
         private dialogService: NbDialogService,
         private transmit: StrongFBTransmitService,
-        private locale: StrongFBLocaleService) {
-        super(elRef);
+        private locale: StrongFBLocaleService,
+        protected override cdr: ChangeDetectorRef,) {
+        super(elRef, cdr);
     }
 
     layoutSchema: StrongFBLayoutBuilderSchema;
@@ -65,7 +66,7 @@ export class StrongFBDialogComponent extends StrongFBBaseWidget {
 
 
     /***************************************** */
-    async normalizeActions() {
+    protected async normalizeActions() {
         if (!this.actions || !Array.isArray(this.actions)) return;
         for (const act of this.actions) {
             // =>if show function
@@ -73,6 +74,9 @@ export class StrongFBDialogComponent extends StrongFBBaseWidget {
                 act.__show = await act.show();
             } else {
                 act.__show = true;
+            }
+            if (!act.status) {
+                act.status = 'primary';
             }
             // =>if is cancel
             if (act.isCancel) {
@@ -121,7 +125,7 @@ export class StrongFBDialogComponent extends StrongFBBaseWidget {
         await this.runActionFunction(action);
     }
     /***************************************** */
-    async runActionFunction(action: StrongFBDialogAction) {
+    protected async runActionFunction(action: StrongFBDialogAction) {
         if (action.action) {
             const ret = await action.action.call(this.widgetForm, this.form.formFieldValues());
             if (ret) {

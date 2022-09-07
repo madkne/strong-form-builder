@@ -47,8 +47,9 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
     constructor(
         protected detectChanges: ChangeDetectorRef,
         protected elref: ElementRef,
-        public locale: StrongFBLocaleService) {
-        super(elref);
+        public locale: StrongFBLocaleService,
+    ) {
+        super(elref, detectChanges);
     }
     /********************************** */
 

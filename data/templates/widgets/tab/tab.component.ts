@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef } from '@angular/core';
 import { SFB_warn } from '../../common/StrongFB-common';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBService } from '../../services/StrongFB.service';
@@ -16,8 +16,11 @@ export class StrongFBTabWidgetComponent extends StrongFBBaseWidget<TabSchema> {
 
     // protected override emitAutoReadyToUse = false;
 
-    constructor(private elref: ElementRef, private strongService: StrongFBService) {
-        super(elref);
+    constructor(
+        private elref: ElementRef,
+        private strongService: StrongFBService,
+        protected detectChanges: ChangeDetectorRef) {
+        super(elref, detectChanges);
     }
 
     override async onInit() {

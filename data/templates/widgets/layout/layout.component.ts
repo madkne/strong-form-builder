@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { StrongFBFormClass } from '../../common/StrongFB-base';
 import { StrongFBLayoutBuilder } from '../../common/StrongFB-layout-builder';
@@ -26,8 +26,11 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
     };
 
 
-    constructor(protected override elRef: ElementRef, protected locale: StrongFBLocaleService) {
-        super(elRef);
+    constructor(
+        protected override elRef: ElementRef,
+        protected locale: StrongFBLocaleService,
+        protected override cdr: ChangeDetectorRef,) {
+        super(elRef, cdr);
     }
     @Input() form: StrongFBFormClass;
 

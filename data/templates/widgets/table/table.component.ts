@@ -20,8 +20,11 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
     isRtl = false;
     rowsSelected: { [k: string]: object } = {};
 
-    constructor(protected override elRef: ElementRef, protected cdr: ChangeDetectorRef, protected srv: StrongFBService) {
-        super(elRef)
+    constructor(
+        protected override elRef: ElementRef,
+        protected override cdr: ChangeDetectorRef,
+        protected srv: StrongFBService) {
+        super(elRef, cdr);
     }
 
 
@@ -214,9 +217,10 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
     calcDisplayPagination() {
         /**
          * 1 2 3 4 5
-         * < [1] 2 .. 4 5 > (5)
-         * < 1 2 .. [5] .. 9 > (9)
-         * < 1 .. [8] 9 10 > (10)
+         * < [1] 2 3 4 5 > >>(5)
+         * < 1 [2] 3 4 5 > >>(9)
+         * < 1 2 [3] 4 5 > >>(10)
+         * < 2 3 [4] 5 6 > >> (10)
          */
         let count = this.schema.mapApiPagination.__pageCountResponse;
         this.displayPages = {
@@ -228,7 +232,7 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
 
         }
         // count less than 5
-        if (count < 5) {
+        if (count <= 5) {
             for (let i = 1; i <= count; i++) {
                 this.displayPages.pages.push(i);
             }
@@ -238,44 +242,40 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
         this.displayPages.next = true;
         this.displayPages.first = true;
         this.displayPages.last = true;
-        if (this.page > 2 && count - this.page > 3) {
-            this.displayPages.pages.push(1);
-            this.displayPages.pages.push(2);
-            this.displayPages.pages.push('...');
-            this.displayPages.pages.push(this.page);
-            this.displayPages.first = false;
-        }
-        else if (this.page > 1 && count != this.page) {
-            this.displayPages.pages.push('...');
-            this.displayPages.pages.push(this.page);
-        }
 
-        else if (count != this.page) {
-            this.displayPages.first = false;
-            this.displayPages.pages.push(this.page);
-
+        // =>if page bigger than 2
+        if (this.page > 2) {
+            this.displayPages.pages.push(this.page - 2);
         }
-
-
-        if (count == this.page) {
-            this.displayPages.pages.push('...');
-            this.displayPages.pages.push(count - 1);
-            this.displayPages.pages.push(count);
-            this.displayPages.last = false;
+        if (this.page > 1) {
+            this.displayPages.pages.push(this.page - 1);
         }
-        else if (count - this.page < 3) {
-            for (let i = this.page + 1; i <= count; i++) {
-                this.displayPages.pages.push(i);
-            }
-            this.displayPages.last = false;
-        } else {
+        this.displayPages.pages.push(this.page);
+        if (this.page + 1 <= count) {
             this.displayPages.pages.push(this.page + 1);
-            this.displayPages.pages.push('...');
-            this.displayPages.pages.push(count - 1);
-            this.displayPages.pages.push(count);
-            this.displayPages.last = false;
-
         }
+        if (this.page + 2 <= count) {
+            this.displayPages.pages.push(this.page + 2);
+        }
+        if (this.displayPages.pages.length < 5 && this.page + 3 <= count) {
+            this.displayPages.pages.push(this.page + 3);
+        }
+        // =>Add from first
+        if (this.displayPages.pages.length < 5 && this.page > 3) {
+            this.displayPages.pages.unshift(this.page - 3);
+        }
+
+
+
+
+        if (this.displayPages.pages.includes(count)) {
+            this.displayPages.last = false;
+        }
+
+        if (this.displayPages.pages.includes(1)) {
+            this.displayPages.first = false;
+        }
+
 
         return true;
     }

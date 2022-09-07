@@ -2,6 +2,8 @@ import { InputSize, InputStatus } from "../input/input-interfaces";
 
 export type EditorType = 'markdown' | 'wysiwyg';
 
+export type EditorProductType = 'ToastUI' | 'Froala';
+
 export interface EditorSchema {
 
     /**
@@ -9,6 +11,10 @@ export interface EditorSchema {
      */
     type?: EditorType;
     placeholder?: string;
+    /**
+     * @default Froala
+     */
+    editorType?: EditorProductType;
     /**
      * @default false
      */

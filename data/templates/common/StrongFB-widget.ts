@@ -1,7 +1,7 @@
 import { StrongFBFormClass } from "./StrongFB-base";
 import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
 import { BehaviorSubject, interval, Subject, take, takeUntil } from 'rxjs';
-import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewContainerRef } from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewContainerRef } from "@angular/core";
 import { StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderWidgetFunction } from "./StrongFB-layout-builder-types";
 import { Block } from 'notiflix/build/notiflix-block-aio';
 import { SFB_info, SFB_warn } from "./StrongFB-common";
@@ -34,20 +34,25 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
 
     /******************************************* */
 
-    constructor(protected elRef: ElementRef) {
+    constructor(protected elRef: ElementRef, protected cdr: ChangeDetectorRef) {
 
 
     }
 
     get widgetId() {
+        this._generateWidgetId();
         return this._widgetId;
     }
-
+    private _generateWidgetId() {
+        if (this._widgetId) return;
+        this._widgetId = `strong_fb_${this.prefixId}_widget_` + new Date().getTime() + '_' + Math.ceil(Math.random() * 10000);
+        this.cdr.detectChanges();
+    }
     /**
      * instead of override this function, call 'onInit' function
      */
     ngOnInit(): void {
-        this._widgetId = `strong_fb_${this.prefixId}_widget_` + new Date().getTime() + '_' + Math.ceil(Math.random() * 10000);
+        this._generateWidgetId();
         if (this.emitAutoReadyToUse) {
             this.readyToUse = true;
         }

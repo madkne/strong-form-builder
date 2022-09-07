@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, Output, EventEmitter, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBLocaleService } from '../../services/StrongFB-locale.service';
 import { StrongFBService } from '../../services/StrongFB.service';
@@ -6,6 +6,7 @@ import { EditorSchema } from './editor-interfaces';
 // import Editor from '@toast-ui/editor';
 
 declare var toastui;
+declare var FroalaEditor;
 
 @Component({
     selector: 'editor-widget',
@@ -18,25 +19,71 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
     override schema: EditorSchema;
     @Output() override ngModelChange = new EventEmitter<string | number>();
     protected override emitAutoReadyToUse = false;
+    protected override prefixId = 'editor';
 
 
     constructor(
         protected override elRef: ElementRef,
         protected srv: StrongFBService,
         protected locale: StrongFBLocaleService,
+        protected override cdr: ChangeDetectorRef,
     ) {
-        super(elRef);
-        this.editorId = 'editor_' + this.widgetId;
+        super(elRef, cdr);
+
     }
 
 
     override async onInit() {
+        this.editorId = 'editor_' + this.widgetId;
         this.displayLoading();
         this.schema = this.widgetHeader.schema;
         // =>normalize schema
         this.schema = this.normalizeSchema(this.schema);
 
         this.listenOnFormFieldChange('value');
+
+        // =>if toastUI type
+        if (this.schema.editorType === 'ToastUI') {
+            this.toastUILoad();
+        } else {
+            this.froalaLoad();
+        }
+
+    }
+
+    normalizeSchema(schema: EditorSchema) {
+        if (!schema.type) schema.type = 'wysiwyg';
+        if (!schema.minHeight) schema.minHeight = '200px';
+        if (!schema.maxWidth) schema.minHeight = '100%';
+        if (this.schema.value === undefined || this.schema.value === null) this.schema.value = '';
+        if (!schema.editorType) schema.editorType = 'Froala';
+
+
+        return schema;
+    }
+
+    changeValue(event?) {
+        // console.log(event);
+        // =>get value by type
+        if (this.schema.type === 'markdown') {
+            if (this.schema.editorType === 'ToastUI') {
+                this.schema.value = this.editor.getMarkdown();
+            } else {
+                this.schema.value = this.editor.html.get();
+            }
+        } else if (this.schema.type === 'wysiwyg') {
+            if (this.schema.editorType === 'ToastUI') {
+                this.schema.value = this.editor.getHTML();
+            } else {
+                this.schema.value = this.editor.html.get();
+            }
+        }
+        this.updateFormField('value');
+    }
+
+
+
+    async toastUILoad() {
         // =>load dynamic resources
         await this.srv.loadScript(this.srv.assetsUrl('js/toastui-editor-all.min.js'));
         await this.srv.loadStyleLink(this.srv.assetsUrl('css/toastui-editor.min.css'));
@@ -100,24 +147,129 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
         }, 10);
     }
 
-    normalizeSchema(schema: EditorSchema) {
-        if (!schema.type) schema.type = 'wysiwyg';
-        if (!schema.minHeight) schema.minHeight = '200px';
-        if (!schema.maxWidth) schema.minHeight = '100%';
-        if (this.schema.value === undefined || this.schema.value === null) this.schema.value = '';
 
-
-        return schema;
-    }
-
-    changeValue(event?) {
-        // console.log(event);
-        // =>get value by type
-        if (this.schema.type === 'markdown') {
-            this.schema.value = this.editor.getMarkdown();
-        } else if (this.schema.type === 'wysiwyg') {
-            this.schema.value = this.editor.getHTML();
+    async froalaLoad() {
+        // =>load dynamic resources
+        await this.srv.loadStyleLink(this.srv.assetsUrl('css/froala_editor.min.css'));
+        await this.srv.loadStyleLink(this.srv.assetsUrl('css/froala_editor-plugins.pkgd.min.css'));
+        if (this.srv['_darkTheme']) {
+            await this.srv.loadStyleLink(this.srv.assetsUrl('css/froala_editor.dark.min.css'));
         }
-        this.updateFormField('value');
+        await this.srv.loadScript(this.srv.assetsUrl('js/froala_editor.pkgd.min.js'));
+        // =>load language
+        if (this.locale.getLangInfo().code !== 'en') {
+            await this.srv.loadScript(this.srv.assetsUrl(`js/froala_editor-language-${this.locale.getLangInfo().code}.js`));
+
+        }
+        await this.srv.loadStyleBlock(`
+        #fr-logo {
+            display: none;
+        }
+        .fr-toolbar, .fr-wrapper, .fr-second-toolbar  {
+            border-color: var(--input-basic-border-color) !important;
+            background-color: var(--input-basic-background-color) !important;
+            color: var(--card-text-color) !important;
+        }
+
+        `);
+
+        let editorLoaded = setInterval(() => {
+            if (!document.getElementById(this.editorId)) return;
+
+            this.editor = new FroalaEditor(`div#${this.editorId}`,
+                {
+                    events: {
+                        contentChanged: () => this.changeValue(),
+                    },
+                    charCounterMax: -1,
+                    quickInsertEnabled: false,
+                    charCounterCount: true,
+                    codeMirror: false,
+                    "emoticonsButtons": [
+                        "emoticonsBack",
+                        "|"
+                    ],
+                    "tableCellMultipleStyles": true,
+                    // "tableCellStyles": {
+                    //     "fr-highlighted": "Highlighted",
+                    //     "fr-thick": "Thick"
+                    // },
+                    useClasses: false,
+                    "language": this.locale.getLangInfo().code,
+                    "direction": "auto",
+                    "heightMax": this.schema.minHeight,
+                    "iframe": false,
+                    "toolbarButtons": {
+                        "moreText": {
+                            "buttons": [
+                                "bold",
+                                "italic",
+                                "underline",
+                                "strikeThrough",
+                                "subscript",
+                                "superscript",
+                                "fontFamily",
+                                "fontSize",
+                                "textColor",
+                                "backgroundColor",
+                                "inlineClass",
+                                "inlineStyle",
+                                "clearFormatting"
+                            ],
+                            "buttonsVisible": 3,
+                            "align": "left"
+                        },
+                        "moreParagraph": {
+                            "buttons": [
+                                "alignLeft",
+                                "alignCenter",
+                                "formatOLSimple",
+                                "alignRight",
+                                "alignJustify",
+                                "paragraphFormat",
+                                "paragraphStyle",
+                                "lineHeight",
+                                "outdent",
+                                "indent",
+                                "quote"
+                            ],
+                            "buttonsVisible": 3,
+                            "align": "left"
+                        },
+                        "moreRich": {
+                            "buttons": [
+                                "insertLink",
+                                "insertImage",
+                                "insertVideo",
+                                "insertTable",
+                                "emoticons",
+                                "specialCharacters",
+                                "insertHR"
+                            ],
+                            "buttonsVisible": 2,
+                            "align": "left"
+                        },
+                        "moreMisc": {
+                            "buttons": [
+                                "undo",
+                                "redo",
+                                "fullscreen",
+                                "print",
+                                "selectAll",
+                                "html"
+                            ],
+                            "buttonsVisible": 2,
+                            "align": "right"
+                        },
+                        "showMoreButtons": true
+                    },
+                    imageUpload: false,
+                    videoUpload: false
+                });
+
+            this.displayLoading(false);
+            this.readyToUse = true;
+            clearInterval(editorLoaded);
+        }, 10);
     }
 }
