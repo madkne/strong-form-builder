@@ -1,5 +1,5 @@
 import { BehaviorSubject } from "rxjs";
-import { generateId } from "src/app/core/common/public";
+import { generateId } from "./StrongFB-common";
 import { StrongFBLayoutBuilderProperties } from "./StrongFB-layout-builder-properties";
 import { StrongFBLayoutBuilderBoxCommonProperties, StrongFBLayoutBuilderGridColumnType, StrongFBLayoutBuilderGridCommonProperties, StrongFBLayoutBuilderNormalBoxProperties, StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderType } from "./StrongFB-layout-builder-types";
 import { ScreenMode } from "./StrongFB-types";

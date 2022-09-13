@@ -1,4 +1,4 @@
-import { APIRequest } from "../../common/StrongFB-interfaces";
+import { APIRequest, APIResponse } from "../../common/StrongFB-interfaces";
 import { ButtonAppearance, ButtonStatus } from "../button/button-interfaces";
 import { StrongFBTableWidget } from "./table.header";
 import { HttpErrorResponse } from "@angular/common/http";
@@ -110,6 +110,7 @@ export interface TableSchema<COL extends string = string, ROW extends object = o
     loadRowsByApi?: {
         options: APIRequest;
         response: TableLoadRowsResponse<ROW>;
+        request?: (req: APIRequest<ROW>) => Promise<APIResponse<ROW>>
     };
     columnActions?: { [k in COL]?: TableColumnAction<ROW>[] | TableColumnDynamicActionsType };
     mapApiPagination?: TableMapApiPagination;

@@ -80,7 +80,7 @@ TODO:
 ### `loadRowsByApi` method
 
 ```ts
-loadRowsByApi(options: APIRequest, response?: TableLoadRowsResponse<ROW>)
+loadRowsByApi(options: APIRequest, response?: TableLoadRowsResponse<ROW>, request?: (req: APIRequest<ROW>) => Promise<APIResponse<ROW>>)
 ```
 
 ?> in default, table widget works with `StrongFBHttpService` for call APIs.
@@ -90,6 +90,8 @@ you must one parameter and one optional parameter:
 - **options** (*required*) this parameter is in type `APIRequest` and you can set `method`, `path` and other need properties.
 
 - **response** if your API response needs to parse and can not be used directly, you can use this parameter to map your response to an Array of objects (as rows)
+
+- **request** if you can send request by your self method (like another http service), you can use it.
 
 for example:
 

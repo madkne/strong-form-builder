@@ -118,19 +118,24 @@ export function generateString(length = 10, includeNumbers = true, includeChars 
     return result;
 }
 /************************************************* */
+
+export function generateId(prefix?: string): string {
+    return Math.random().toString().split('.')[1] + '_' + new Date().getTime() + '_' + (prefix ? prefix : 'id');
+}
+/************************************************* */
 export function replaceByRegex(text: string, values: object, regex: RegExp = /:\w+/g) {
     // =>if must replace values in translate text
     if (text && values) {
-      // =>get all variables of text
-      const matches = text.match(regex);
-      // =>replace all variables
-      if (Array.isArray(matches)) {
-        for (const match of matches) {
-          if (values[match.substr(1)] !== undefined) {
-            text = text.replace(match, values[match.substr(1)]);
-          }
+        // =>get all variables of text
+        const matches = text.match(regex);
+        // =>replace all variables
+        if (Array.isArray(matches)) {
+            for (const match of matches) {
+                if (values[match.substr(1)] !== undefined) {
+                    text = text.replace(match, values[match.substr(1)]);
+                }
+            }
         }
-      }
     }
     return text
-  }
+}

@@ -5,6 +5,7 @@ import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
 import { TableColumnAction, TableColumnDynamicActionsType, TableSchema } from './table-interfaces';
 import { takeUntil } from 'rxjs';
 import { StrongFBService } from '../../services/StrongFB.service';
+import { APIResponse } from '../../common/StrongFB-interfaces';
 
 @Component({
     selector: 'table-widget',
@@ -92,8 +93,15 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
             }
             //TODO: post
         }
+        let res: APIResponse;
+        // =>call api by user request
+        if (this.schema.loadRowsByApi.request) {
+            res = await this.schema.loadRowsByApi.request(this.schema.loadRowsByApi.options);
+        }
         // =>call api
-        let res = await this.widgetForm.http.sendPromise(this.schema.loadRowsByApi.options);
+        else {
+            res = await this.widgetForm.http.sendPromise(this.schema.loadRowsByApi.options);
+        }
         // =>parse pagination from response
         if (this.schema.mapApiPagination) {
             if (res && res.result) {
@@ -320,7 +328,7 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
         let row = this.simpleRows[rowIndex];
         // =>generate sign
         let rowSign = this.generateRowSign(row);
-        return this.rowsSelected[rowSign] ?? false;
+        return this.rowsSelected[rowSign] !== undefined ? true : false;
     }
 
     checkSelectedLimit() {

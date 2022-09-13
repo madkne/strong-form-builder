@@ -1,5 +1,5 @@
 
-import { APIRequest } from "../../common/StrongFB-interfaces";
+import { APIRequest, APIResponse } from "../../common/StrongFB-interfaces";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableLoadRowsResponse, TableMapApiPagination, TableNotFound, TableSchema, TableSelectable, TableSelectableCallback } from "./table-interfaces";
 import { StrongFBTabledWidgetComponent } from "./table.component";
@@ -103,7 +103,7 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
         return this;
     }
 
-    loadRowsByApi(options: APIRequest, response?: TableLoadRowsResponse<ROW>) {
+    loadRowsByApi(options: APIRequest, response?: TableLoadRowsResponse<ROW>, request?: (req: APIRequest<ROW>) => Promise<APIResponse<ROW>>) {
         this._schema.loadRowsByApi = {
             options,
             response: response ? response : (rep, err) => {
@@ -111,6 +111,7 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
                 if (Array.isArray(rep)) return rep;
                 return [];
             },
+            request: request ? request : undefined,
         };
         return this;
     }
