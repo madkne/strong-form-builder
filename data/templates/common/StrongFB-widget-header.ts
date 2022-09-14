@@ -55,6 +55,13 @@ export class StrongFBBaseWidgetHeader<SCHEMA extends object = object, WIDGET_NAM
         return this;
     }
 
+
+    style(key: string, value: string | number) {
+        this._commonStyles[key] = value;
+
+        return this;
+    }
+
     showByCallback(callback: StrongFBWidgetShowCallback) {
         this._showCallback = callback;
         return this;

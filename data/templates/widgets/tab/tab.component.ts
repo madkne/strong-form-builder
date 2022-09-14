@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { SFB_warn } from '../../common/StrongFB-common';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBService } from '../../services/StrongFB.service';
@@ -13,6 +13,7 @@ export class StrongFBTabWidgetComponent extends StrongFBBaseWidget<TabSchema> {
 
 
     protected override prefixId = 'tab';
+    @ViewChild('TabComponentRef', { read: ViewContainerRef }) tabComponentRef: ViewContainerRef;
 
     // protected override emitAutoReadyToUse = false;
 
@@ -47,8 +48,15 @@ export class StrongFBTabWidgetComponent extends StrongFBBaseWidget<TabSchema> {
     }
 
 
-    async changeTab(name: string) {
-        console.log('switch tab name:', name)
+    async changeTab(name: string, event) {
+        // console.log('switch tab name:', name, event)
+        let selectedTabHeader = this.schema.tabHeaders.find(i => i.name === name);
+        // =>check before change event
+        if (this.schema.tabBeforeChange) {
+            if (!await this.schema.tabBeforeChange.call(this.widgetForm, selectedTabHeader, this.widgetHeader)) {
+                return;
+            }
+        }
         // =>find tab content
         let content = this.schema.tabContents[name];
         if (!content) {
@@ -58,6 +66,28 @@ export class StrongFBTabWidgetComponent extends StrongFBBaseWidget<TabSchema> {
         // =>load form of tab content, if exist
         if (content.form) {
             content.__formInstance = await this.strongService.loadFormClass(content.form, content.formInitialData);
+        }
+        // =>load component of tab content, if exist
+        if (content.component) {
+            let ref = setInterval(async () => {
+                if (!this.tabComponentRef) return;
+                this.tabComponentRef.clear();
+                content.__componentInstance = await this.widgetForm.service.loadDynamicComponent(this.tabComponentRef, content.component, content.formInitialData);
+                this.cdr.detectChanges();
+                clearInterval(ref);
+            }, 10);
+        }
+        // =>change is active of tabs
+        for (const tab of this.schema.tabHeaders) {
+            if (tab.name === name) {
+                tab.isActive = true;
+            } else {
+                tab.isActive = false;
+            }
+        }
+        // =>raise click event
+        if (this.schema.tabClick) {
+            this.schema.tabClick.call(this.widgetForm, selectedTabHeader, this.widgetHeader);
         }
     }
 

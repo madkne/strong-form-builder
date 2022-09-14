@@ -164,6 +164,16 @@ export class StrongFBService {
         return component;
     }
     /********************************* */
+    async loadDynamicComponent(container: ViewContainerRef, component: any, data?: object) {
+        let componentInstance = await container.createComponent(component);
+        if (data) {
+            for (const key of Object.keys(data)) {
+                componentInstance.instance[key] = data[key];
+            }
+        }
+        return componentInstance;
+    }
+    /********************************* */
     locale() {
         return this._locale;
     }

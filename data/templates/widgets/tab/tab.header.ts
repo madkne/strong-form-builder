@@ -1,7 +1,7 @@
 
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBTabWidgetComponent } from "./tab.component";
-import { TabContent, TabHeader, TabSchema } from "./tab-interfaces";
+import { TabBeforeChangeEvent, TabClickEvent, TabContent, TabHeader, TabSchema } from "./tab-interfaces";
 
 
 
@@ -40,6 +40,17 @@ export class StrongFBTabWidget<HEADER extends string = string> extends StrongFBB
      */
     tabPadding(is = true) {
         this._schema.tabPadding = is;
+        return this;
+    }
+    /********************************* */
+    /*************EVENTS************** */
+    /********************************* */
+    click(click: TabClickEvent<HEADER>) {
+        this._schema.tabClick = click;
+        return this;
+    }
+    beforeChange(change: TabBeforeChangeEvent<HEADER>) {
+        this._schema.tabBeforeChange = change;
         return this;
     }
 
