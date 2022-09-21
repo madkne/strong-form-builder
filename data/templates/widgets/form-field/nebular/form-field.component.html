@@ -16,7 +16,7 @@
             <div class="nb-form-field-addon " [ngClass]="['nb-form-field-suffix-'+schema.size]"
                 *ngIf="schema.suffixIcon || schema.suffixText || schema.suffixButton">
                 <!-- suffix button -->
-                <button-widget *ngIf="schema.suffixButton" [widgetForm]="widgetForm"
+                <button-widget *ngIf="schema.suffixButton && schema.__suffixButtonWidget" [widgetForm]="widgetForm"
                     [widgetHeader]="schema.__suffixButtonWidget"></button-widget>
                 <!-- TODO: -->
             </div>

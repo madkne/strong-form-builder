@@ -4,7 +4,7 @@ import { StrongFBRadioBoxWidget } from "./radio-box.header";
 
 
 
-export type RadioBoxStatus =  'primary' | 'info' | 'success' | 'warning' | 'danger';
+export type RadioBoxStatus = 'primary' | 'info' | 'success' | 'warning' | 'danger';
 
 export type RadioBoxOptionsDirection = 'row' | 'column';
 export interface RadioOption {
@@ -14,11 +14,11 @@ export interface RadioOption {
 }
 
 
-export type RadioBoxChangeEvent = (event?: MouseEvent, self?: StrongFBRadioBoxWidget) => Promise<any> | any;
+export type RadioBoxChangeEvent = (value?: string, event?: MouseEvent, self?: StrongFBRadioBoxWidget) => Promise<any> | any;
 
 export interface RadioBoxSchema {
-   
-   
+
+
     /**
      * @default primary
      */
@@ -35,7 +35,7 @@ export interface RadioBoxSchema {
      * @default column
      */
     optionsDirection?: RadioBoxOptionsDirection;
-    
+
     /********************************* */
     /*************EVENTS************** */
     /********************************* */

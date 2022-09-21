@@ -3,6 +3,7 @@ import { StrongFBValidator } from "../../common/StrongFB-validator";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { ButtonSchema } from "../button/button-interfaces";
 import { StrongFBButtonWidget } from "../button/button.header";
+import { StrongFBDatePickerWidget } from "../date-picker/date-picker.header";
 import { StrongFBEditorWidget } from "../editor/editor.header";
 import { StrongFBFileUploaderWidget } from "../file-uploader/file-uploader.header";
 import { StrongFBInputWidget } from "../input/input.header";
@@ -26,7 +27,8 @@ export type FormFieldType =
     StrongFBRadioBoxWidget |
     StrongFBFileUploaderWidget |
     StrongFBToggleWidget |
-    StrongFBEditorWidget;
+    StrongFBEditorWidget |
+    StrongFBDatePickerWidget;
 
 export type FormFieldErrorCallback = (name: StrongFBValidatorName, value?: any, self?: StrongFBFormFieldWidget) => any;
 

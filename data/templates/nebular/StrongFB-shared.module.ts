@@ -24,6 +24,7 @@ import {
   NbButtonGroupModule,
   NbRadioModule,
   NbProgressBarModule,
+  NbDatepickerModule,
 } from '@nebular/theme';
 
 @NgModule({
@@ -53,6 +54,7 @@ import {
     NbButtonGroupModule,
     NbRadioModule,
     NbProgressBarModule,
+    NbDatepickerModule,
 
   ],
   providers: [],
@@ -81,6 +83,7 @@ import {
     NbButtonGroupModule,
     NbRadioModule,
     NbProgressBarModule,
+    NbDatepickerModule,
   ],
 })
 export class StrongFBSharedModule { }

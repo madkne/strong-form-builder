@@ -51,6 +51,11 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
         return this;
     }
 
+    hint(text: string) {
+        this._schema.hint = text;
+        return this;
+    }
+
     validator(validator: StrongFBValidator) {
         this._schema.validator = validator;
         return this;

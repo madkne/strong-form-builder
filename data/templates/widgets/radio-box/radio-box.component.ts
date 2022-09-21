@@ -44,10 +44,12 @@ export class StrongFBRadioBoxWidgetComponent extends StrongFBBaseWidget<RadioBox
     }
 
 
-    changeEvent(event: MouseEvent) {
+    changeEvent(event: string) {
+        // console.log(event)
+        this.schema.value = event;
         this.updateFormField('value');
 
         if (!this.schema.change) return;
-        this.schema.change.call(this.widgetForm, event, this.widgetHeader);
+        this.schema.change.call(this.widgetForm, this.schema.value, event, this.widgetHeader);
     }
 }

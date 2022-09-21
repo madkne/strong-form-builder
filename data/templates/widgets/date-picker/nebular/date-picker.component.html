@@ -1,0 +1,24 @@
+<ng-container *ngIf="schema && show">
+    <!-- <nb-form-field> -->
+    <nb-icon *ngIf="schema.icon" nbPrefix [icon]="schema.icon" pack="eva"></nb-icon>
+    <ng-container *ngIf="schema.pickerType === 'rangePicker'">
+        <input nbInput placeholder="تاریخ مورد نظر خود را انتخاب کنید." [nbDatepicker]="rangepicker"
+            [(ngModel)]="schema.value" [fullWidth]="schema.fullWidth ? true : undefined">
+        <nb-rangepicker #rangepicker (rangeChange)="changeRangeValue($event)" [min]="schema.min" [max]="schema.max">
+        </nb-rangepicker>
+    </ng-container>
+    <ng-container *ngIf="schema.pickerType === 'datePicker'">
+        <input nbInput placeholder="تاریخ مورد نظر خود را انتخاب کنید." [nbDatepicker]="datepicker"
+            [(ngModel)]="schema.value" [fullWidth]="schema.fullWidth ? true : undefined">
+        <nb-datepicker #datepicker (dateChange)="changeValue($event)" [min]="schema.min" [max]="schema.max">
+        </nb-datepicker>
+    </ng-container>
+    <ng-container *ngIf="schema.pickerType === 'dateTimePicker'">
+        <input nbInput placeholder="زمان مورد نظر خود را انتخاب کنید." [nbDatepicker]="dateTimePicker_el"
+            [(ngModel)]="schema.value" [fullWidth]="schema.fullWidth ? true : undefined">
+        <nb-date-timepicker #dateTimePicker_el singleColumn (dateTimeChange)="changeValue($event)" [step]="schema.step"
+            [min]="schema.min" [max]="schema.max">
+        </nb-date-timepicker>
+    </ng-container>
+    <!-- </nb-form-field> -->
+</ng-container>
