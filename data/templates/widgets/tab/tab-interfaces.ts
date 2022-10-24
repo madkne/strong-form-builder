@@ -45,6 +45,7 @@ export type TabBeforeChangeEvent<H extends string = string> = (tab: TabHeader<H>
 
 
 export interface TabSchema<H extends string = string> {
+    fullWidth?: boolean;
     tabHeaders?: TabHeader<H>[];
     /**
      * @default true

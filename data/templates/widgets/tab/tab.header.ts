@@ -54,5 +54,10 @@ export class StrongFBTabWidget<HEADER extends string = string> extends StrongFBB
         return this;
     }
 
+    fullWidth(is = true) {
+        this._schema.fullWidth = is;
+        return this;
+    }
+
 
 }

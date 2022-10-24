@@ -33,6 +33,7 @@ export class StrongFBTabWidgetComponent extends StrongFBBaseWidget<TabSchema> {
     normalizeSchema(schema: TabSchema) {
         if (schema.tabPadding === undefined) schema.tabPadding = true;
         if (!schema.tabContents) schema.tabContents = {};
+        if (!schema.fullWidth) schema.fullWidth = false;
         if (!schema.tabHeaders) schema.tabHeaders = [];
         for (const header of schema.tabHeaders) {
             if (!header.mode) {
