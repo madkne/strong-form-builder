@@ -80,6 +80,7 @@ export class AppComponent implements AfterViewInit {
 | getRefreshTokenApi | function | NO | - | used for recovery access token |
 | language | AvailableLanguage | NO | `'en'` | used for locales |
 | customLocales | object | NO | - | define custom locales [more info](./locales.md) | 
+| defaultLocaleNamespace | string | NO | - | forms in default use from which locale namespace |
 | assetsBaseUrl | string | NO | `'/assets/StrongFB'` | set base url for StrongFB assets | 
 | darkTheme | boolean | NO | false | set dark theme for widgets like editor widget |
 | injectServices | object | NO | {} | you can inject your custom services and use them later on forms |

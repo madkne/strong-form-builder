@@ -104,6 +104,10 @@ export interface StrongFBConfigOptions {
     language?: AvailableLanguage;
     customLocales?: CustomLocales;
     /**
+     * forms in default use from which locale namespace
+     */
+    defaultLocaleNamespace?: string;
+    /**
      * @default '/assets/StrongFB'
      */
     assetsBaseUrl?: string;

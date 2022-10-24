@@ -173,32 +173,36 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
     }
     /********************************** */
     async configProject() {
-        // =>add properties to tsconfig of project
-        let projectTsConfig = fs.readFileSync(path.join(this.source, 'tsconfig.json')).toString();
-        if (projectTsConfig.startsWith('/*')) {
-            let lines = projectTsConfig.split('\n');
-            lines.shift();
-            projectTsConfig = lines.join('\n');
-        }
-        projectTsConfig = JSON.parse(projectTsConfig);
-        projectTsConfig['compilerOptions']['experimentalDecorators'] = true;
-        projectTsConfig['compilerOptions']['strict'] = false;
-        // =>save tsconfig
-        fs.writeFileSync(path.join(this.source, 'tsconfig.json'), JSON.stringify(projectTsConfig, null, 2));
+        try {
+            // =>add properties to tsconfig of project
+            let projectTsConfig = fs.readFileSync(path.join(this.source, 'tsconfig.json')).toString();
+            if (projectTsConfig.startsWith('/*')) {
+                let lines = projectTsConfig.split('\n');
+                lines.shift();
+                projectTsConfig = lines.join('\n');
+            }
+            projectTsConfig = JSON.parse(projectTsConfig);
+            projectTsConfig['compilerOptions']['experimentalDecorators'] = true;
+            projectTsConfig['compilerOptions']['strict'] = false;
+            // =>save tsconfig
+            fs.writeFileSync(path.join(this.source, 'tsconfig.json'), JSON.stringify(projectTsConfig, null, 2));
 
-        // =>add properties to tsconfig.app of project
-        let projectTsConfigApp = fs.readFileSync(path.join(this.source, 'tsconfig.app.json')).toString();
-        if (projectTsConfigApp.startsWith('/*')) {
-            let lines = projectTsConfigApp.split('\n');
-            lines.shift();
-            projectTsConfigApp = lines.join('\n');
+            // =>add properties to tsconfig.app of project
+            let projectTsConfigApp = fs.readFileSync(path.join(this.source, 'tsconfig.app.json')).toString();
+            if (projectTsConfigApp.startsWith('/*')) {
+                let lines = projectTsConfigApp.split('\n');
+                lines.shift();
+                projectTsConfigApp = lines.join('\n');
+            }
+            projectTsConfigApp = JSON.parse(projectTsConfigApp);
+            if (!projectTsConfigApp['include'].includes("src/app/StrongFB/**/*.ts")) {
+                projectTsConfigApp['include'].push("src/app/StrongFB/**/*.ts");
+            }
+            // =>save tsconfig
+            fs.writeFileSync(path.join(this.source, 'tsconfig.app.json'), JSON.stringify(projectTsConfigApp, null, 2));
+        } catch (e) {
+            error(e);
         }
-        projectTsConfigApp = JSON.parse(projectTsConfigApp);
-        if (!projectTsConfigApp['include'].includes("src/app/StrongFB/**/*.ts")) {
-            projectTsConfigApp['include'].push("src/app/StrongFB/**/*.ts");
-        }
-        // =>save tsconfig
-        fs.writeFileSync(path.join(this.source, 'tsconfig.app.json'), JSON.stringify(projectTsConfigApp, null, 2));
     }
     /********************************** */
     async addRequiredPackages() {
