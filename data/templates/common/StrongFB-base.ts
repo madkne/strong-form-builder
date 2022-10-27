@@ -34,6 +34,9 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         this._service = _service;
         this._options = _options;
         this._transmit = _transmit;
+        if (_options.defaultLocaleNamespace) {
+            this.defaultLocaleNamespace = _options.defaultLocaleNamespace as any;
+        }
     }
     /**
      * call before layout init

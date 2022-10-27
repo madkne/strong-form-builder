@@ -1,0 +1,52 @@
+<div *ngIf="schema && show" class="auto-complete-container">
+    <!-- multiple select -->
+    <ng-container *ngIf="schema.multiple">
+        <nb-form-field>
+            <nb-tag-list (tagRemove)="onRemove($event)">
+                <nb-tag *ngFor="let val of schema.value" [text]="findTextOfValue(val)" removable></nb-tag>
+                <input nbTagInput type="text" (focus)="makeDirtyField()" nbInput (active)="showPopupPanel(true)"
+                    (tagAdd)="onAddValue($event.value)" [status]="schema.status"
+                    [fullWidth]="schema.fullWidth ? true : undefined" [disabled]="schema.disabled? true : undefined"
+                    [shape]="schema.shape" [fieldSize]="schema.size"
+                    [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId"
+                    [(ngModel)]="schema._searchText" (keyup)="keyupEvent($event)" (click)="showPopupPanel()">
+            </nb-tag-list>
+            <nb-icon nbSuffix [icon]="'chevron-'+(showPopup ? 'up' : 'down')+'-outline'" pack="eva"
+                (click)="showPopupPanel()"></nb-icon>
+        </nb-form-field>
+    </ng-container>
+    <!-- one select -->
+    <ng-container *ngIf="!schema.multiple">
+        <nb-form-field>
+            <input type="text" (focus)="makeDirtyField()" nbInput (active)="showPopupPanel(true)"
+                [status]="schema.status" [fullWidth]="schema.fullWidth ? true : undefined"
+                [disabled]="schema.disabled? true : undefined" [shape]="schema.shape" [fieldSize]="schema.size"
+                [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId"
+                [(ngModel)]="schema._searchText" (keyup)="keyupEvent($event)" (click)="showPopupPanel()">
+            <nb-icon nbSuffix [icon]="'chevron-'+(showPopup ? 'up' : 'down')+'-outline'" pack="eva"
+                (click)="showPopupPanel()"></nb-icon>
+        </nb-form-field>
+    </ng-container>
+
+
+    <!-- panel -->
+    <nb-card size="small" class="panel" *ngIf="showPopup">
+        <nb-list>
+            <nb-list-item class="nb-transition  option" [class.selected]="isSelected(opt.value)"
+                (click)="toggleSelectOption(opt)" *ngFor="let opt of options">
+                <!-- <nb-user [name]="user.name" [title]="user.title">
+                </nb-user> -->
+                <div>{{opt.text}}</div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card>
+    <!-- <nb-select (focus)="makeDirtyField()" [size]="schema.size" [shape]="schema.shape" [status]="schema.status"
+        [id]="widgetId" [disabled]="schema.disabled ? schema.disabled : undefined"
+        [fullWidth]="schema.fullWidth ? true : undefined" [hero]="schema.appearance === 'colorful'"
+        [outline]="schema.appearance === 'outline'" [placeholder]="schema.placeholder" [(selected)]="schema.value"
+        (selectedChange)="changeEvent($event)" [multiple]="schema.multiple ? schema.multiple : undefined">
+        <nb-option *ngFor="let opt of options" [value]="opt.value">{{opt.text}}</nb-option>
+    </nb-select> -->
+
+
+</div>

@@ -32,6 +32,7 @@ export interface StrongFBFormOptions<D extends object = object> {
     rtl?: boolean;
     fontFamily?: string;
     initData?: D;
+    defaultLocaleNamespace?: string;
 }
 
 export interface StrongFBDialogAction<T extends object = object> {

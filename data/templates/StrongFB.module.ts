@@ -7,6 +7,7 @@ import { SanitizerUrlPipe } from "./pipes/SanitizerUrlPipe.pipe";
 // import { StrongFBDatePickerService } from "./services/StrongFB-date-picker.service";
 
 import { StrongFBSharedModule } from "./StrongFB-shared.module";
+import { StrongFBAutoCompleteWidgetComponent } from "./widgets/auto-complete/auto-complete.component";
 import { StrongFBButtonWidgetComponent } from "./widgets/button/button.component";
 import { StrongFBCardWidgetComponent } from "./widgets/card/card.component";
 import { StrongFBComponentWidgetComponent } from "./widgets/component/component.component";
@@ -46,6 +47,7 @@ import { StrongFBToggleWidgetComponent } from "./widgets/toggle/toggle.component
         StrongFBComponentWidgetComponent,
         StrongFBTabWidgetComponent,
         StrongFBDatepickerWidgetComponent,
+        StrongFBAutoCompleteWidgetComponent,
         SanitizerUrlPipe,
 
     ],

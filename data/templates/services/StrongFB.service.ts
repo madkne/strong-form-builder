@@ -23,6 +23,7 @@ export class StrongFBService {
     protected _assetsBaseUrl: string;
     protected _darkTheme: boolean;
     protected _injectServices: { [k: string]: any } = {};
+    protected _defaultLocaleNamespace: string;
 
     protected defaultOptions: StrongFBConfigOptions = {
         localStorageTokenKey: 'access_token',
@@ -82,6 +83,8 @@ export class StrongFBService {
                 customLocales: options.customLocales,
             })
         }
+        // =>set default locale
+        this._defaultLocaleNamespace = options.defaultLocaleNamespace;
         // =>set service options
         this._viewContainerRef = options.viewContainerRef;
         this._assetsBaseUrl = options.assetsBaseUrl;
@@ -123,6 +126,7 @@ export class StrongFBService {
             {
                 rtl: this._locale.getLangInfo()?.direction === 'rtl',
                 initData: data,
+                defaultLocaleNamespace: this._defaultLocaleNamespace,
             },
         ) as StrongFBFormClass;
 

@@ -13,6 +13,7 @@ these widgets supported by form field widget as a field:
 6. **file uploader** `StrongFBFileUploaderWidget`
 7. **toggle** `StrongFBToggleWidget`
 8. **editor** `StrongFBEditorWidget`
+9. **auto complete** `StrongFBAutoCompleteWidget`
 
 
 ## methods

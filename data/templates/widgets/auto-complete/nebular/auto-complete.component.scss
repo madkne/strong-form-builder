@@ -1,0 +1,36 @@
+.auto-complete-container {
+    position: relative;
+
+    .panel {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: auto;
+        z-index: 999;
+        max-height: 300px;
+        overflow: auto;
+
+        .option {
+            font-size: var(--option-medium-text-font-size);
+            font-weight: var(--option-medium-text-font-weight);
+            line-height: var(--option-medium-text-line-height);
+            padding: var(--option-medium-padding);
+
+            &.selected {
+                background-color: var(--option-selected-background-color);
+                color: var(--option-selected-text-color);
+            }
+
+            &:hover {
+                background-color: var(--option-hover-background-color);
+                color: var(--option-hover-text-color);
+                cursor: pointer;
+
+                &.selected {
+                    background-color: var(--option-selected-hover-background-color);
+                    color: var(--option-selected-hover-text-color);
+                }
+            }
+        }
+    }
+}

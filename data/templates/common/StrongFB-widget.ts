@@ -67,8 +67,8 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
             clearInterval(widgetComponentLoading);
         }, 10);
 
-        // =>execute every 1s
-        interval(1000).pipe(takeUntil(this.destroy$)).subscribe(async () => {
+        // =>execute every 500ms
+        interval(500).pipe(takeUntil(this.destroy$)).subscribe(async () => {
             // =>if have show callback function
             try {
                 if (this.widgetHeader && this.widgetHeader['_showCallback']) {
