@@ -105,6 +105,12 @@ export interface TableNotFound {
     html?: string;
     imageUrl?: string;
 }
+
+/**
+ * @return background color like '#111' or array of background, foreground colors like ['#000', '#fff']
+ */
+export type TableRowSetColorAction<ROW extends object = object> = (row: ROW, self?: StrongFBTableWidget) => string | [string, string];
+
 export interface TableSchema<COL extends string = string, ROW extends object = object> {
     columns?: TableColumn<COL, ROW>[];
     loadRowsByApi?: {
@@ -114,6 +120,8 @@ export interface TableSchema<COL extends string = string, ROW extends object = o
     };
     columnActions?: { [k in COL]?: TableColumnAction<ROW>[] | TableColumnDynamicActionsType };
     mapApiPagination?: TableMapApiPagination;
+
+    rowColorAction?: TableRowSetColorAction<ROW>;
 
     selectable?: TableSelectable<ROW>;
 

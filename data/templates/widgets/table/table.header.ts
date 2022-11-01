@@ -1,7 +1,7 @@
 
 import { APIRequest, APIResponse } from "../../common/StrongFB-interfaces";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
-import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableLoadRowsResponse, TableMapApiPagination, TableNotFound, TableSchema, TableSelectable, TableSelectableCallback } from "./table-interfaces";
+import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableLoadRowsResponse, TableMapApiPagination, TableNotFound, TableRowSetColorAction, TableSchema, TableSelectable, TableSelectableCallback } from "./table-interfaces";
 import { StrongFBTabledWidgetComponent } from "./table.component";
 import { BehaviorSubject } from 'rxjs';
 
@@ -76,6 +76,10 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
         return this;
     }
 
+    setRowColor(action: TableRowSetColorAction<ROW>) {
+        this._schema.rowColorAction = action;
+        return this;
+    }
     /**
      * used for dynamic map actions type of column (add dynamically actions)
      * if not exist column, create it!

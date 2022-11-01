@@ -68,14 +68,14 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
         if (this.schema.type === 'markdown') {
             if (this.schema.editorType === 'ToastUI') {
                 this.schema.value = this.editor.getMarkdown();
-            } else {
-                this.schema.value = this.editor.html.get();
+            } else if (this.schema.editorType === 'Froala') {
+                this.schema.value = this.editor.html.get().replace('Powered by Froala Editor', '');
             }
         } else if (this.schema.type === 'wysiwyg') {
             if (this.schema.editorType === 'ToastUI') {
                 this.schema.value = this.editor.getHTML();
-            } else {
-                this.schema.value = this.editor.html.get();
+            } else if (this.schema.editorType === 'Froala') {
+                this.schema.value = this.editor.html.get().replace('Powered by Froala Editor', '');
             }
         }
         this.updateFormField('value');
@@ -266,10 +266,17 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
                     imageUpload: false,
                     videoUpload: false
                 });
-
             this.displayLoading(false);
             this.readyToUse = true;
             clearInterval(editorLoaded);
+        }, 10);
+
+        // =>remove watermark
+        let editorRemoveWatermark = setInterval(() => {
+            var els = document.querySelectorAll("a[href='https://www.froala.com/wysiwyg-editor?k=u']");
+            if (!els || els.length == 0) return;
+            els[0]['style']['display'] = 'none';
+            // clearInterval(editorRemoveWatermark);
         }, 10);
     }
 }

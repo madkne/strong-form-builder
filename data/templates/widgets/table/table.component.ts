@@ -337,5 +337,25 @@ export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchem
 
         return true;
     }
+
+    setRowColor(mode: 'background' | 'foreground', rowIndex: number) {
+        if (!this.schema.rowColorAction) return undefined;
+        // =>find row by index
+        let row = this.simpleRows[rowIndex];
+        // =>call row color action
+        let res = this.schema.rowColorAction.call(this.widgetForm, row, this.widgetHeader);
+        if (mode === 'background') {
+            if (typeof res === 'string') {
+                return res;
+            } else if (Array.isArray(res) && res.length > 0) {
+                return String(res[0]);
+            }
+        } else if (mode === 'foreground') {
+            if (Array.isArray(res) && res.length > 1) {
+                return String(res[1]);
+            }
+        }
+        return undefined;
+    }
 }
 
