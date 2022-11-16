@@ -34,6 +34,11 @@ export class StrongFBRadioBoxWidget<FIELDS = { [k: string]: any }> extends Stron
         return this;
     }
 
+    selectedOption(value: string) {
+        this._schema.value = value;
+        return this;
+    }
+
 
     formFieldName(name: keyof FIELDS) {
         this._formFieldName = name as any;
