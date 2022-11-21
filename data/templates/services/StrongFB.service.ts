@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { StrongFBFormClass } from '../common/StrongFB-base';
 import { StrongFBConfigOptions, StrongFBDialogAction } from '../common/StrongFB-interfaces';
-import { StrongFBDialogComponent } from '../widgets/dialog/dialog.component';
+import { StrongFBDialogWidgetComponent } from '../widgets/dialog/dialog.component';
 import { StrongFBHttpService } from './StrongFB-http.service';
 import { StrongFBLocaleService } from './StrongFB-locale.service';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
@@ -147,7 +147,7 @@ export class StrongFBService {
         // =>create instance of form
         let formInstance = await this.loadFormClass(form, options.data);
         // =>init dialog component
-        let component = this._viewContainerRef.createComponent(StrongFBDialogComponent);
+        let component = this._viewContainerRef.createComponent(StrongFBDialogWidgetComponent);
         component.instance['form'] = formInstance;
         component.instance['widgetForm'] = form;
         if (options.title) {

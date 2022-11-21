@@ -1,6 +1,5 @@
-import { APIStatusCodes, AvailableLanguage, CustomLocales, Direction, LocaleCalendar, StrongFBValidatorName } from "./StrongFB-types";
+import { APIStatusCodes, AvailableLanguage, ButtonAppearance, ButtonStatus, CustomLocales, Direction, LocaleCalendar, StrongFBValidatorName } from "./StrongFB-types";
 import { HttpErrorResponse } from "@angular/common/http";
-import { ButtonAppearance, ButtonStatus } from "../widgets/button/button-interfaces";
 import { StrongFBHttpService } from "../services/StrongFB-http.service";
 import { ViewContainerRef } from "@angular/core";
 

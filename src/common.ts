@@ -42,4 +42,4 @@ function _detectAngularSourcePath(scanDirs: string[]) {
     return sourcePaths;
 }
 
-export const UIFrameWorks: UIFrameWorkType[] = ['nebular'];
+export const UIFrameWorks: UIFrameWorkType[] = ['nebular', 'material'];

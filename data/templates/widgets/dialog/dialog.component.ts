@@ -14,7 +14,7 @@ import { StrongFBTransmitService } from '../../services/StrongFB-transmit.servic
     templateUrl: './dialog.component.html',
     styleUrls: ['./dialog.component.scss']
 })
-export class StrongFBDialogComponent extends StrongFBBaseWidget {
+export class StrongFBDialogWidgetComponent extends StrongFBBaseWidget {
     @ViewChild('dialog') dialogTemplateRef: TemplateRef<any>;
 
 
@@ -31,7 +31,7 @@ export class StrongFBDialogComponent extends StrongFBBaseWidget {
 
     // @Output() formValuesByAction = new EventEmitter<[string, object]>();
     // protected override  showLoading = false;
-    protected _dialogRef: NbDialogRef<StrongFBDialogComponent>;
+    protected _dialogRef: NbDialogRef<StrongFBDialogWidgetComponent>;
 
     constructor(
         protected override elRef: ElementRef,
@@ -88,7 +88,7 @@ export class StrongFBDialogComponent extends StrongFBBaseWidget {
 
     }
     /***************************************** */
-    async open(): Promise<NbDialogRef<StrongFBDialogComponent>> {
+    async open(): Promise<NbDialogRef<StrongFBDialogWidgetComponent>> {
         return new Promise((res) => {
 
             let dialogLoading = setInterval(() => {

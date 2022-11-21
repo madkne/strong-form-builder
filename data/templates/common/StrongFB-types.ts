@@ -59,6 +59,9 @@ export type NotifyCssAnimationStyle = 'fade' | 'zoom' | 'from-right' | 'from-top
 
 export type StrongFBWidgetShowCallback = (self?: StrongFBBaseWidgetHeader) => Promise<boolean> | boolean;
 
+export type ButtonStatus = 'basic' | 'primary' | 'info' | 'success' | 'warning' | 'danger';
+
+export type ButtonAppearance = 'fill' | 'outline' | 'colorful' | 'basic';
 
 /**************************** */
 /*********CONSTANTS********** */

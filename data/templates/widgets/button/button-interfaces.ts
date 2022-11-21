@@ -1,13 +1,12 @@
+import { ButtonAppearance, ButtonStatus } from "../../common/StrongFB-types";
 import { StrongFBButtonWidget } from "./button.header";
 
 
 
 export type ButtonSize = 'small' | 'medium' | 'large';
 
-export type ButtonStatus = 'basic' | 'primary' | 'info' | 'success' | 'warning' | 'danger';
 
 export type ButtonShape = 'rectangle' | 'round';
-export type ButtonAppearance = 'fill' | 'outline' | 'colorful' | 'basic';
 export type ButtonMode = 'iconButton' | 'text' | 'iconBeforeText' | 'iconAfterText' | 'icon';
 
 export type ButtonClickEvent = (event?: MouseEvent, self?: StrongFBButtonWidget) => Promise<any> | any;

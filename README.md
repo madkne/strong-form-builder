@@ -1,4 +1,4 @@
-# Strong Form Builder (StrongFB) - **v0.9**
+# Strong Form Builder (StrongFB) - **v0.10**
 
 StrongFB is a form builder for angular projects that use top ui frameworks widgets like **nebular**.
 
@@ -11,7 +11,7 @@ also you can define layouts and create completely a page with it.
 |Name|supported?|
 |----|--------|
 |Nebular| **processing**|
-|ngPrime| *pending*|
+|ngPrime| **processing**|
 
 ## Install & Use
 - install node 12 or higher version

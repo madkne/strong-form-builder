@@ -12,7 +12,7 @@ import { APIResponse } from '../../common/StrongFB-interfaces';
     templateUrl: './table.component.html',
     styleUrls: ['./table.component.scss']
 })
-export class StrongFBTabledWidgetComponent extends StrongFBBaseWidget<TableSchema> implements AfterViewInit {
+export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema> implements AfterViewInit {
     override schema: TableSchema;
     simpleRows: object[] = [];
     displayRows: object[] = [];

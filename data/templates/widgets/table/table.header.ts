@@ -2,7 +2,7 @@
 import { APIRequest, APIResponse } from "../../common/StrongFB-interfaces";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableLoadRowsResponse, TableMapApiPagination, TableNotFound, TableRowSetColorAction, TableSchema, TableSelectable, TableSelectableCallback } from "./table-interfaces";
-import { StrongFBTabledWidgetComponent } from "./table.component";
+import { StrongFBTableWidgetComponent } from "./table.component";
 import { BehaviorSubject } from 'rxjs';
 
 
@@ -18,7 +18,7 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
     protected override _schema: TableSchema<COL> = {};
 
     override get component(): any {
-        return StrongFBTabledWidgetComponent;
+        return StrongFBTableWidgetComponent;
     }
 
     override get widgetName(): string {
