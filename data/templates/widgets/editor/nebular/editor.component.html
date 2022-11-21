@@ -1,5 +1,8 @@
 <ng-container *ngIf="schema && show">
-    <div class="main-editor" [id]="editorId" [ngStyle]="{'minHeight': schema.minHeight, 'maxWidth': schema.maxWidth}">
+    <div *ngIf="schema.editorType === 'Froala' || schema.editorType === 'ToastUI'" class="main-editor" [id]="editorId"
+        [ngStyle]="{'minHeight': schema.minHeight, 'maxWidth': schema.maxWidth}">
         <div [innerHtml]="schema.value"></div>
     </div>
+    <textarea *ngIf="schema.editorType === 'TinyMCE'" class="main-editor" [id]="editorId"
+        [ngStyle]="{'minHeight': schema.minHeight, 'maxWidth': schema.maxWidth}"></textarea>
 </ng-container>

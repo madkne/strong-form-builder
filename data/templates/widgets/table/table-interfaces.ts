@@ -1,7 +1,7 @@
 import { APIRequest, APIResponse } from "../../common/StrongFB-interfaces";
-import { ButtonAppearance, ButtonStatus } from "../button/button-interfaces";
 import { StrongFBTableWidget } from "./table.header";
 import { HttpErrorResponse } from "@angular/common/http";
+import { ButtonAppearance, ButtonStatus } from "../../common/StrongFB-types";
 
 export interface TableTagColumnMapValue {
     value: string;

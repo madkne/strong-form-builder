@@ -2,7 +2,7 @@ import { InputSize, InputStatus } from "../input/input-interfaces";
 
 export type EditorType = 'markdown' | 'wysiwyg';
 
-export type EditorProductType = 'ToastUI' | 'Froala';
+export type EditorProductType = 'ToastUI' | 'Froala' | 'TinyMCE';
 
 export interface EditorSchema {
 

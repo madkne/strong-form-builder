@@ -7,6 +7,7 @@ import { EditorSchema } from './editor-interfaces';
 
 declare var toastui;
 declare var FroalaEditor;
+declare var tinymce;
 
 @Component({
     selector: 'editor-widget',
@@ -45,8 +46,10 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
         // =>if toastUI type
         if (this.schema.editorType === 'ToastUI') {
             this.toastUILoad();
-        } else {
+        } else if (this.schema.editorType === 'Froala') {
             this.froalaLoad();
+        } else {
+            this.tinyMceLoad();
         }
 
     }
@@ -76,11 +79,44 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
                 this.schema.value = this.editor.getHTML();
             } else if (this.schema.editorType === 'Froala') {
                 this.schema.value = this.editor.html.get().replace('Powered by Froala Editor', '');
+            } else {
+                this.schema.value = tinymce.get(this.editorId).getContent();
             }
         }
         this.updateFormField('value');
     }
 
+    async tinyMceLoad() {
+        // =>load dynamic resources
+        await this.srv.loadScript(this.srv.assetsUrl('js/tinymce.min.js'));
+        if (this.locale.getLangInfo().code !== 'en') {
+            await this.srv.loadScript(this.srv.assetsUrl(`js/tinymce-${this.locale.getLangInfo().code}.js`));
+        }
+
+        let editorLoaded = setInterval(async () => {
+            if (!document.getElementById(this.editorId)) return;
+
+            await tinymce.init({
+                selector: '#' + this.editorId,
+                min_height: this.schema.minHeight,
+                skin: this.srv['_darkTheme'] ? 'oxide-dark' : 'oxide',
+                content_css: this.srv['_darkTheme'] ? 'dark' : 'default',
+                toolbar: 'undo redo styleselect bold italic alignleft aligncenter alignright bullist numlist outdent indent code',
+                plugins: 'code',
+                menubar: 'edit view format table',
+                language: this.locale.getLangInfo().code,
+                directionality: this.locale.getLangInfo().direction,
+                setup: (editor) => {
+                    editor.on('change', (e) => {
+                        this.changeValue();
+                    });
+                }
+            });
+            this.displayLoading(false);
+            this.readyToUse = true;
+            clearInterval(editorLoaded);
+        }, 10);
+    }
 
 
     async toastUILoad() {

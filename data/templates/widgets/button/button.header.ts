@@ -1,7 +1,8 @@
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBButtonWidgetComponent } from "./button.component";
-import { ButtonAppearance, ButtonClickEvent, ButtonMode, ButtonSchema, ButtonShape, ButtonSize, ButtonStatus } from "./button-interfaces";
+import { ButtonClickEvent, ButtonMode, ButtonSchema, ButtonShape, ButtonSize } from "./button-interfaces";
+import { ButtonAppearance, ButtonStatus } from "../../common/StrongFB-types";
 
 
 

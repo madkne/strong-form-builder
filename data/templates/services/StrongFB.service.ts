@@ -201,6 +201,7 @@ export class StrongFBService {
                 let script = document.createElement('script');
                 script.type = 'text/javascript';
                 script.src = src;
+                script.referrerPolicy = "origin";
                 if (script['readyState']) {  //IE
                     script['onreadystatechange'] = () => {
                         if (script['readyState'] === "loaded" || script['readyState'] === "complete") {
