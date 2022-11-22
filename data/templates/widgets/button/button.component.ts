@@ -4,6 +4,7 @@ import { FormFieldMetaData } from '../../common/StrongFB-interfaces';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
 import { ButtonSchema } from './button-interfaces';
+import { extraNormalizeSchema } from './convertor';
 
 @Component({
     selector: 'button-widget',
@@ -77,7 +78,7 @@ export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSche
         if (schema.fullWidth === undefined) schema.fullWidth = false;
         if (!schema.appearance) schema.appearance = 'fill';
         if (!schema.mode) schema.mode = 'text';
-
+        schema = extraNormalizeSchema(schema);
 
         return schema;
     }

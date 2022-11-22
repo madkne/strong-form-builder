@@ -1,3 +1,4 @@
+import { FormFieldSchema } from "../form-field/form-field-interfaces";
 import { StrongFBInputWidget } from "./input.header";
 
 
@@ -40,6 +41,8 @@ export interface InputSchema {
      */
     disabled?: boolean;
     value?: string | number;
+
+    _form?: FormFieldSchema;
     /********************************* */
     /*************EVENTS************** */
     /********************************* */

@@ -1,0 +1,23 @@
+[dir=rtl] [nbButton].size-medium.icon-end:not(.icon-start) nb-icon, [dir=rtl] .size-medium.icon-end[nbButtonToggle]:not(.icon-start) nb-icon {
+    margin-right: var(--button-medium-icon-offset);
+    display: none;
+  }
+  
+  nb-calendar-pageable-navigation{
+    width: 100%;
+    justify-content: space-between !important;
+  }
+  
+  nb-calendar-pageable-navigation {
+    position: absolute;
+  }
+  
+  nb-base-calendar .calendar-navigation{
+    justify-content: center;
+  }
+  
+  [dir=rtl] nb-calendar-pageable-navigation{
+    padding: 0 70px;
+  }
+
+

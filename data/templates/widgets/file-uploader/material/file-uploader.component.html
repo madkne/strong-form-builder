@@ -1,0 +1,5 @@
+<div class="file-picker-root" *ngIf="schema && show">
+
+    <!-- global error -->
+    <p class="file-picker-error" *ngIf="globalError" (click)="globalError = undefined">{{ globalError }}</p>
+</div>

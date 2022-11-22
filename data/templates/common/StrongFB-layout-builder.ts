@@ -21,7 +21,7 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
         this._propertiesClass = new StrongFBLayoutBuilderProperties(this);
     }
 
-    columnBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
+    columnBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>): StrongFBLayoutBuilderProperties<WIDGET> {
         this._schema.type = 'box';
         properties = this._makeObject(properties, ['style']);
         properties.style['display'] = 'flex';
@@ -31,7 +31,7 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
 
         return this._propertiesClass = new StrongFBLayoutBuilderProperties<WIDGET>(this);
     }
-    rowBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
+    rowBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>): StrongFBLayoutBuilderProperties<WIDGET> {
         this._schema.type = 'box';
         properties = this._makeObject(properties, ['style']);
         properties.style['display'] = 'flex';
@@ -44,7 +44,7 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
 
     }
 
-    rowReverseBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
+    rowReverseBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>): StrongFBLayoutBuilderProperties<WIDGET> {
         this._schema.type = 'box';
         properties = this._makeObject(properties, ['style']);
         properties.style['display'] = 'flex';
@@ -57,7 +57,7 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
 
     }
 
-    box(properties?: StrongFBLayoutBuilderNormalBoxProperties<WIDGET>) {
+    box(properties?: StrongFBLayoutBuilderNormalBoxProperties<WIDGET>): StrongFBLayoutBuilderProperties<WIDGET> {
         this._schema.type = 'box';
         this._setBoxCommonProperties(properties);
         if (properties?.text) {
@@ -72,7 +72,7 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
 
     }
 
-    fullFlexBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
+    fullFlexBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>): StrongFBLayoutBuilderProperties<WIDGET> {
         this._schema.type = 'box';
         properties = this._makeObject(properties, ['style']);
         properties.style['flex'] = '1 1 0';
@@ -83,7 +83,7 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
 
     }
 
-    centerScreenBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>) {
+    centerScreenBox(properties?: StrongFBLayoutBuilderBoxCommonProperties<WIDGET>): StrongFBLayoutBuilderProperties<WIDGET> {
         this._schema.type = 'box';
         properties = this._makeObject(properties, ['style']);
         properties.style['height'] = '100%';
@@ -97,7 +97,7 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
 
     }
 
-    gridBox(properties?: StrongFBLayoutBuilderGridCommonProperties<WIDGET>) {
+    gridBox(properties?: StrongFBLayoutBuilderGridCommonProperties<WIDGET>): StrongFBLayoutBuilderProperties<WIDGET> {
         this._schema.type = 'grid';
         properties = this._makeObject(properties, ['style']);
         properties.style['display'] = 'flex';

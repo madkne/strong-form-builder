@@ -59,7 +59,7 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
         if (!schema.minHeight) schema.minHeight = '200px';
         if (!schema.maxWidth) schema.minHeight = '100%';
         if (this.schema.value === undefined || this.schema.value === null) this.schema.value = '';
-        if (!schema.editorType) schema.editorType = 'Froala';
+        if (!schema.editorType) schema.editorType = 'TinyMCE';
 
 
         return schema;

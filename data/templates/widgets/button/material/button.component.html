@@ -1,0 +1,46 @@
+<ng-container *ngIf="schema && show">
+    <!-- basic button -->
+    <button *ngIf="schema.appearance === 'basic'" mat-button [color]="schema.status"
+        [disabled]="schema.disabled ? schema.disabled : undefined" (click)="clickEvent($event)"
+        [matTooltip]="schema.tooltip" [matTooltipDisabled]="!schema.tooltip">
+        <ng-container [ngTemplateOutlet]="buttonContent"></ng-container>
+    </button>
+    <!-- colorful button -->
+    <button *ngIf="schema.appearance === 'colorful'" mat-raised-button [color]="schema.status"
+        [disabled]="schema.disabled ? schema.disabled : undefined" (click)="clickEvent($event)"
+        [matTooltip]="schema.tooltip" [matTooltipDisabled]="!schema.tooltip">
+        <ng-container [ngTemplateOutlet]="buttonContent"></ng-container>
+    </button>
+    <!-- fill button -->
+    <button *ngIf="schema.appearance === 'fill'" mat-flat-button [color]="schema.status"
+        [disabled]="schema.disabled ? schema.disabled : undefined" (click)="clickEvent($event)"
+        [matTooltip]="schema.tooltip" [matTooltipDisabled]="!schema.tooltip">
+        <ng-container [ngTemplateOutlet]="buttonContent"></ng-container>
+    </button>
+    <!-- outline button -->
+    <button *ngIf="schema.appearance === 'outline'" mat-stroked-button [color]="schema.status"
+        [disabled]="schema.disabled ? schema.disabled : undefined" (click)="clickEvent($event)"
+        [matTooltip]="schema.tooltip" [matTooltipDisabled]="!schema.tooltip">
+        <ng-container [ngTemplateOutlet]="buttonContent"></ng-container>
+    </button>
+
+</ng-container>
+
+
+<ng-template #buttonContent>
+    <!-- text mode -->
+    <ng-container *ngIf="!schema.mode || schema.mode === 'text'">{{schema.text}}</ng-container>
+    <!-- icon before text  mode-->
+    <ng-container *ngIf="schema.mode === 'iconBeforeText'">
+        <mat-icon [fontIcon]="schema.icon"></mat-icon>{{schema.text}}
+    </ng-container>
+    <!-- icon after text  mode-->
+    <ng-container *ngIf="schema.mode === 'iconAfterText'">
+        {{schema.text}}
+        <mat-icon [fontIcon]="schema.icon"></mat-icon>
+    </ng-container>
+    <!-- icon button or icon mode -->
+    <ng-container *ngIf="schema.mode === 'iconButton' || schema.mode === 'icon'">
+        <mat-icon [fontIcon]="schema.icon"></mat-icon>
+    </ng-container>
+</ng-template>

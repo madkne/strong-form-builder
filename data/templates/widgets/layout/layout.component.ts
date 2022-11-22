@@ -72,9 +72,13 @@ export class StrongFBLayoutComponent extends StrongFBBaseWidget implements OnCha
     async updateLayout() {
         if (this.updatingLayout) return;
         this.updatingLayout = true;
+        this.layoutSchema = this.layout.schema;
+        // =>set id, if not!
+        if (!this.layoutSchema.id) {
+            this.layoutSchema.id = this.widgetId;
+        }
         this.displayLoading();
         // console.log('layout:', this.layout);
-        this.layoutSchema = this.layout.schema;
         // =>load widgets, if exist
         if ((this.layoutSchema.widgets && this.layoutSchema.widgets.length > 0) || (this.layoutSchema.widgetHeaders && this.layoutSchema.widgetHeaders.length > 0)) {
             await this.loadWidgets();

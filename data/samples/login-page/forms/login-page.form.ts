@@ -1,4 +1,4 @@
-import { StrongFBBase } from "../common/StrongFB-base";
+import { StrongFBFormClass } from "../common/StrongFB-base";
 import { StrongFBWidget } from "../common/StrongFB-decorators";
 import { StrongFBButtonWidget } from "../widgets/button/button.header";
 import { StrongFBCardWidget } from "../widgets/card/card.header";
@@ -14,7 +14,7 @@ type widgets = 'usernameField' | 'passwordField' | 'loginButton' | 'loginCard';
  * input: password field
  * button: login button 
  */
-export class LoginPageForm extends StrongFBBase<widgets> {
+export class LoginPageForm extends StrongFBFormClass<widgets> {
     showPassword = false;
     override get layout() {
         return this.layoutBuilder().centerScreenBox().widget(this.loginCard)

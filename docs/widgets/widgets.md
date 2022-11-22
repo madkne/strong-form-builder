@@ -3,22 +3,22 @@
 
 ## supported widgets
 
-|**#**|**Widget**|**Nebular supported**|**description**|**developers**|
-|---|:-------:|:----:|:-----------:|:-------:|
-|1|button|YES|-|madkne|
-|2|card|YES|-|madkne|
-|3|dialog|YES|-|madkne|
-|4|form-field|YES|supported `input`, `select`, `textarea`, ... widgets|madkne|
-|5|input|YES|-|madkne|
-|6|[select](./select.md)|YES|supported multi select|madkne, rashidi|
-|7|[table](./table.md)|YES|supported load by api|madkne|
-|8|tags-list|YES|-|madkne|
-|9|textarea|YES|-|madkne|
-|10|radio-box|YES|-|madkne|
-|11|[file-uploader](./file_uploader.md)|YES|file browsing and uploading|madkne|
-|12|toggle|YES|-|rashidi|
-|13|editor|YES|html editor or markdown editor|madkne|
-|14|[component](./component.md)|YES|load dynamic a custom component|madkne|
-|15|tab|YES|-|madkne|
-|16|auto-complete|YES|supported multi select|madkne|
+|**#**|**Widget**|**Nebular supported**|**Material supported**|**description**|**developers**|
+|---|:-------:|:----:|:----:|:-----------:|:-------:|
+|1|button|YES|YES|-|madkne|
+|2|card|YES|NO|-|madkne|
+|3|dialog|YES|TESTING|-|madkne|
+|4|form-field|YES|TESTING|supported `input`, `select`, `textarea`, ... widgets|madkne|
+|5|input|YES|TESTING|-|madkne|
+|6|[select](./select.md)|YES|NO|supported multi select|madkne, rashidi|
+|7|[table](./table.md)|YES|NO|supported load by api|madkne|
+|8|tags-list|YES|NO|-|madkne|
+|9|textarea|YES|NO|-|madkne|
+|10|radio-box|YES|NO|-|madkne|
+|11|[file-uploader](./file_uploader.md)|YES|NO|file browsing and uploading|madkne|
+|12|toggle|YES|NO|-|rashidi|
+|13|editor|YES|NO|html editor or markdown editor|madkne|
+|14|[component](./component.md)|YES|YES|load dynamic a custom component|madkne|
+|15|tab|YES|NO|-|madkne|
+|16|auto-complete|YES|NO|supported multi select|madkne|
 <!-- |16|date-picker|YES|-|rashidi| -->

@@ -4,7 +4,7 @@ import { BehaviorSubject, interval, Subject, take, takeUntil } from 'rxjs';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewContainerRef } from "@angular/core";
 import { StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderWidgetFunction } from "./StrongFB-layout-builder-types";
 import { Block } from 'notiflix/build/notiflix-block-aio';
-import { SFB_info, SFB_warn } from "./StrongFB-common";
+import { checkAndDoByInterval, SFB_info, SFB_warn } from "./StrongFB-common";
 import { StrongFBHelper } from "../StrongFB-helpers";
 
 
@@ -111,8 +111,12 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
                 });
             } else {
                 this.displayComponentLoading = false;
-                if (!document.getElementById(this._widgetId)) return;
-                Block.remove('#' + this._widgetId);
+                checkAndDoByInterval(
+                    () => document.getElementById(this._widgetId) !== null,
+                    () => {
+                        Block.remove('#' + this._widgetId);
+                    }, 5);
+                // if (!document.getElementById(this._widgetId)) return;
             }
         } catch (e) { }
     }

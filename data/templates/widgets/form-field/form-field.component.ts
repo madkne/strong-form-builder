@@ -53,6 +53,10 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
         if (this.schema.field) {
             schema.__suffixButtonWidget = await (() => this.schema.suffixButton).call(this.widgetForm);
         }
+        // =>set appearance
+        if (!schema.appearance) {
+            schema.appearance = 'default';
+        }
 
 
         return schema;
@@ -70,7 +74,13 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
             this.FieldContainer.clear();
             // =>load dynamic field
             this.formFieldInstance = (await this.loadDynamicWidgets(this.FieldContainer, { widgets: [() => this.schema.field] })).widgetComponents;
-            this.fieldIsLoaded = true;
+            // =>set form schema on widget
+            let setFormSchemaInterval = setInterval(async () => {
+                if (!this.formFieldInstance[0].instance['schema']) return;
+                this.formFieldInstance[0].instance['schema']['_form'] = this.schema;
+                this.fieldIsLoaded = true;
+                clearInterval(setFormSchemaInterval);
+            }, 5);
 
             // =>listen on ngModelChange
             this.formFieldInstance[0].instance['ngModelChange'].pipe(takeUntil(this.destroy$)).subscribe(it => this.changeFormFieldValue(it));

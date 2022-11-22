@@ -139,3 +139,13 @@ export function replaceByRegex(text: string, values: object, regex: RegExp = /:\
     }
     return text
 }
+/************************************************* */
+export async function checkAndDoByInterval<T = any>(checkFunc: () => boolean | Promise<boolean>, doFunc: () => T | Promise<T>, ms = 1000): Promise<T> {
+    return new Promise((res) => {
+        const intervalRef = setInterval(async () => {
+            if (!await checkFunc()) return;
+            clearInterval(intervalRef);
+            res(await doFunc());
+        }, ms);
+    });
+}

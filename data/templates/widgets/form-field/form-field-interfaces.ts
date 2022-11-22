@@ -19,6 +19,8 @@ import { StrongFBFormFieldWidget } from "./form-field.header";
 
 export type FormFieldSize = 'small' | 'medium' | 'large';
 
+export type FormAppearance = 'fill' | 'outline' | 'default';
+
 
 export type FormFieldType =
     StrongFBInputWidget |
@@ -40,6 +42,11 @@ export interface FormFieldSchema {
      * @default medium
      */
     size?: FormFieldSize;
+
+    /**
+     * @default default
+     */
+    appearance?: FormAppearance;
 
     /**
      * @default false

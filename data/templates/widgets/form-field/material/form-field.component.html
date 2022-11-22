@@ -1,0 +1,15 @@
+<ng-container *ngIf="schema && show">
+    <div class="main-form-field">
+        <!-- <mat-label *ngIf="schema.label">
+            {{schema.label}}
+            <span class="required" *ngIf="isRequiredField()">*</span>
+        </mat-label> -->
+        <ng-container #FieldContainer></ng-container>
+        <!-- <input matInput placeholder="Placeholder"> -->
+        <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon> -->
+        <!-- error -->
+        <div class="error" *ngIf="errorMessage">{{errorMessage}}</div>
+        <!-- hint -->
+        <!-- <mat-hint *ngIf="schema.hint">{{schema.hint}}</mat-hint> -->
+    </div>
+</ng-container>

@@ -1,0 +1,11 @@
+.error {
+    color: var(--mdc-theme-error, #f44336);
+    font-size: 75%;
+    margin-top: 0.6666666667em;
+}
+.main-form-field {
+    margin: 5px 2px;
+    display: flex;
+    flex-direction: column;
+
+}

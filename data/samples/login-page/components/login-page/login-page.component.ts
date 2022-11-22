@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StrongFBBase } from 'src/app/StrongFB/common/StrongFB-base';
+import { StrongFBFormClass } from 'src/app/StrongFB/common/StrongFB-base';
 import { LoginPageForm } from 'src/app/StrongFB/forms/pages/login-page.form';
 import { StrongFBService } from '../../StrongFB/services/StrongFB.service';
 
@@ -11,13 +11,13 @@ import { StrongFBService } from '../../StrongFB/services/StrongFB.service';
 export class LoginPageComponent implements OnInit {
 
 
-  form: StrongFBBase;
+  form: StrongFBFormClass;
 
   constructor(public strongfb: StrongFBService) { }
 
 
-  ngOnInit(): void {
-    this.form = new LoginPageForm();
+  async ngOnInit() {
+    this.form = await this.strongfb.loadFormClass(LoginPageForm);
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
 
 
