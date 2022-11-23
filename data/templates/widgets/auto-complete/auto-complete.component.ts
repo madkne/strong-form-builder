@@ -45,6 +45,10 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
         if (this.schema.options) {
             this.options = JSON.parse(JSON.stringify(this.schema.options));
         }
+        // =>call load option function
+        if (this.schema.loadOptions) {
+            this.options = await this.schema.loadOptions.call(this.widgetForm, this.widgetHeader, this.schema._searchText);
+        }
     }
 
 
@@ -53,6 +57,8 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
         this.schema = this.widgetHeader.schema;
         // =>normalize schema
         this.schema = this.normalizeSchema(this.schema);
+        // =>load options
+        this.loadOptions();
 
     }
 
@@ -88,18 +94,18 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
 
     }
 
-    async keyupEvent(event: KeyboardEvent) {
+    async keyupEvent(event?: KeyboardEvent) {
         // =>if not force to select option
         if (!this.schema.forceToSelectOption) {
             this.schema.value = clone(this.schema._searchText);
             this.updateFormField('value');
         }
-        // =>call load option function
-        if (this.schema.loadOptions) {
-            this.options = await this.schema.loadOptions.call(this.widgetForm, this.widgetHeader, this.schema._searchText);
-        }
+        this.loadOptions();
         this.showPopup = true;
     }
+
+
+
     @HostListener('document:click', ['$event'])
     clickout(event) {
         if (this.eRef.nativeElement.contains(event.target)) {
@@ -167,6 +173,8 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
                 this.schema._searchText = '';
             }
         }
+        this.updateFormField('value');
+        this.keyupEvent();
     }
 
     findTextOfValue(value: string) {
@@ -175,6 +183,10 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
         if (option) return option.text;
 
         return value;
+    }
+
+    findOptionByText(text: string) {
+        return this.options.find(i => i.text === text);
     }
 
     onAddValue(value: string) {

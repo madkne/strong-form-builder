@@ -90,4 +90,6 @@ export interface FormFieldSchema {
 
     formFieldHasError?: StrongFBValidatorName;
 
+    __isRequired?: boolean;
+
 }

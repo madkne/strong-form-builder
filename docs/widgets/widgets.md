@@ -10,8 +10,8 @@
 |3|dialog|YES|YES|-|madkne|
 |4|form-field|YES|TESTING|supported `input`, `select`, `textarea`, ... widgets|madkne|
 |5|input|YES|TESTING|-|madkne|
-|6|[select](./select.md)|YES|NO|supported multi select|madkne, rashidi|
-|7|[table](./table.md)|YES|NO|supported load by api|madkne|
+|6|[select](./select.md)|YES|YES|supported multi select|madkne, rashidi|
+|7|[table](./table.md)|YES|TESTING|supported load by api|madkne|
 |8|tags-list|YES|NO|-|madkne|
 |9|textarea|YES|NO|-|madkne|
 |10|radio-box|YES|NO|-|madkne|
@@ -20,5 +20,5 @@
 |13|editor|YES|NO|html editor or markdown editor|madkne|
 |14|[component](./component.md)|YES|YES|load dynamic a custom component|madkne|
 |15|tab|YES|NO|-|madkne|
-|16|auto-complete|YES|NO|supported multi select|madkne|
+|16|auto-complete|YES|TESTING|supported multi select|madkne|
 <!-- |16|date-picker|YES|-|rashidi| -->

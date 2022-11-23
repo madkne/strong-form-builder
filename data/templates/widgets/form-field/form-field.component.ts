@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ComponentRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { takeUntil } from 'rxjs';
-import { SFB_warn } from '../../common/StrongFB-common';
+import { checkAndDoByInterval, SFB_warn } from '../../common/StrongFB-common';
 import { StrongFBCheckValidatorsResponse } from '../../common/StrongFB-interfaces';
 import { StrongFBValidatorName } from '../../common/StrongFB-types';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
@@ -75,12 +75,15 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
             // =>load dynamic field
             this.formFieldInstance = (await this.loadDynamicWidgets(this.FieldContainer, { widgets: [() => this.schema.field] })).widgetComponents;
             // =>set form schema on widget
-            let setFormSchemaInterval = setInterval(async () => {
-                if (!this.formFieldInstance[0].instance['schema']) return;
-                this.formFieldInstance[0].instance['schema']['_form'] = this.schema;
-                this.fieldIsLoaded = true;
-                clearInterval(setFormSchemaInterval);
-            }, 5);
+            checkAndDoByInterval(
+                () => this.formFieldInstance[0].instance['schema'] !== undefined,
+                () => {
+                    // =>check is required field
+                    this.isRequiredField();
+                    // =>set form
+                    this.formFieldInstance[0].instance['schema']['_form'] = this.schema;
+                    this.fieldIsLoaded = true;
+                }, 5);
 
             // =>listen on ngModelChange
             this.formFieldInstance[0].instance['ngModelChange'].pipe(takeUntil(this.destroy$)).subscribe(it => this.changeFormFieldValue(it));
@@ -102,9 +105,11 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
     }
 
     isRequiredField() {
-        if (!this.schema?.validator) return false;
-        if (this.schema.validator.schema.find(i => i.name === 'required')) return true;
-        return false;
+        let res = false;
+        if (!this.schema?.validator) res = false;
+        if (this.schema?.validator && this.schema.validator.schema.find(i => i.name === 'required')) res = true;
+        this.schema.__isRequired = res;
+        return res;
     }
 
     async changeFormFieldValue(event) {

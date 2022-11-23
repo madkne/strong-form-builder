@@ -1,3 +1,44 @@
 <div *ngIf="schema && show" class="auto-complete-container">
+    <!-- multiple select -->
+    <ng-container *ngIf="schema.multiple">
+        <!-- <mat-form-field>
+            <nb-tag-list (tagRemove)="onRemove($event)">
+                <nb-tag *ngFor="let val of schema.value" [text]="findTextOfValue(val)" removable></nb-tag>
+                <input nbTagInput type="text" (focus)="makeDirtyField()" nbInput (active)="showPopupPanel(true)"
+                    (tagAdd)="onAddValue($event.value)" [status]="schema.status"
+                    [fullWidth]="schema.fullWidth ? true : undefined" [disabled]="schema.disabled? true : undefined"
+                    [shape]="schema.shape" [fieldSize]="schema.size"
+                    [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId"
+                    [(ngModel)]="schema._searchText" (keyup)="keyupEvent($event)" (click)="showPopupPanel()">
+            </nb-tag-list>
+            <nb-icon nbSuffix [icon]="'chevron-'+(showPopup ? 'up' : 'down')+'-outline'" pack="eva"
+                (click)="showPopupPanel()"></nb-icon>
+        </mat-form-field> -->
+    </ng-container>
+    <!-- one select -->
+    <ng-container *ngIf="!schema.multiple">
+        <mat-form-field>
+            <mat-label *ngIf="schema._form?.label">
+                {{schema._form.label}}
+                <span class="required" *ngIf="schema._form?.__isRequired">*</span>
+            </mat-label>
+            <input [matAutocomplete]="auto" matInput type="text" (focus)="makeDirtyField()" nbInput
+                (active)="showPopupPanel(true)" [color]="schema.status"
+                [fullWidth]="schema.fullWidth ? true : undefined" [disabled]="schema.disabled? true : undefined"
+                [shape]="schema.shape" [fieldSize]="schema.size"
+                [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId"
+                [(ngModel)]="schema._searchText" (keyup)="keyupEvent($event)" (click)="showPopupPanel()">
+            <!-- <mat-icon matSuffix (click)="showPopupPanel()">{{showPopup ? 'expand_less':'expand_more'}}</mat-icon> -->
+        </mat-form-field>
+        <!-- panel -->
+        <mat-autocomplete (optionSelected)="toggleSelectOption(findOptionByText($event.option.value))"
+            #auto="matAutocomplete">
+            <mat-option [value]="opt.text" *ngFor="let opt of options">
+                {{opt.text}}
+            </mat-option>
+        </mat-autocomplete>
+    </ng-container>
+
+
 
 </div>
