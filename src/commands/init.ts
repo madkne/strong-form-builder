@@ -296,53 +296,55 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
                 componentClassFilePath = path.join(widgetDirPath, this.uiFramework, widDir.name + '.component.ts');
             }
             // =>extract widget class
-            let res = /export\s+class\s+[\w\d]+/g.exec(fs.readFileSync(componentClassFilePath).toString());
-            if (!res || res.length === 0) continue;
-            let widgetClassName = res[0].replace(/export\s+class\s+/g, '').trim();
-            // =>create widget import
-            widgetImports.push(`import { ${widgetClassName} } from "./widgets/${widDir.name}/${widDir.name}.component";
-            `)
-            // =>add declarations
-            declarations.push(widgetClassName);
+            let res = fs.readFileSync(componentClassFilePath).toString().matchAll(/export\s+class\s+[\w\d]+/g);
+            if (!res) continue;
+            while (true) {
+                let match = res.next().value;
+                if (!match) break;
+                let widgetClassName = match[0].replace(/export\s+class\s+/g, '').trim();
+                // =>create widget import
+                widgetImports.push(`import { ${widgetClassName} } from "./widgets/${widDir.name}/${widDir.name}.component";
+                            `)
+                // =>add declarations
+                declarations.push(widgetClassName);
+            }
         }
         // =>write to file
         fs.writeFileSync(filePath, `
-import { CommonModule } from "@angular/common";
-import { HttpClientModule } from "@angular/common/http";
-import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { SanitizerUrlPipe } from "./pipes/SanitizerUrlPipe.pipe";
-import { StrongFBSharedModule } from "./StrongFB-shared.module";
+            import { CommonModule } from "@angular/common";
+            import { HttpClientModule } from "@angular/common/http";
+            import { NgModule } from "@angular/core";
+            import { FormsModule } from "@angular/forms";
+            import { SanitizerUrlPipe } from "./pipes/SanitizerUrlPipe.pipe";
+            import { StrongFBSharedModule } from "./StrongFB-shared.module";
 
 
-${widgetImports.join('\n')}
+            ${widgetImports.join('\n')}
 
-@NgModule({
-    declarations: [
-        StrongFBFormComponent, 
-        SanitizerUrlPipe,
+            @NgModule({
+                declarations: [
+                    SanitizerUrlPipe,
 
-       ${declarations.join(',\n')}
-    ],
-    imports: [
-        StrongFBSharedModule,
-        CommonModule,
-        FormsModule,
-        HttpClientModule,
-    ],
-    providers: [],
-    exports: [
-        StrongFBFormComponent,
-        ${declarations.join(',\n')}
-    ],
-})
-export class StrongFBModule { }
+                   ${declarations.join(',\n')}
+                ],
+                imports: [
+                    StrongFBSharedModule,
+                    CommonModule,
+                    FormsModule,
+                    HttpClientModule,
+                ],
+                providers: [],
+                exports: [
+                    ${declarations.join(',\n')}
+                ],
+            })
+            export class StrongFBModule { }
 
-/************************************/
-/**GENERATED*BY*STRONG*FORM*BUILDER**/
-/************************************/
+            /************************************/
+            /**GENERATED*BY*STRONG*FORM*BUILDER**/
+            /************************************/
 
-        `);
+                    `);
     }
 
 }

@@ -1,0 +1,88 @@
+nb-card-body {
+    padding: 0;
+    border-radius: 5px;
+}
+
+table {
+    line-height: 1.5em;
+    border-collapse: collapse;
+    border-spacing: 0;
+    display: table;
+    width: 100%;
+    max-width: 100%;
+    overflow: auto;
+
+    thead {
+        tr {
+            th {
+                padding: 0.875rem 1.25rem;
+                border: 1px solid var(--background-basic-color-2);
+
+                .title {
+                    text-transform: capitalize;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            td {
+                padding: 0.875rem 1.25rem;
+                border: 1px solid var(--background-basic-color-2);
+
+            }
+        }
+    }
+}
+
+.td-has-checkbox {
+    display: flex;
+    align-items: center;
+
+    nb-checkbox {
+        margin: 0 5px;
+        margin-bottom: -5px;
+    }
+}
+
+.td-selectable {
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover:not(.td-selected) {
+        // background: var(--actions-divider-color);
+        background-color: var(--card-scrollbar-color);
+    }
+}
+
+.td-selected {
+    background: var(--alert-outline-control-color);
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 4px;
+}
+
+.rtl-icon {
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+.not-found {
+    padding: 2em 10%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    img {
+        max-height: 250px;
+        margin-bottom: 5px;
+    }
+}

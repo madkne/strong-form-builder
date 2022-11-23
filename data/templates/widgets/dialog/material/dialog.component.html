@@ -1,21 +1,20 @@
-<ng-template>
-    <div mat-dialog-title *ngIf="data.title" class="title">
-        <h1>{{ data.title }}</h1>
-        <p *ngIf="data.description" class="light-black" [innerHtml]="data.description"></p>
-    </div>
-    <div mat-dialog-content>
-        <!-- html -->
-        <p class="html" *ngIf="data.html" [innerHtml]="data.html"></p>
-        <strong-form-builder [form]="data.form"></strong-form-builder>
-    </div>
-    <div mat-dialog-actions *ngIf="data.actions" class="actions">
-        <ng-container *ngFor="let action of data.actions">
-            <button *ngIf="action.__show" [attr.mat-button]="action.appearance === 'basic'" [color]="action.status"
-                [disabled]="action.disabled ? action.disabled : undefined"
-                [attr.mat-raised-button]="action.appearance === 'colorful'"
-                [attr.mat-stroked-button]="action.appearance === 'outline'" (click)="runAction(action)">
+<div mat-dialog-title [dir]="locale.getLangInfo().direction" *ngIf="data.title" class="title">
+    <h1>{{ data.title }}</h1>
+    <p *ngIf="data.description" class="light-black" [innerHtml]="data.description"></p>
+</div>
+<div mat-dialog-content>
+    <!-- html -->
+    <p class="html" *ngIf="data.html" [innerHtml]="data.html"></p>
+    <strong-form-builder *ngIf="data.form" [form]="data.form"></strong-form-builder>
+</div>
+<div mat-dialog-actions *ngIf="data.actions" class="actions">
+    <ng-container *ngFor="let action of data.actions">
+        <ng-container *ngIf="action.__show">
+            <!-- basic button -->
+            <button mat-button [color]="action.status" [disabled]="action.disabled ? action.disabled : undefined"
+                (click)="runAction(action)">
                 {{ action.text }}
             </button>
         </ng-container>
-    </div>
-</ng-template>
+    </ng-container>
+</div>

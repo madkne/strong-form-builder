@@ -107,7 +107,7 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
         return this;
     }
 
-    loadRowsByApi(options: APIRequest, response?: TableLoadRowsResponse<ROW>, request?: (req: APIRequest<ROW>) => Promise<APIResponse<ROW>>) {
+    loadRowsByApi(options: APIRequest, response?: TableLoadRowsResponse<ROW>, request?: (req: APIRequest<ROW>) => Promise<APIResponse<ROW[]>>) {
         this._schema.loadRowsByApi = {
             options,
             response: response ? response : (rep, err) => {

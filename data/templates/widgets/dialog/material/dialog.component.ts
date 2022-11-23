@@ -8,11 +8,12 @@ import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBLocaleService } from '../../services/StrongFB-locale.service';
 import { StrongFBTransmitService } from '../../services/StrongFB-transmit.service';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { StrongFBService } from '../../services/StrongFB.service';
 
 
 @Component({
     selector: 'strong-dialog',
-    template: '<div></div>'
+    template: `<div></div>`
 })
 export class StrongFBDialogWidgetComponent extends StrongFBBaseWidget {
     // @ViewChild('dialog') dialogTemplateRef: TemplateRef<any>;
@@ -38,6 +39,7 @@ export class StrongFBDialogWidgetComponent extends StrongFBBaseWidget {
         private transmit: StrongFBTransmitService,
         private locale: StrongFBLocaleService,
         protected override cdr: ChangeDetectorRef,
+        private strongfb: StrongFBService,
     ) {
         super(elRef, cdr);
     }
@@ -84,60 +86,49 @@ export class StrongFBDialogWidgetComponent extends StrongFBBaseWidget {
                 act.status = 'danger';
                 act.closable = true;
             }
+            // =>normalize status 
+            if (act.status == 'basic') act.status = undefined;
+            if (act.status == 'info') act.status = 'primary';
+            if (act.status == 'danger' || act.status == 'warning') act.status = 'warn' as any;
+            if (act.status == 'success') act.status = 'accent' as any;
+
         }
+
 
     }
     /***************************************** */
     async open(): Promise<MatDialogRef<StrongFBDialogWidgetRefComponent>> {
-        return new Promise((res) => {
+        return new Promise(async (res) => {
 
-            let dialogLoading = setInterval(() => {
-                // if (!this.dialogTemplateRef) return;
-                // =>normalize actions
-                this.normalizeActions();
-                // =>open dialog
-                // let ref = this.dialogService.open(this.dialogTemplateRef, {
-                //     context: {
-                //         title: this.title,
-                //         description: this.description,
-                //         html: this.html,
-                //         actions: this.actions,
-                //         form: this.form,
-                //         data: this.initialData,
-                //     }
-                // });
-                let ref = this.dialogService.open(StrongFBDialogWidgetRefComponent, {
-                    data: {
-                        form: this.form,
-                        initialData: this.initialData,
-                        actions: this.actions,
-                        html: this.html,
-                        description: this.description,
-                        title: this.title,
-                    }
-                })
-                this._dialogRef = ref;
-                clearInterval(dialogLoading);
-                res(ref);
-            }, 20);
+            // =>normalize actions
+            this.normalizeActions();
+            // =>open dialog
+            let ref = this.dialogService.open(StrongFBDialogWidgetRefComponent, {
+                data: {
+                    form: this.form,
+                    initialData: this.initialData,
+                    actions: this.actions,
+                    html: this.html,
+                    description: this.description,
+                    title: this.title,
+                }
+            });
+            this._dialogRef = ref;
+            res(ref);
         });
     }
-
-
-
-
-
 }
 
 
 @Component({
-    selector: 'dialog-overview-example-dialog',
+    selector: 'dialog-xxxxx-dialog',
     templateUrl: './dialog.component.html',
     styleUrls: ['./dialog.component.scss']
 })
 export class StrongFBDialogWidgetRefComponent extends StrongFBBaseWidget {
     constructor(
         protected override elRef: ElementRef,
+        public locale: StrongFBLocaleService,
         public dialogRef: MatDialogRef<StrongFBDialogWidgetRefComponent>,
         protected override cdr: ChangeDetectorRef,
         @Inject(MAT_DIALOG_DATA) public data: {

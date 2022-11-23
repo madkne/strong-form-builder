@@ -1,0 +1,69 @@
+<ng-container *ngIf="schema && show">
+    <nb-card>
+        <nb-card-body>
+            <table #table *ngIf="!isNotFoundEnabled()" mat-table [dataSource]="displayRows">
+                <!-- Columns -->
+                <ng-container *ngFor="let rowCol of schema.columns;let colIndex = index" [matColumnDef]="rowCol.name">
+                    <th mat-header-cell *matHeaderCellDef>{{rowCol.title ?? rowCol.name}} </th>
+                    <td mat-cell *matCellDef="let row; let rowIndex = index">
+                        <!-- string type -->
+                        <div *ngIf="!rowCol.type || rowCol.type === 'string'">
+                            {{row[rowCol.name]}}
+                        </div>
+                        <!-- tag type -->
+                        <mat-chip-list *ngIf="rowCol.type == 'tag'">
+                            <mat-chip [color]="row[rowCol.name].status ? row[rowCol.name].status : undefined">
+                                {{row[rowCol.name].value}}</mat-chip>
+                        </mat-chip-list>
+                        <!-- tagsList type -->
+                        <mat-chip-list *ngIf="rowCol.type == 'tagsList' && row[rowCol.name].length > 0">
+                            <mat-chip *ngFor="let tag of row[rowCol.name]"
+                                [color]="tag.status ? tag.status : undefined">{{tag.value}}</mat-chip>
+                        </mat-chip-list>
+
+
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns; sticky: true"
+                    [class.td-selectable]="schema.selectable"
+                    (click)="schema.selectable ? toggleSelectRow(rowIndex, !isRowSelected(rowIndex)) : undefined"
+                    [class.td-selected]="schema.selectable ? isRowSelected(rowIndex) : undefined"></tr>
+            </table>
+            <!-- pagination -->
+            <div class="pagination" *ngIf="schema.mapApiPagination && schema.mapApiPagination.__pageCountResponse">
+                <!-- prev buttons -->
+                <nb-button-group shape="semi-round">
+                    <button (click)="goToPage(1)" nbButtonToggle *ngIf="page > 2  && displayPages.first">
+                        <nb-icon icon="arrowhead-left-outline" [class.rtl-icon]="isRtl"></nb-icon>
+                    </button>
+                    <button (click)="goToPage(page - 1)" nbButtonToggle *ngIf="page > 1 && displayPages.prev">
+                        <nb-icon icon="arrow-ios-back-outline" [class.rtl-icon]="isRtl"></nb-icon>
+                    </button>
+                    <ng-container *ngFor="let p of displayPages.pages">
+                        <button *ngIf="p !== '...'" (click)="goToPage(p)" [pressed]="page== p"
+                            nbButtonToggle>{{p}}</button>
+                        <button *ngIf="p === '...'" disabled outline nbButtonToggle>...</button>
+                    </ng-container>
+
+                    <!-- next buttons -->
+                    <button (click)="goToPage(page+1)" nbButtonToggle
+                        *ngIf="page < schema.mapApiPagination.__pageCountResponse && displayPages.next">
+                        <nb-icon icon="arrow-ios-forward-outline" [class.rtl-icon]="isRtl"></nb-icon>
+                    </button>
+                    <button (click)="goToPage(schema.mapApiPagination.__pageCountResponse)" nbButtonToggle
+                        *ngIf="page < schema.mapApiPagination.__pageCountResponse - 1 && displayPages.last">
+                        <nb-icon icon="arrowhead-right-outline" [class.rtl-icon]="isRtl"></nb-icon>
+                    </button>
+                </nb-button-group>
+
+            </div>
+
+            <!-- not found -->
+            <div *ngIf="isNotFoundEnabled()" class="not-found">
+                <img *ngIf="schema.notFound.imageUrl" [src]="schema.notFound.imageUrl">
+                <p *ngIf="schema.notFound.html" [innerHtml]="schema.notFound.html"></p>
+            </div>
+        </nb-card-body>
+    </nb-card>
+</ng-container>

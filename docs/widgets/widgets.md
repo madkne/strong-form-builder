@@ -7,7 +7,7 @@
 |---|:-------:|:----:|:----:|:-----------:|:-------:|
 |1|button|YES|YES|-|madkne|
 |2|card|YES|NO|-|madkne|
-|3|dialog|YES|TESTING|-|madkne|
+|3|dialog|YES|YES|-|madkne|
 |4|form-field|YES|TESTING|supported `input`, `select`, `textarea`, ... widgets|madkne|
 |5|input|YES|TESTING|-|madkne|
 |6|[select](./select.md)|YES|NO|supported multi select|madkne, rashidi|

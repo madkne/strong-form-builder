@@ -6,6 +6,8 @@ import { TableColumnAction, TableColumnDynamicActionsType, TableSchema } from '.
 import { takeUntil } from 'rxjs';
 import { StrongFBService } from '../../services/StrongFB.service';
 import { APIResponse } from '../../common/StrongFB-interfaces';
+import { refreshTable } from './convertor';
+// import { extraNormalizeSchema } from './convertor';
 
 @Component({
     selector: 'table-widget',
@@ -13,6 +15,7 @@ import { APIResponse } from '../../common/StrongFB-interfaces';
     styleUrls: ['./table.component.scss']
 })
 export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema> implements AfterViewInit {
+    @ViewChild('table') tableRef: any;
     override schema: TableSchema;
     simpleRows: object[] = [];
     displayRows: object[] = [];
@@ -20,6 +23,7 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
     rowsSelectedCount = 0;
     isRtl = false;
     rowsSelected: { [k: string]: object } = {};
+    displayedColumns: string[] = [];
 
     constructor(
         protected override elRef: ElementRef,
@@ -76,7 +80,7 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
         // =>load rows by local
         //TODO:
         this.displayLoading(false);
-
+        refreshTable(this.tableRef);
     }
 
 
@@ -156,6 +160,10 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
             schema.notFound.html = this.srv.locale().trans('common', 'Not Found!');
         }
 
+        this.displayedColumns = this.schema.columns.map(i => i.name);
+
+        // schema = extraNormalizeSchema(schema);
+
         return schema;
     }
 
@@ -193,6 +201,7 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
                 }
             }
             this.cdr.detectChanges();
+            refreshTable(this.tableRef);
         }
     }
 
