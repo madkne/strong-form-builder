@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, ChangeDetectorRef, ElementRef, HostLis
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { AutoCompleteOption, AutoCompleteSchema } from './auto-complete-interfaces';
 import { takeUntil } from 'rxjs';
-import { clone } from '../../common/StrongFB-common';
+import { checkAndDoByInterval, clone, generateId } from '../../common/StrongFB-common';
 
 @Component({
     selector: 'auto-complete-widget',
@@ -13,6 +13,8 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
 
     showPopup = false;
     options: AutoCompleteOption[] = [];
+    panelId: string;
+    panelStyles = {};
     @Output() override ngModelChange = new EventEmitter<string | string[]>();
     @ViewChild(Object, { read: ElementRef }) tagInput: ElementRef<HTMLInputElement>;
 
@@ -25,6 +27,7 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
 
     override schema: AutoCompleteSchema;
     override async onInit() {
+        this.panelId = generateId('panel');
         this.schema = this.widgetHeader.schema;
         // =>normalize schema
         this.schema = await this.normalizeSchema(this.schema);
@@ -101,7 +104,7 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
             this.updateFormField('value');
         }
         this.loadOptions();
-        this.showPopup = true;
+        this.showPopupPanel(true);
     }
 
 
@@ -111,7 +114,7 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
         if (this.eRef.nativeElement.contains(event.target)) {
             // this.text = "clicked inside";
         } else {
-            this.showPopup = false;
+            this.showPopupPanel(false);
             // this.text = "clicked outside";
         }
     }
@@ -123,6 +126,10 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
         if (is) {
             if (this.options.length === 0) return;
             this.showPopup = true;
+            this.panelStyles = {};
+            setTimeout(() => {
+                this.panelStyles = this.detectPanelOpenedDirection();
+            }, 10);
         } else {
             this.showPopup = false;
         }
@@ -201,4 +208,20 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
         this.schema._searchText = '';
     }
 
+
+    async detectPanelOpenedDirection() {
+        return await checkAndDoByInterval(
+            () => document.getElementById(this.panelId) !== null, () => {
+                let rect = document.getElementById(this.panelId).getBoundingClientRect();
+                let winHeight = window.innerHeight;
+                console.log('dddd:', rect.top, winHeight)
+                if (rect.top + 350 >= winHeight) {
+                    this.panelStyles['bottom'] = '15px';
+                } else {
+                    this.panelStyles['top'] = '50px';
+                }
+
+            }, 5);
+        // if (!) return { top: '50px' };
+    }
 }

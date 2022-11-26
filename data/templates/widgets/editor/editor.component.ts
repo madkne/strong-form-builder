@@ -48,7 +48,7 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
             this.toastUILoad();
         } else if (this.schema.editorType === 'Froala') {
             this.froalaLoad();
-        } else {
+        } else if (this.schema.editorType === 'TinyMCE') {
             this.tinyMceLoad();
         }
 
@@ -73,6 +73,8 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
                 this.schema.value = this.editor.getMarkdown();
             } else if (this.schema.editorType === 'Froala') {
                 this.schema.value = this.editor.html.get().replace('Powered by Froala Editor', '');
+            } else {
+                this.schema.value = tinymce.get(this.editorId).getContent();
             }
         } else if (this.schema.type === 'wysiwyg') {
             if (this.schema.editorType === 'ToastUI') {
@@ -110,10 +112,16 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
                     editor.on('change', (e) => {
                         this.changeValue();
                     });
+                    editor.on('OpenNotification', (e) => {
+                        // =>close any notifications
+                        tinymce.get(this.editorId)?.notificationManager?.close();
+                    });
+                    editor.on('init', (e) => {
+                        this.displayLoading(false);
+                        this.readyToUse = true;
+                    });
                 }
             });
-            this.displayLoading(false);
-            this.readyToUse = true;
             clearInterval(editorLoaded);
         }, 10);
     }

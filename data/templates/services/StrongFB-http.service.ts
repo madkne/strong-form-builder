@@ -94,6 +94,18 @@ export class StrongFBHttpService {
 
         if (!data.body) { data.body = {}; }
         if (!data.params) { data.params = {}; }
+        // =>iterate params, for undefined
+        for (const key of Object.keys(data.params)) {
+            if (data.params[key] === undefined || data.params[key] === null) {
+                delete data.params[key];
+            }
+        }
+        // =>iterate body, for undefined
+        for (const key of Object.keys(data.body)) {
+            if (data.body[key] === undefined) {
+                delete data.body[key];
+            }
+        }
         // =>calculate request data size
         this.httpTransferData.upload += lengthInUtf8Bytes(JSON.stringify(data));
         // =>generate url
@@ -118,8 +130,14 @@ export class StrongFBHttpService {
         }
         // =>if PUT method
         else if (data.method === 'PUT') {
-
-            return this.http.put<APIResponse<T>>(url, data.body, { headers: data.headers });
+            if (data.formData) {
+                data.body = data.formData;
+            }
+            return this.http.put<APIResponse<T>>(url, data.body, {
+                headers: data.headers,
+                reportProgress: data.reportProgress,
+                observe: data.reportProgress ? 'events' : undefined,
+            });
         }
         // =>if DELETE method
         else if (data.method === 'DELETE') {

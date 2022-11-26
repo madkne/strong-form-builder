@@ -30,7 +30,7 @@
 
 
     <!-- panel -->
-    <nb-card size="small" class="panel" *ngIf="showPopup">
+    <nb-card size="small" class="panel" [ngStyle]="panelStyles" [id]="panelId" *ngIf="showPopup">
         <nb-list>
             <nb-list-item class="nb-transition  option" [class.selected]="isSelected(opt.value)"
                 (click)="toggleSelectOption(opt)" *ngFor="let opt of options">
@@ -40,13 +40,7 @@
             </nb-list-item>
         </nb-list>
     </nb-card>
-    <!-- <nb-select (focus)="makeDirtyField()" [size]="schema.size" [shape]="schema.shape" [status]="schema.status"
-        [id]="widgetId" [disabled]="schema.disabled ? schema.disabled : undefined"
-        [fullWidth]="schema.fullWidth ? true : undefined" [hero]="schema.appearance === 'colorful'"
-        [outline]="schema.appearance === 'outline'" [placeholder]="schema.placeholder" [(selected)]="schema.value"
-        (selectedChange)="changeEvent($event)" [multiple]="schema.multiple ? schema.multiple : undefined">
-        <nb-option *ngFor="let opt of options" [value]="opt.value">{{opt.text}}</nb-option>
-    </nb-select> -->
+
 
 
 </div>
