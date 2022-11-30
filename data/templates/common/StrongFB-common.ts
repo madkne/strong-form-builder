@@ -149,3 +149,10 @@ export async function checkAndDoByInterval<T = any>(checkFunc: () => boolean | P
         }, ms);
     });
 }
+/************************************************* */
+export function randomColor() {
+    let blue = Math.ceil(Math.random() * 255);
+    let red = Math.ceil(Math.random() * 255);
+    let green = Math.ceil(Math.random() * 255);
+    return `rgb(${red}, ${green}, ${blue})`;
+}

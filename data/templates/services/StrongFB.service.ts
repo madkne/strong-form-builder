@@ -143,6 +143,7 @@ export class StrongFBService {
         html?: string;
         actions?: StrongFBDialogAction[],
         data?: T,
+        minWidth?: string;
     } = {}) {
         // =>create instance of form
         let formInstance = await this.loadFormClass(form, options.data);
@@ -161,6 +162,9 @@ export class StrongFBService {
         }
         if (options.actions) {
             component.instance['actions'] = options.actions;
+        }
+        if (options.minWidth) {
+            component.instance['minWidth'] = options.minWidth;
         }
         // if (options.data) {
         //     component.instance['initialData'] = options.data;

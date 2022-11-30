@@ -44,7 +44,7 @@ export class StrongFBBaseWidgetHeader<SCHEMA extends object = object, WIDGET_NAM
         return this;
     }
     margin4x(top = '0.1em', bottom = '0.1em', left = '0.1em', right = '0.1em') {
-        this._commonStyles['margin'] = `${top} ${bottom} ${left} ${right}`;
+        this._commonStyles['margin'] = `${top} ${right} ${bottom} ${left}`;
 
         return this;
     }

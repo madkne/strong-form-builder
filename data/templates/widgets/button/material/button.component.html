@@ -2,24 +2,24 @@
     <!-- basic button -->
     <button *ngIf="schema.appearance === 'basic'" mat-button [color]="schema.status"
         [disabled]="schema.disabled ? schema.disabled : undefined" (click)="clickEvent($event)"
-        [matTooltip]="schema.tooltip" [matTooltipDisabled]="!schema.tooltip">
+        [class.full]="schema.fullWidth" [matTooltip]="schema.tooltip" [matTooltipDisabled]="!schema.tooltip">
         <ng-container [ngTemplateOutlet]="buttonContent"></ng-container>
     </button>
     <!-- colorful button -->
     <button *ngIf="schema.appearance === 'colorful'" mat-raised-button [color]="schema.status"
-        [disabled]="schema.disabled ? schema.disabled : undefined" (click)="clickEvent($event)"
-        [matTooltip]="schema.tooltip" [matTooltipDisabled]="!schema.tooltip">
+        [disabled]="schema.disabled ? schema.disabled : undefined" [class.full]="schema.fullWidth"
+        (click)="clickEvent($event)" [matTooltip]="schema.tooltip" [matTooltipDisabled]="!schema.tooltip">
         <ng-container [ngTemplateOutlet]="buttonContent"></ng-container>
     </button>
     <!-- fill button -->
     <button *ngIf="schema.appearance === 'fill'" mat-flat-button [color]="schema.status"
-        [disabled]="schema.disabled ? schema.disabled : undefined" (click)="clickEvent($event)"
-        [matTooltip]="schema.tooltip" [matTooltipDisabled]="!schema.tooltip">
+        [disabled]="schema.disabled ? schema.disabled : undefined" [class.full]="schema.fullWidth"
+        (click)="clickEvent($event)" [matTooltip]="schema.tooltip" [matTooltipDisabled]="!schema.tooltip">
         <ng-container [ngTemplateOutlet]="buttonContent"></ng-container>
     </button>
     <!-- outline button -->
-    <button *ngIf="schema.appearance === 'outline'" mat-stroked-button [color]="schema.status"
-        [disabled]="schema.disabled ? schema.disabled : undefined" (click)="clickEvent($event)"
+    <button *ngIf="schema.appearance === 'outline'" mat-stroked-button [class.full]="schema.fullWidth"
+        [color]="schema.status" [disabled]="schema.disabled ? schema.disabled : undefined" (click)="clickEvent($event)"
         [matTooltip]="schema.tooltip" [matTooltipDisabled]="!schema.tooltip">
         <ng-container [ngTemplateOutlet]="buttonContent"></ng-container>
     </button>

@@ -1,19 +1,36 @@
 <div *ngIf="schema && show" class="auto-complete-container">
     <!-- multiple select -->
     <ng-container *ngIf="schema.multiple">
-        <!-- <mat-form-field>
-            <nb-tag-list (tagRemove)="onRemove($event)">
-                <nb-tag *ngFor="let val of schema.value" [text]="findTextOfValue(val)" removable></nb-tag>
-                <input nbTagInput type="text" (focus)="makeDirtyField()" nbInput (active)="showPopupPanel(true)"
-                    (tagAdd)="onAddValue($event.value)" [status]="schema.status"
-                    [fullWidth]="schema.fullWidth ? true : undefined" [disabled]="schema.disabled? true : undefined"
-                    [shape]="schema.shape" [fieldSize]="schema.size"
-                    [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId"
-                    [(ngModel)]="schema._searchText" (keyup)="keyupEvent($event)" (click)="showPopupPanel()">
-            </nb-tag-list>
-            <nb-icon nbSuffix [icon]="'chevron-'+(showPopup ? 'up' : 'down')+'-outline'" pack="eva"
-                (click)="showPopupPanel()"></nb-icon>
-        </mat-form-field> -->
+        <mat-form-field>
+            <mat-label *ngIf="schema._form?.label">
+                {{schema._form.label}}
+                <span class="required" *ngIf="schema._form?.__isRequired">*</span>
+            </mat-label>
+            <mat-chip-list [id]="widgetId" [disabled]="schema.disabled? true : undefined" multiple="true" #chipList>
+                <mat-chip [color]="schema.status" class="chip" *ngFor="let val of schema.value" [selectable]="true"
+                    [removable]="true" (removed)="onRemove(findOptionByValue(val))">
+                    <!-- color mode -->
+                    <!-- <div *ngIf="options.hasColor" class="color" [style.background]="getColorByValue(val)">
+                        <input type="color" [value]="getColorByValue(val)"
+                            (input)="setColorByValue(val, $event.target.value)" />
+                    </div> -->
+                    <!-- image mode -->
+                    <!-- <img *ngIf="options.hasImage" [src]="findImageByValue(val)" /> -->
+                    <div class="text">{{ findTextOfValue(val)}}</div>
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input (focus)="makeDirtyField()" #Input [(ngModel)]="schema._searchText"
+                    #trigger="matAutocompleteTrigger" [placeholder]="schema.placeholder ? schema.placeholder : ''"
+                    [matAutocomplete]="auto" [matChipInputFor]="chipList" (keyup)="keyupEvent($event)" />
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete"
+                (optionSelected)="toggleSelectOption(findOptionByText($event.option.value))">
+                <mat-option [value]="opt.text" *ngFor="let opt of options">
+                    <ng-container *ngTemplateOutlet="autoCompleteOption;context: {option:opt}"></ng-container>
+
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
     </ng-container>
     <!-- one select -->
     <ng-container *ngIf="!schema.multiple">
@@ -22,7 +39,7 @@
                 {{schema._form.label}}
                 <span class="required" *ngIf="schema._form?.__isRequired">*</span>
             </mat-label>
-            <input [matAutocomplete]="auto" matInput type="text" (focus)="makeDirtyField()" nbInput
+            <input [matAutocomplete]="auto" matInput type="text" (focus)="makeDirtyField()"
                 (active)="showPopupPanel(true)" [color]="schema.status"
                 [fullWidth]="schema.fullWidth ? true : undefined" [disabled]="schema.disabled? true : undefined"
                 [shape]="schema.shape" [fieldSize]="schema.size"
@@ -34,7 +51,7 @@
         <mat-autocomplete (optionSelected)="toggleSelectOption(findOptionByText($event.option.value))"
             #auto="matAutocomplete">
             <mat-option [value]="opt.text" *ngFor="let opt of options">
-                {{opt.text}}
+                <ng-container *ngTemplateOutlet="autoCompleteOption;context: {option:opt}"></ng-container>
             </mat-option>
         </mat-autocomplete>
     </ng-container>
@@ -42,3 +59,25 @@
 
 
 </div>
+
+
+<ng-template #autoCompleteOption let-option="option">
+    <div class="item">
+        <!-- item color -->
+        <!-- <div class="color" *ngIf="options.hasColor" [style.background]="getColorByValue(item.value)">
+        </div> -->
+        <!-- item image -->
+        <!-- <img *ngIf="options.hasImage" [src]="item.image" /> -->
+        <!-- item avatar -->
+        <!-- <avatar *ngIf="options.avatarMode" [mode]="options.avatarMode"
+            [user]="options.avatarMode === 'user' ? item.avatarModel : undefined" [group]="
+        options.avatarMode === 'group' ? item.avatarModel : undefined
+      " [readOnly]="true" [size]="30"></avatar> -->
+        <div class="full">
+            <span>{{ option.text }}</span>
+            <!-- <span class="des mat-hint" *ngIf="item.description">{{
+                item.description
+                }}</span> -->
+        </div>
+    </div>
+</ng-template>

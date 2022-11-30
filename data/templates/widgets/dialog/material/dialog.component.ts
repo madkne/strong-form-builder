@@ -27,6 +27,7 @@ export class StrongFBDialogWidgetComponent extends StrongFBBaseWidget {
     // @Input() table: PopupTable;
     @Input() form: StrongFBFormClass;
     @Input() initialData: object;
+    @Input() minWidth: string;
     // @Input() waitForComponentResponse = false;
 
     // @Output() formValuesByAction = new EventEmitter<[string, object]>();
@@ -111,7 +112,8 @@ export class StrongFBDialogWidgetComponent extends StrongFBBaseWidget {
                     html: this.html,
                     description: this.description,
                     title: this.title,
-                }
+                },
+                minWidth: this.minWidth,
             });
             this._dialogRef = ref;
             res(ref);

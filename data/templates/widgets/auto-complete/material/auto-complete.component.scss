@@ -7,6 +7,10 @@
 .auto-complete-container {
     position: relative;
 
+    mat-form-field {
+        width: 100%;
+    }
+
     .panel {
         position: absolute;
         left: 0;
