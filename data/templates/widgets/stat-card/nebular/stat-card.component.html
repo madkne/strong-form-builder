@@ -1,10 +1,10 @@
 <ng-container *ngIf="schema && show">
-    <nb-card>
-        <nb-card-body>
+    <nb-card [style.background]="schema.background.__value">
+        <nb-card-body [style.color]="detectColorByBg(schema.color)">
             <div class="stat-card">
                 <div class="stat-card__content">
-                    <p class="text-uppercase mb-1 text-muted">{{schema.title}}</p>
-                    <h2>
+                    <p class="text-uppercase mb-1 text-muted" [class.dark]="mode === 'dark'">{{schema.title}}</p>
+                    <h2 [class.dark]="mode === 'dark'">
                         <div [id]="'stat_'+widgetId">
                             {{schema.value}}
                         </div>
@@ -18,12 +18,12 @@
                             </nb-icon> <span>{{schema.ratioChange.__ratioPercent > 0 ? '+' :
                                 ''}}{{schema.ratioChange.__ratioPercent}}</span>%
                         </span>
-                        <span class="text-muted ratio-text"
+                        <span class="text-muted ratio-text" [class.dark]="mode === 'dark'"
                             *ngIf="schema.ratioChange?.ratioText">{{schema.ratioChange.ratioText}}</span>
                     </div>
                 </div>
                 <!-- stat icon -->
-                <div class="stat-card__icon stat-card__icon--success">
+                <div class="stat-card__icon stat-card__icon--success" [style.background]="schema.color">
                     <nb-icon [icon]="schema.icon" *ngIf="schema.icon"></nb-icon>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBStatisticsCardWidgetComponent } from "./stat-card.component";
-import { StatisticsCardHeader, StatisticsCardSchema, StatisticsCardUpdateInfo, StatisticsCardSymbol, StatisticsCardChangeProgress, StatisticsCardClickEvent } from "./stat-card-interfaces";
+import { StatisticsCardHeader, StatisticsCardSchema, StatisticsCardUpdateInfo, StatisticsCardSymbol, StatisticsCardChangeProgress, StatisticsCardClickEvent, StatisticsCardBackground } from "./stat-card-interfaces";
 import { ButtonSchema } from "../button/button-interfaces";
 
 
@@ -33,6 +33,10 @@ export class StrongFBStatisticsCardWidget extends StrongFBBaseWidgetHeader {
         this._schema.title = title;
         return this;
     }
+    color(c: string) {
+        this._schema.color = c;
+        return this;
+    }
     symbol(symbol: StatisticsCardSymbol) {
         this._schema.symbol = symbol;
         return this;
@@ -55,6 +59,11 @@ export class StrongFBStatisticsCardWidget extends StrongFBBaseWidgetHeader {
         }
 
         this._schema.buttons = buttons;
+        return this;
+    }
+
+    background(bg: StatisticsCardBackground) {
+        this._schema.background = bg;
         return this;
     }
     /********************************* */

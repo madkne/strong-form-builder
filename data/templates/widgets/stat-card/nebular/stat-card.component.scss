@@ -11,6 +11,12 @@
 
     .stat-card__content {
         margin-left: 1em;
+
+        h2 {
+            &.dark {
+                color: #eeeeee;
+            }
+        }
     }
 
     .stat-card__icon {
@@ -34,6 +40,10 @@
 
 .text-muted {
     color: #6c757d !important;
+
+    &.dark {
+        color: #dfe8f0 !important;
+    }
 }
 
 .text-uppercase {

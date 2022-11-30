@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { randomColor } from '../../common/StrongFB-common';
+import { colorIsLight, randomColor } from '../../common/StrongFB-common';
 import { SFB_warn } from '../../common/StrongFB-common';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBService } from '../../services/StrongFB.service';
@@ -12,7 +12,7 @@ import { StatisticsCardSchema } from './stat-card-interfaces';
 })
 export class StrongFBStatisticsCardWidgetComponent extends StrongFBBaseWidget<StatisticsCardSchema> {
 
-
+    mode: 'light' | 'dark' = 'light';
     protected override prefixId = 'statCard';
 
     // protected override emitAutoReadyToUse = false;
@@ -28,6 +28,7 @@ export class StrongFBStatisticsCardWidgetComponent extends StrongFBBaseWidget<St
         this.schema = this.widgetHeader.schema;
         // =>normalize schema
         this.schema = await this.normalizeSchema(this.schema);
+        this.calcBackground();
         this.updateStat();
         // =>listen on update stat
         if (this.schema.updateInfo.updatePeriod) {
@@ -67,14 +68,33 @@ export class StrongFBStatisticsCardWidgetComponent extends StrongFBBaseWidget<St
         if (!schema.updateInfo) {
             schema.updateInfo = {};
         }
-
-
+        if (!schema.background) {
+            schema.background = {
+                mode: 'basic',
+            };
+        }
         return schema;
+    }
+
+    calcBackground() {
+        // =>if mode is basic
+        if (this.schema.background.mode === 'basic') {
+            this.schema.background.__value = undefined;
+        }
+        // =>if mode is auto-gradient
+        if (this.schema.background.mode === 'auto-gradient') {
+            let dir = '-90deg';
+            if (this.schema.background.direction) {
+                dir = this.schema.background.direction + 'deg';
+            }
+            this.schema.background.__value = `linear-gradient(${dir}, ${this.schema.color}, #eeeeee)`;
+        }
     }
 
 
     async counterAnim(qSelector, start = 0, end, duration = 1000) {
         const target = document.querySelector(qSelector);
+        if (!target) return;
         let startTimestamp = null;
         const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
@@ -85,6 +105,15 @@ export class StrongFBStatisticsCardWidgetComponent extends StrongFBBaseWidget<St
             }
         };
         window.requestAnimationFrame(step);
+    }
+
+    detectColorByBg(color: string) {
+        if (colorIsLight(color)) {
+            this.mode = 'light';
+            return '#424242';
+        }
+        this.mode = 'dark';
+        return '#eee';
     }
 
 }

@@ -2,7 +2,7 @@ import { FormFieldSchema } from "../form-field/form-field-interfaces";
 import { StrongFBInputWidget } from "./input.header";
 
 
-export type InputType = 'text' | 'password' | 'search' | 'email' | 'number';
+export type InputType = 'text' | 'password' | 'search' | 'email' | 'number' | 'color';
 
 export type InputSize = 'small' | 'medium' | 'large';
 

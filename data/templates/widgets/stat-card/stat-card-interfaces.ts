@@ -29,6 +29,23 @@ export interface StatisticsCardUpdateInfo {
     getInfo?: (self?: StrongFBStatisticsCardWidget) => Promise<number> | number;
 }
 
+export interface StatisticsCardBackground {
+    /**
+     * @default basic
+     */
+    mode?: 'basic' | 'auto-gradient';
+    /**
+     * used for 'auto-gradient' mode
+     * as degree
+     */
+    direction?: number;
+    /**
+     * linear-gradient(-90deg, rgb(192 223 255), #eeeeee)
+     */
+
+    __value?: string;
+}
+
 
 export type StatisticsCardClickEvent = (value: number, self?: StrongFBStatisticsCardWidget) => void;
 
@@ -50,6 +67,7 @@ export interface StatisticsCardSchema {
     symbol?: StatisticsCardSymbol;
     ratioChange?: StatisticsCardChangeProgress;
     buttons?: ButtonSchema[];
+    background?: StatisticsCardBackground;
     /*******EVENTS******* */
     click?: StatisticsCardClickEvent;
 }
