@@ -21,4 +21,5 @@
 |14|[component](./component.md)|YES|YES|load dynamic a custom component|madkne|
 |15|tab|YES|NO|-|madkne|
 |16|auto-complete|YES|TESTING|supported multi select|madkne|
+|17|stat-card|YES|NO|supported buttons and ratio change|madkne|
 <!-- |16|date-picker|YES|-|rashidi| -->

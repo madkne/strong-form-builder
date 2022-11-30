@@ -1,4 +1,4 @@
-import { Component, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { delay, takeUntil } from 'rxjs';
 import { FormFieldMetaData } from '../../common/StrongFB-interfaces';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
@@ -13,7 +13,7 @@ import { extraNormalizeSchema } from './convertor';
 })
 export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSchema> {
 
-    override schema: ButtonSchema;
+    @Input() override schema: ButtonSchema;
     override async onInit() {
         this.initSchema();
     }
@@ -26,8 +26,11 @@ export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSche
     }
 
     initSchema() {
-        if (!this.widgetHeader) return;
-        this.schema = this.widgetHeader.schema;
+        if (this.widgetHeader) {
+            this.schema = this.widgetHeader.schema;
+        } else if (!this.schema) {
+            this.schema = {};
+        }
         // =>normalize schema
         this.schema = this.normalizeSchema(this.schema);
         // =>if disabled for form fields

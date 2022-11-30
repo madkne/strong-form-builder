@@ -3,7 +3,7 @@ import { StrongFBButtonWidget } from "./button.header";
 
 
 
-export type ButtonSize = 'small' | 'medium' | 'large';
+export type ButtonSize = 'tiny' | 'small' | 'medium' | 'large';
 
 
 export type ButtonShape = 'rectangle' | 'round';

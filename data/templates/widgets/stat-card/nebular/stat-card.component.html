@@ -1,0 +1,37 @@
+<ng-container *ngIf="schema && show">
+    <nb-card>
+        <nb-card-body>
+            <div class="stat-card">
+                <div class="stat-card__content">
+                    <p class="text-uppercase mb-1 text-muted">{{schema.title}}</p>
+                    <h2>
+                        <div [id]="'stat_'+widgetId">
+                            {{schema.value}}
+                        </div>
+                    </h2>
+                    <!-- ratio change -->
+                    <div *ngIf="schema?.ratioChange?.ratioText && schema.ratioChange?.__ratioPercent">
+                        <span [class.text-success]="schema.ratioChange.__ratioPercent > 0"
+                            [class.text-danger]="schema.ratioChange.__ratioPercent < 0" class=" font-weight-bold mr-1">
+                            <nb-icon
+                                [icon]="schema.ratioChange.__ratioPercent > 0 ? 'arrow-upward-outline' :   'arrow-downward-outline'">
+                            </nb-icon> <span>{{schema.ratioChange.__ratioPercent > 0 ? '+' :
+                                ''}}{{schema.ratioChange.__ratioPercent}}</span>%
+                        </span>
+                        <span class="text-muted ratio-text"
+                            *ngIf="schema.ratioChange?.ratioText">{{schema.ratioChange.ratioText}}</span>
+                    </div>
+                </div>
+                <!-- stat icon -->
+                <div class="stat-card__icon stat-card__icon--success">
+                    <nb-icon [icon]="schema.icon" *ngIf="schema.icon"></nb-icon>
+                </div>
+            </div>
+            <!-- buttons -->
+            <div class="buttons" *ngIf="schema.buttons && schema.buttons.length > 0">
+                <button-widget *ngFor="let btn of schema.buttons" [schema]="btn" [widgetForm]="widgetForm">
+                </button-widget>
+            </div>
+        </nb-card-body>
+    </nb-card>
+</ng-container>
