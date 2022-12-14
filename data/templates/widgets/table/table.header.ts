@@ -1,7 +1,7 @@
 
 import { APIRequest, APIResponse } from "../../common/StrongFB-interfaces";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
-import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableLoadRowsResponse, TableMapApiPagination, TableNotFound, TableRowSetColorAction, TableSchema, TableSelectable, TableSelectableCallback } from "./table-interfaces";
+import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableColumnSortMode, TableLoadByApi, TableLoadRowsResponse, TableMapApiPagination, TableNotFound, TableRowSetColorAction, TableSchema, TableSelectable, TableSelectableCallback } from "./table-interfaces";
 import { StrongFBTableWidgetComponent } from "./table.component";
 import { BehaviorSubject } from 'rxjs';
 
@@ -50,6 +50,21 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
         }
         return this;
     }
+
+    // mapColumnSort<T = TableColumnMapValue>(column: COL, sort: TableColumnSortMode) {
+    //     if (!this._schema.columns) this._schema.columns = [];
+    //     // =>find column by name
+    //     let columnObject = this._schema.columns?.find(i => i.name === column);
+    //     if (!columnObject) {
+    //         this._schema.columns.push({
+    //             name: column,
+    //             mapValue: map as any,
+    //         });
+    //     } else {
+    //         columnObject.mapValue = map as any;
+    //     }
+    //     return this;
+    // }
     /**
      * used for map actions type of column
      * if not exist column, create it!
@@ -107,6 +122,14 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
         return this;
     }
 
+    /**
+     * use instead **'loadTableByApi'** method
+     * @deprecated
+     * @param options 
+     * @param response 
+     * @param request 
+     * @returns 
+     */
     loadRowsByApi(options: APIRequest, response?: TableLoadRowsResponse<ROW>, request?: (req: APIRequest<ROW>) => Promise<APIResponse<ROW[]>>) {
         this._schema.loadRowsByApi = {
             options,
@@ -116,6 +139,20 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
                 return [];
             },
             request: request ? request : undefined,
+        };
+        return this;
+    }
+
+    loadTableByApi(options: TableLoadByApi<ROW, COL>) {
+        if (!options) return this;
+        this._schema.loadRowsByApi = {
+            options: options.prepareRequest ? options.prepareRequest : { method: 'GET', path: '/' },
+            response: options.prepareRows ? options.prepareRows : (rep, err) => {
+                if (err) return [];
+                if (Array.isArray(rep)) return rep;
+                return [];
+            },
+            request: options.callRequest ? options.callRequest : undefined,
         };
         return this;
     }

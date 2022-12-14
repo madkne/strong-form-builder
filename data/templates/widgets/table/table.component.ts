@@ -2,10 +2,10 @@ import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild, Vie
 import { clone, SFB_warn } from '../../common/StrongFB-common';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
-import { TableColumnAction, TableColumnDynamicActionsType, TableSchema } from './table-interfaces';
+import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnSortMode, TableSchema, TableSortRequest } from './table-interfaces';
 import { takeUntil } from 'rxjs';
 import { StrongFBService } from '../../services/StrongFB.service';
-import { APIResponse } from '../../common/StrongFB-interfaces';
+import { APIRequest, APIResponse } from '../../common/StrongFB-interfaces';
 import { refreshTable } from './convertor';
 // import { extraNormalizeSchema } from './convertor';
 
@@ -24,6 +24,7 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
     isRtl = false;
     rowsSelected: { [k: string]: object } = {};
     displayedColumns: string[] = [];
+    sortRows: TableSortRequest;
 
     constructor(
         protected override elRef: ElementRef,
@@ -54,9 +55,9 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
         this.displayRows = [];
         // =>load rows by api
         if (this.schema.loadRowsByApi) {
-            let res = await this.callApi();
+            let [res, options] = await this.callApi();
             // =>call 'response' function
-            this.simpleRows = await this.schema.loadRowsByApi.response.call(this.widgetForm, res.result, res.error, this.widgetHeader);
+            this.simpleRows = await this.schema.loadRowsByApi.response.call(this.widgetForm, res.result, res.error, this.widgetHeader, options);
             // =>set loading for display rows
             let displayRow = {};
             for (const col of this.schema.columns) {
@@ -84,27 +85,33 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
     }
 
 
-    protected async callApi() {
+    protected async callApi(): Promise<[APIResponse, APIRequest]> {
+        let options: APIRequest;
+        if (typeof this.schema.loadRowsByApi.options == 'function') {
+            options = this.schema.loadRowsByApi.options.call(this.widgetForm, this.sortRows, this.widgetHeader);
+        } else {
+            options = this.schema.loadRowsByApi.options;
+        }
         // =>add pagination
         if (this.schema.mapApiPagination) {
             // =>GET method
-            if (this.schema.loadRowsByApi.options.method === 'GET') {
-                if (this.schema.loadRowsByApi.options.params === undefined) {
-                    this.schema.loadRowsByApi.options.params = {};
+            if (options.method === 'GET') {
+                if (options.params === undefined) {
+                    options.params = {};
                 }
-                this.schema.loadRowsByApi.options.params[this.schema.mapApiPagination.pageParam] = this.page;
-                this.schema.loadRowsByApi.options.params[this.schema.mapApiPagination.pageSizeParam] = this.schema.mapApiPagination.pageSize;
+                options.params[this.schema.mapApiPagination.pageParam] = this.page;
+                options.params[this.schema.mapApiPagination.pageSizeParam] = this.schema.mapApiPagination.pageSize;
             }
             //TODO: post
         }
         let res: APIResponse;
         // =>call api by user request
         if (this.schema.loadRowsByApi.request) {
-            res = await this.schema.loadRowsByApi.request(this.schema.loadRowsByApi.options);
+            res = await this.schema.loadRowsByApi.request(options);
         }
         // =>call api
         else {
-            res = await this.widgetForm.http.sendPromise(this.schema.loadRowsByApi.options);
+            res = await this.widgetForm.http.sendPromise(options);
         }
         // =>parse pagination from response
         if (this.schema.mapApiPagination) {
@@ -123,7 +130,7 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
             this.calcDisplayPagination();
         }
 
-        return res;
+        return [res, options];
     }
 
     protected async normalizeSchema(schema: TableSchema) {
@@ -365,6 +372,15 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
             }
         }
         return undefined;
+    }
+
+    async sortColumn(column: TableColumn, mode: TableColumnSortMode) {
+        this.sortRows = {
+            column: column.name,
+            mode,
+        };
+        // =>refresh table rows
+        await this.loadRows();
     }
 }
 

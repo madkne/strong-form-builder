@@ -19,6 +19,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [],
@@ -45,6 +46,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatTooltipModule,
     MatCardModule,
     MatAutocompleteModule,
+    MatDialogModule,
 
   ],
   providers: [],
@@ -70,6 +72,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatTooltipModule,
     MatCardModule,
     MatAutocompleteModule,
+    MatDialogModule,
   ],
 })
 export class StrongFBSharedModule { }

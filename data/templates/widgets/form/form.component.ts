@@ -1,8 +1,10 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { StrongFBFormClass } from '../../common/StrongFB-base';
+import { checkAndDoByInterval } from '../../common/StrongFB-common';
 import { StrongFBLayoutBuilderSchema } from '../../common/StrongFB-layout-builder-types';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
+import { StrongFBService } from '../../services/StrongFB.service';
 
 @Component({
     selector: 'strong-form-builder',
@@ -15,6 +17,13 @@ export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChang
     // @Input() initialData: object;
 
     // protected override  showLoading = false;
+    constructor(
+        public override elRef: ElementRef,
+        public override cdr: ChangeDetectorRef,
+        public srv: StrongFBService
+    ) {
+        super(elRef, cdr);
+    }
 
     formSchema: StrongFBLayoutBuilderSchema
 
@@ -25,7 +34,12 @@ export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChang
             this.form['_callOnInit'] = true;
             await this.form.onInit();
         }
-        this.initStart = true;
+        checkAndDoByInterval(
+            () => this.srv.configLoaded,
+            () => {
+                this.initStart = true;
+            }, 1);
+
         this.form.service.locale().languageChanged.pipe(takeUntil(this.destroy$)).subscribe(it => {
             if (!it) return;
             this.updateForm();

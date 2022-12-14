@@ -6,7 +6,7 @@
 |**#**|**Widget**|**Nebular supported**|**Material supported**|**description**|**developers**|
 |---|:-------:|:----:|:----:|:-----------:|:-------:|
 |1|button|YES|YES|-|madkne|
-|2|card|YES|NO|-|madkne|
+|2|card|YES|YES|-|madkne|
 |3|dialog|YES|YES|-|madkne|
 |4|form-field|YES|TESTING|supported `input`, `select`, `textarea`, ... widgets|madkne|
 |5|input|YES|TESTING|-|madkne|

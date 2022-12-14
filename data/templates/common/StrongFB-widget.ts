@@ -71,7 +71,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
         interval(500).pipe(takeUntil(this.destroy$)).subscribe(async () => {
             // =>if have show callback function
             try {
-                if (this.widgetHeader && this.widgetHeader['_showCallback']) {
+                if (this.widgetForm && this.widgetHeader && this.widgetHeader['_showCallback']) {
                     let beforeStateShow = this.show;
                     this.show = await this.widgetHeader['_showCallback'].call(this.widgetForm, this.widgetHeader);
                     if (beforeStateShow !== this.show) {
@@ -138,15 +138,15 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
         // =>update form field
         if (this.widgetForm) {
             this.widgetForm['_formFieldValuesUpdated$'].next(true);
+            // =>listen on form field update
+            this.widgetForm['_formFieldValuesUpdated$'].pipe(takeUntil(this.destroy$)).subscribe(it => {
+                if (!it) return;
+                // =>set value by form field
+                if (this.widgetHeader['_formFieldName'] && this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] !== undefined) {
+                    this.schema[valueField] = this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']];
+                }
+            });
         }
-        // =>listen on form field update
-        this.widgetForm['_formFieldValuesUpdated$'].pipe(takeUntil(this.destroy$)).subscribe(it => {
-            if (!it) return;
-            // =>set value by form field
-            if (this.widgetHeader['_formFieldName'] && this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] !== undefined) {
-                this.schema[valueField] = this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']];
-            }
-        })
     }
     /******************************************* */
     /**
@@ -154,21 +154,23 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
     * @param valueField 
     */
     updateFormField(valueField: keyof SCHEMA) {
-        // =>set value to form field
-        if (this.widgetHeader['_formFieldName']) {
-            this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema[valueField];
+        if (this.widgetForm) {
+            // =>set value to form field
+            if (this.widgetHeader['_formFieldName']) {
+                this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']] = this.schema[valueField];
+            }
+            this.ngModelValue = this.schema[valueField];
+            this.makeDirtyField();
+            this.ngModelChange.emit(this.schema[valueField]);
+            this.widgetForm['_formFieldValuesUpdated$'].next(true);
         }
-        this.ngModelValue = this.schema[valueField];
-        this.makeDirtyField();
-        this.ngModelChange.emit(this.schema[valueField]);
-        this.widgetForm['_formFieldValuesUpdated$'].next(true);
     }
     /******************************************* */
     /**
      * just used for form fields
      */
     makeDirtyField() {
-        if (this.widgetHeader['_formFieldName']) {
+        if (this.widgetForm && this.widgetHeader['_formFieldName']) {
             // => if before not dirty
             let beforeDirty = this.widgetForm.formFieldMeta(this.widgetHeader['_formFieldName'])?.is_dirty;
             this.widgetForm.setFormFieldMeta(this.widgetHeader['_formFieldName'], {

@@ -1,12 +1,13 @@
 
 export type CssImageSize = 'small' | 'medium' | 'large';
 
-export type CssImageType = 'illustration';
+export type CssImageType = 'illustration' | 'emoji';
 
-export type CssImageName = CssImageIllustrationName;
+export type CssImageName = CssImageIllustrationName | CssImageEmojiName;
 
 export type CssImageIllustrationName = 'cactus';
 
+export type CssImageEmojiName = 'success' | 'failed';
 export interface CssImageSchema {
     /**
      * @default medium

@@ -13,11 +13,13 @@ import { Confirm, IConfirmOptions } from 'notiflix/build/notiflix-confirm-aio';
 import { NotifyCssAnimationStyle, NotifyMode } from '../common/StrongFB-types';
 import { StrongFBHelper } from '../StrongFB-helpers';
 import { StrongFBTransmitService } from './StrongFB-transmit.service';
+import { checkAndDoByInterval } from '../common/StrongFB-common';
 
 @Injectable({
     providedIn: 'root'
 })
 export class StrongFBService {
+    protected _configsLoaded = false;
     protected _viewContainerRef: ViewContainerRef;
     protected _scripts: { src: string; loaded?: boolean; }[] = [];
     protected _assetsBaseUrl: string;
@@ -55,7 +57,7 @@ export class StrongFBService {
 
     }
     /********************************* */
-    config(options: StrongFBConfigOptions) {
+    config(options?: StrongFBConfigOptions) {
         if (!options) options = {} as any;
         // =>merge with default options
         for (const key of Object.keys(this.defaultOptions)) {
@@ -90,7 +92,11 @@ export class StrongFBService {
         this._assetsBaseUrl = options.assetsBaseUrl;
         this._darkTheme = options.darkTheme;
         this._injectServices = options.injectServices;
-
+        this._configsLoaded = true;
+    }
+    /********************************* */
+    get configLoaded() {
+        return this._configsLoaded;
     }
     /********************************* */
     assetsUrl(path: string) {
@@ -119,24 +125,41 @@ export class StrongFBService {
      * @returns 
      */
     async loadFormClass(form: any, data?: object): Promise<StrongFBFormClass> {
-        let formInstance = new form(
-            this._http,
-            this,
-            this._transmit,
-            {
-                rtl: this._locale.getLangInfo()?.direction === 'rtl',
-                initData: data,
-                defaultLocaleNamespace: this._defaultLocaleNamespace,
-            },
-        ) as StrongFBFormClass;
-
-        return formInstance;
+        const formInstance = () => {
+            let formInstance = new form(
+                this._http,
+                this,
+                this._transmit,
+                {
+                    rtl: this._locale.getLangInfo()?.direction === 'rtl',
+                    initData: data,
+                    defaultLocaleNamespace: this._defaultLocaleNamespace,
+                },
+            ) as StrongFBFormClass;
+            return formInstance;
+        }
+        if (this._configsLoaded) {
+            return formInstance();
+        } else {
+            return await checkAndDoByInterval(
+                () => this._configsLoaded,
+                formInstance,
+                2
+            );
+        }
     }
     /********************************* */
     goToPage(path: string) {
         return this._router.navigateByUrl(path);
     }
     /********************************* */
+    /**
+     * use instead 'dialogBox' method
+     * @deprecated
+     * @param form 
+     * @param options 
+     * @returns 
+     */
     async dialog<T extends object = object>(form: any, options: {
         title?: string;
         description?: string;
@@ -146,7 +169,10 @@ export class StrongFBService {
         minWidth?: string;
     } = {}) {
         // =>create instance of form
-        let formInstance = await this.loadFormClass(form, options.data);
+        let formInstance: StrongFBFormClass;
+        if (form) {
+            formInstance = await this.loadFormClass(form, options.data);
+        }
         // =>init dialog component
         let component = this._viewContainerRef.createComponent(StrongFBDialogWidgetComponent);
         component.instance['form'] = formInstance;
@@ -170,6 +196,45 @@ export class StrongFBService {
         //     component.instance['initialData'] = options.data;
         // }
         return component;
+    }
+    /********************************* */
+    async dialogBox<T extends object = object>(options: {
+        form?: any;
+        title?: string;
+        description?: string;
+        html?: string;
+        actions?: StrongFBDialogAction[],
+        data?: T,
+        minWidth?: string;
+    }) {
+        // =>create instance of form
+        let formInstance: StrongFBFormClass;
+        if (options.form) {
+            formInstance = await this.loadFormClass(options.form, options.data);
+        }
+        // =>init dialog component
+        let component = this._viewContainerRef.createComponent(StrongFBDialogWidgetComponent);
+        component.instance['form'] = formInstance;
+        component.instance['widgetForm'] = options.form;
+        if (options.title) {
+            component.instance['title'] = options.title;
+        }
+        if (options.description) {
+            component.instance['description'] = options.description;
+        }
+        if (options.html) {
+            component.instance['html'] = options.html;
+        }
+        if (options.actions) {
+            component.instance['actions'] = options.actions;
+        }
+        if (options.minWidth) {
+            component.instance['minWidth'] = options.minWidth;
+        }
+        // if (options.data) {
+        //     component.instance['initialData'] = options.data;
+        // }
+        return component.instance;
     }
     /********************************* */
     async loadDynamicComponent(container: ViewContainerRef, component: any, data?: object) {

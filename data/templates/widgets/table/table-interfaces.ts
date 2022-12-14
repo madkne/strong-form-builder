@@ -13,6 +13,11 @@ export interface TableTagColumnMapValue {
 
 export type TableColumnMapValueType = string | TableTagColumnMapValue | TableTagColumnMapValue[];
 
+export enum TableColumnSortMode {
+    DESC = 'desc',
+    ASC = 'asc',
+}
+
 export interface TableColumn<N extends string = string, R extends object = object> {
     name: N;
     title?: string;
@@ -25,6 +30,8 @@ export interface TableColumn<N extends string = string, R extends object = objec
      * not exist for 'actions' type
      */
     mapValue?: TableColumnMapValue<TableColumnMapValueType, R>;
+
+    hasSort?: boolean;
 }
 
 export interface TableMapApiPagination {
@@ -55,9 +62,24 @@ export interface TableMapApiPagination {
 
 }
 
+export interface TableSortRequest<COL extends string = string> {
+    column: COL;
+    mode: TableColumnSortMode;
+}
+
+export type TablePrepareRequestForLoadTable<COL extends string = string> = (sort?: TableSortRequest<COL>, self?: StrongFBTableWidget) => APIRequest;
+
+export interface TableLoadByApi<ROW extends object = object, COL extends string = string> {
+    prepareRequest?: TablePrepareRequestForLoadTable<COL>;
+    callRequest?: (req: APIRequest<ROW>) => Promise<APIResponse<ROW>>;
+    prepareRows?: TableLoadRowsResponse<ROW>;
+}
+
+
 export type TableColumnMapValue<T = TableColumnMapValueType, R extends object = object> = (row?: R, index?: number, self?: StrongFBTableWidget) => Promise<T> | T
 
-export type TableLoadRowsResponse<ROW extends object = object> = (apiResponse: any[], error?: HttpErrorResponse, self?: StrongFBTableWidget) => Promise<ROW[]> | ROW[];
+
+export type TableLoadRowsResponse<ROW extends object = object> = (apiResponse: any[], error?: HttpErrorResponse, self?: StrongFBTableWidget, req?: APIRequest<ROW>) => Promise<ROW[]> | ROW[];
 
 export type TableColumnDynamicActionsType<ROW extends object = object> = (row?: ROW, index?: number, self?: StrongFBTableWidget) => Promise<TableColumnAction<ROW>[]> | TableColumnAction<ROW>[];
 export interface TableColumnAction<R extends object = object> {
@@ -114,7 +136,7 @@ export type TableRowSetColorAction<ROW extends object = object> = (row: ROW, sel
 export interface TableSchema<COL extends string = string, ROW extends object = object> {
     columns?: TableColumn<COL, ROW>[];
     loadRowsByApi?: {
-        options: APIRequest;
+        options: APIRequest | TablePrepareRequestForLoadTable<COL>;
         response: TableLoadRowsResponse<ROW>;
         request?: (req: APIRequest<ROW>) => Promise<APIResponse<ROW>>
     };

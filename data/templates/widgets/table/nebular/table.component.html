@@ -4,8 +4,22 @@
             <table *ngIf="!isNotFoundEnabled()">
                 <thead>
                     <tr>
-                        <th *ngFor="let col of schema.columns">
-                            <div class="title">{{col.title ?? col.name}}</div>
+                        <th *ngFor="let col of schema.columns" [class.has-sort]="col.hasSort">
+                            <div class="title">
+                                <span class="text">{{col.title ?? col.name}}</span>
+                                <ng-container *ngIf="col.hasSort">
+                                    <span class=" non-sort" *ngIf="!sortRows || sortRows.column!==col.name">
+                                        <nb-icon icon="arrow-up-outline" (click)="sortColumn(col, 'asc')"></nb-icon>
+                                        <nb-icon icon="arrow-down-outline" (click)="sortColumn(col, 'desc')"></nb-icon>
+                                    </span>
+                                    <nb-icon [ngClass]="[sortRows.mode]"
+                                        (click)="sortColumn(col, sortRows.mode == 'asc' ?'desc' : 'asc')"
+                                        *ngIf=" sortRows && sortRows.column===col.name"
+                                        [icon]="sortRows.mode === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'">
+                                    </nb-icon>
+
+                                </ng-container>
+                            </div>
                         </th>
                     </tr>
                 </thead>

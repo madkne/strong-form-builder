@@ -32,6 +32,9 @@ export class StrongFBCssImageWidgetComponent extends StrongFBBaseWidget<CssImage
         if (this.schema.type === 'illustration') {
             this.loadIllustration();
         }
+        else if (this.schema.type === 'emoji') {
+            this.loadEmoji();
+        }
 
     }
 
@@ -58,7 +61,7 @@ export class StrongFBCssImageWidgetComponent extends StrongFBBaseWidget<CssImage
     }
 
     loadIllustration() {
-        // =>cactus mode
+        // =>cactus name
         if (this.schema.name === 'cactus') {
             let potWidth = 40;
             if (this.schema.size === 'medium') {
@@ -284,6 +287,141 @@ export class StrongFBCssImageWidgetComponent extends StrongFBBaseWidget<CssImage
       }
         `);
 
+        }
+    }
+
+    loadEmoji() {
+        // =>failed name
+        if (this.schema.name === 'failed') {
+            let id = 'el_' + generateId('failed');
+            this.imageContent.nativeElement.innerHTML = `<div  id="${id}">
+            <div class="face2">
+              <div class="eye"></div>
+              <div class="eye right"></div>
+              <div class="mouth sad"></div>
+            </div>
+            <div class="shadow move"></div>
+            <div class="message">${this.schema.title ? `<p>${this.schema.title}</p>` : ''}</div>
+        
+        </div>`;
+            this.srv.loadStyleBlock(`
+    #${id} {
+            display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        background-color: ${this.schema.background};
+        z-index: 1;
+        position:relative;
+    }
+    #${id} p{
+      margin-top: 1px;
+      font-size: 0.8em;
+  font-weight: 100;
+  color: #5e5e5e;
+  letter-spacing: 1px;
+    }
+      
+      #${id} .face2 {
+        position: absolute;
+        width: 3.8em;
+        height: 3.8em;
+        background: #FCFCFC;
+        border-radius: 50%;
+        border: 1px solid #777777;
+        top: 21%;
+        left: 37.5%;
+        z-index: 2;
+        animation: roll 3s ease-in-out infinite;
+      }
+      
+      #${id} .eye {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        background: #777777;
+        border-radius: 50%;
+        top: 40%;
+        left: 20%;
+      }
+      
+      #${id} .right {
+        left: 68%;
+      }
+      
+      #${id} .mouth {
+        position: absolute;
+        top: 43%;
+        left: 37%;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+      }
+      
+      #${id} .sad {
+        top: 49%;
+        border: 2px solid;
+        border-color: #777777 transparent transparent #777777;
+        transform: rotate(45deg);
+      }
+      
+      #${id} .shadow {
+        position: absolute;
+        width: 21%;
+        height: 3%;
+        opacity: 0.5;
+        background: #777777;
+        left: 40%;
+        top: 47%;
+        border-radius: 50%;
+        z-index: 1;
+      }
+      
+      #${id} .scale {
+        animation: scale 1s ease-in infinite;
+      }
+      
+      #${id} .move {
+        animation: move 3s ease-in-out infinite;
+      }
+
+      #${id} .message {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        top: 50%;
+      }
+      @keyframes scale {
+        50% {
+          transform: scale(0.9);
+        }
+      }
+      @keyframes roll {
+        0% {
+          transform: rotate(0deg);
+          left: 25%;
+        }
+        50% {
+          left: 60%;
+          transform: rotate(168deg);
+        }
+        100% {
+          transform: rotate(0deg);
+          left: 25%;
+        }
+      }
+      @keyframes move {
+        0% {
+          left: 25%;
+        }
+        50% {
+          left: 60%;
+        }
+        100% {
+          left: 25%;
+        }
+      }
+    `);
         }
     }
 }

@@ -1,5 +1,5 @@
 <ng-container *ngIf="schema && show">
-    <mat-form-field>
+    <mat-form-field [class.full]="schema.fullWidth">
         <mat-label *ngIf="schema._form?.label">
             {{schema._form.label}}
             <span class="required" *ngIf="schema._form?.__isRequired">*</span>

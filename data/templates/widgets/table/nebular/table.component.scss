@@ -19,9 +19,69 @@ table {
                 border: 1px solid var(--background-basic-color-2);
 
                 .title {
-                    text-transform: capitalize;
-                    font-weight: 700;
+                    display: flex;
+                    align-items: center;
+
+                    .text {
+                        text-transform: capitalize;
+                        font-weight: 700;
+                        flex: 1 1 0;
+                    }
+
+                    nb-icon {
+                        opacity: 0.7;
+                        transition: all 0.3s;
+
+                        // font-size: 1.1em;
+                        &.asc {
+                            color: var(--card-header-success-background-color);
+                        }
+
+                        &.desc {
+                            color: var(--card-header-danger-background-color);
+                        }
+
+                        &:hover {
+                            opacity: 1;
+                            cursor: pointer;
+                        }
+                    }
+
+                    .non-sort {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+
+
+                        nb-icon {
+                            opacity: 0.6;
+                            transition: all 0.3s;
+                            font-size: 1.1em;
+
+                            &:hover {
+                                opacity: 1;
+                                cursor: pointer;
+                            }
+                        }
+
+                        nb-icon:first-child {
+                            margin-bottom: -4px;
+
+                            &:hover {
+                                color: var(--card-header-success-background-color);
+                            }
+                        }
+
+                        nb-icon:last-child {
+                            margin-top: -4px;
+
+                            &:hover {
+                                color: var(--card-header-danger-background-color);
+                            }
+                        }
+                    }
                 }
+
             }
         }
     }

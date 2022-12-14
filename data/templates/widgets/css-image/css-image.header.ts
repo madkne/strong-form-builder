@@ -1,6 +1,6 @@
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
-import { CssImageIllustrationName, CssImageName, CssImageSchema, CssImageSize, CssImageType } from "./css-image-interfaces";
+import { CssImageEmojiName, CssImageIllustrationName, CssImageName, CssImageSchema, CssImageSize, CssImageType } from "./css-image-interfaces";
 import { StrongFBCssImageWidgetComponent } from "./css-image.component";
 
 
@@ -32,8 +32,14 @@ export class StrongFBCssImageWidget extends StrongFBBaseWidgetHeader<CssImageSch
     //     return this;
     // }
 
-    illustrationName(name: CssImageIllustrationName) {
+    illustration(name: CssImageIllustrationName) {
         this._schema.type = 'illustration';
+        this._schema.name = name;
+        return this;
+    }
+
+    emoji(name: CssImageEmojiName) {
+        this._schema.type = 'emoji';
         this._schema.name = name;
         return this;
     }

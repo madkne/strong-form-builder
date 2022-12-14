@@ -7,7 +7,7 @@
     <p class="html" *ngIf="data.html" [innerHtml]="data.html"></p>
     <strong-form-builder *ngIf="data.form" [form]="data.form"></strong-form-builder>
 </div>
-<div mat-dialog-actions *ngIf="data.actions" class="actions">
+<div mat-dialog-actions *ngIf="data.actions && data.actions.length > 0" class="actions">
     <ng-container *ngFor="let action of data.actions">
         <ng-container *ngIf="action.__show">
             <!-- basic button -->
