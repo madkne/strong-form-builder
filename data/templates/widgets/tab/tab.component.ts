@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, ViewChild, ViewContainerRef }
 import { SFB_warn } from '../../common/StrongFB-common';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBService } from '../../services/StrongFB.service';
-import { TabSchema } from './tab-interfaces';
+import { TabHeader, TabSchema } from './tab-interfaces';
 
 @Component({
     selector: 'tab-widget',
@@ -12,6 +12,7 @@ import { TabSchema } from './tab-interfaces';
 export class StrongFBTabWidgetComponent extends StrongFBBaseWidget<TabSchema> {
 
 
+    activeTabHeader: TabHeader;
     protected override prefixId = 'tab';
     @ViewChild('TabComponentRef', { read: ViewContainerRef }) tabComponentRef: ViewContainerRef;
 
@@ -51,10 +52,10 @@ export class StrongFBTabWidgetComponent extends StrongFBBaseWidget<TabSchema> {
 
     async changeTab(name: string, event) {
         // console.log('switch tab name:', name, event)
-        let selectedTabHeader = this.schema.tabHeaders.find(i => i.name === name);
+        this.activeTabHeader = this.schema.tabHeaders.find(i => i.name === name);
         // =>check before change event
         if (this.schema.tabBeforeChange) {
-            if (!await this.schema.tabBeforeChange.call(this.widgetForm, selectedTabHeader, this.widgetHeader)) {
+            if (!await this.schema.tabBeforeChange.call(this.widgetForm, this.activeTabHeader, this.widgetHeader)) {
                 return;
             }
         }
@@ -88,7 +89,7 @@ export class StrongFBTabWidgetComponent extends StrongFBBaseWidget<TabSchema> {
         }
         // =>raise click event
         if (this.schema.tabClick) {
-            this.schema.tabClick.call(this.widgetForm, selectedTabHeader, this.widgetHeader);
+            this.schema.tabClick.call(this.widgetForm, this.activeTabHeader, this.widgetHeader);
         }
     }
 

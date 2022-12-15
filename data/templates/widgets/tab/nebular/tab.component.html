@@ -6,19 +6,20 @@
         [tabTitle]="header.mode === 'text' || header.mode === 'textWithIcon' ? header.title : undefined"
         [responsive]="header.mode === 'textWithIcon'">
 
-        <!-- tab content -->
-        <ng-container *ngIf="schema.tabContents[header.name]">
-            <!-- component as content -->
-            <ng-container #TabComponentRef *ngIf="schema.tabContents[header.name].component"></ng-container>
-            <!-- html text -->
-            <p *ngIf="schema.tabContents[header.name].html" [innerHtml]="schema.tabContents[header.name].html"></p>
-            <!-- layout -->
-            <strong-layout-builder *ngIf="schema.tabContents[header.name].layout" [form]="widgetForm"
-                [layout]="schema.tabContents[header.name].layout">
-            </strong-layout-builder>
-            <!-- form -->
-            <strong-form-builder *ngIf="schema.tabContents[header.name].form"
-                [form]="schema.tabContents[header.name].__formInstance"></strong-form-builder>
-        </ng-container>
     </nb-tab>
 </nb-tabset>
+<!-- tab content -->
+<ng-container *ngIf="activeTabHeader && schema.tabContents[activeTabHeader.name]">
+    <!-- component as content -->
+    <ng-container #TabComponentRef *ngIf="schema.tabContents[activeTabHeader.name].component"></ng-container>
+    <!-- html text -->
+    <p *ngIf="schema.tabContents[activeTabHeader.name].html"
+        [innerHtml]="schema.tabContents[activeTabHeader.name].html"></p>
+    <!-- layout -->
+    <strong-layout-builder *ngIf="schema.tabContents[activeTabHeader.name].layout" [form]="widgetForm"
+        [layout]="schema.tabContents[activeTabHeader.name].layout">
+    </strong-layout-builder>
+    <!-- form -->
+    <strong-form-builder *ngIf="schema.tabContents[activeTabHeader.name].form"
+        [form]="schema.tabContents[activeTabHeader.name].__formInstance"></strong-form-builder>
+</ng-container>
