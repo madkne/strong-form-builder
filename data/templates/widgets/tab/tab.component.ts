@@ -49,7 +49,12 @@ export class StrongFBTabWidgetComponent extends StrongFBBaseWidget<TabSchema> {
         return schema;
     }
 
-
+    async changeAsyncTab(name: string, event) {
+        this.activeTabHeader = undefined;
+        setTimeout(() => {
+            this.changeTab(name, event);
+        }, 30);
+    }
     async changeTab(name: string, event) {
         // console.log('switch tab name:', name, event)
         this.activeTabHeader = this.schema.tabHeaders.find(i => i.name === name);

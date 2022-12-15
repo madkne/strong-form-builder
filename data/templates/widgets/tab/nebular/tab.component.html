@@ -1,4 +1,4 @@
-<nb-tabset *ngIf="schema && show" [fullWidth]="schema.fullWidth" (changeTab)="changeTab($event.tabId, $event)">
+<nb-tabset *ngIf="schema && show" [fullWidth]="schema.fullWidth" (changeTab)="changeAsyncTab($event.tabId, $event)">
     <nb-tab [style.padding]="!schema.tabPadding ? '0' : undefined" [tabId]="header.name" [active]="header.isActive"
         [disabled]="header.disabled"
         [tabIcon]="header.mode === 'icon' || header.mode === 'textWithIcon' ? header.icon : undefined"
