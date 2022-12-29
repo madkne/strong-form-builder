@@ -1,5 +1,7 @@
 import { BehaviorSubject } from "rxjs";
-import { generateId } from "./StrongFB-common";
+import { json2WidgetClass } from "./helpers/StrongFB-json";
+import { clone, generateId, SFB_error } from "./StrongFB-common";
+import { StrongFBJsonLayoutBuilderSchema } from "./StrongFB-interfaces";
 import { StrongFBLayoutBuilderProperties } from "./StrongFB-layout-builder-properties";
 import { StrongFBLayoutBuilderBoxCommonProperties, StrongFBLayoutBuilderGridColumnType, StrongFBLayoutBuilderGridCommonProperties, StrongFBLayoutBuilderNormalBoxProperties, StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderType } from "./StrongFB-layout-builder-types";
 import { ScreenMode } from "./StrongFB-types";
@@ -121,17 +123,73 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
     /**
      * generate schema in recursive
      */
-    generateSchema() {
+    async generateSchema(formClass?: any) {
         let currentSchema = this._schema;
+        // =>set layouts
         if (currentSchema.layouts) {
-            // for (let i = 0; i < currentSchema.layouts.length; i++) {
-            //     currentSchema.layouts[i].layouts[0].
-            // }
-            // for (const layout of currentSchema.layouts) {
-            //     la
-            // }
+            let _layouts = [];
+            for (const layout of currentSchema.layouts) {
+                _layouts.push(await layout.generateSchema(formClass));
+            }
+            currentSchema.layouts = _layouts;
+        }
+        // =>set widgets
+        if (currentSchema.widgets) {
+            let _widgets = [];
+            for (const wid of currentSchema.widgets) {
+                let widgetRes = await wid.call(formClass ?? this);
+                const addWidget = async (widgetClass: any) => {
+                    let props = widgetClass._schema;
+                    if (widgetClass['toObject']) {
+                        props = await widgetClass.toObject();
+                    }
+                    _widgets.push({
+                        type: widgetClass.widgetName,
+                        properties: props
+                    });
+                }
+                // console.log('ffff:', widgetRes)
+                if (Array.isArray(widgetRes)) {
+                    for (const item of widgetRes) {
+                        await addWidget(item);
+                    }
+                } else {
+                    await addWidget(widgetRes);
+                }
+            }
+            currentSchema.widgets = _widgets;
         }
         return currentSchema;
+    }
+
+    loadSchemaByJson(json: StrongFBJsonLayoutBuilderSchema) {
+        // =>load all schema
+        try {
+            this._schema = clone(json);
+        } catch (e) {
+            SFB_error('bad json layout', json);
+            return;
+        }
+        // =>parse layouts
+        this._schema.layouts = [];
+        if (json.layouts) {
+            for (const lay of json.layouts) {
+                let newLayout = new StrongFBLayoutBuilder();
+                newLayout.loadSchemaByJson(lay);
+                this._schema.layouts.push(newLayout);
+            }
+        }
+        // =>parse widgets
+        this._schema.widgets = [];
+        if (json.widgets) {
+            for (const wid of json.widgets) {
+                this._schema.widgets.push(async () => {
+                    let res = json2WidgetClass(wid);
+                    return res;
+                });
+            }
+        }
+
     }
     /****************************************** */
     /****************************************** */

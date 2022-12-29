@@ -1,6 +1,5 @@
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
-import { StrongFBCardWidgetComponent } from "./card.component";
 import { CardSchema } from "./card-interfaces";
 
 
@@ -8,10 +7,6 @@ import { CardSchema } from "./card-interfaces";
 export class StrongFBCardWidget extends StrongFBBaseWidgetHeader {
 
     protected override _schema: CardSchema = {};
-
-    override get component(): any {
-        return StrongFBCardWidgetComponent;
-    }
 
     override get widgetName(): string {
         return 'card';
@@ -43,26 +38,20 @@ export class StrongFBCardWidget extends StrongFBBaseWidgetHeader {
         return this;
     }
 
-    private _loadFromJson(json: object) {
-        this._schema = json as any;
-        // =>parse header
-        if (this._schema?.header?.layout) {
-            let newLayout = new StrongFBLayoutBuilder();
-            newLayout.loadSchemaByJson(this._schema.header.layout as any);
-            this._schema.header.layout = newLayout;
+    async toObject() {
+        let obj = this._schema;
+        // =>normalize header
+        if (obj?.header?.layout) {
+            obj.header.layout = await obj.header.layout.generateSchema(this) as any;
         }
-        // =>parse content
-        if (this._schema?.content?.layout) {
-            let newLayout = new StrongFBLayoutBuilder();
-            newLayout.loadSchemaByJson(this._schema.content.layout as any);
-            this._schema.content.layout = newLayout;
+        // =>normalize content
+        if (obj?.content?.layout) {
+            obj.content.layout = await obj.content.layout.generateSchema(this) as any;
         }
-        // =>parse footer
-        if (this._schema?.footer?.layout) {
-            let newLayout = new StrongFBLayoutBuilder();
-            newLayout.loadSchemaByJson(this._schema.footer.layout as any);
-            this._schema.footer.layout = newLayout;
+        // =>normalize footer
+        if (obj?.footer?.layout) {
+            obj.footer.layout = await obj.footer.layout.generateSchema(this) as any;
         }
-
+        return obj;
     }
 }

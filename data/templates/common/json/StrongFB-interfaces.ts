@@ -1,8 +1,4 @@
 import { APIStatusCodes, AvailableLanguage, ButtonAppearance, ButtonStatus, CustomLocales, Direction, LocaleCalendar, StrongFBValidatorName } from "./StrongFB-types";
-import { HttpErrorResponse } from "@angular/common/http";
-import { StrongFBHttpService } from "../services/StrongFB-http.service";
-import { ViewContainerRef } from "@angular/core";
-import { StrongFBBaseLayoutBuilderSchema, StrongFBLayoutBuilderSchema } from "./StrongFB-layout-builder-types";
 
 
 export interface APIRequest<T = any> {
@@ -25,7 +21,7 @@ export interface APIResponse<T = any> {
     paginate?: {
 
     },
-    error?: HttpErrorResponse;
+    error?: any;
 }
 
 export interface StrongFBFormOptions<D extends object = object> {
@@ -81,7 +77,7 @@ export interface LanguageInfo {
 
 export interface StrongFBConfigOptions {
     apiEndPoint: string;
-    viewContainerRef: ViewContainerRef;
+    viewContainerRef: any;
     /**
      * @default 'access_token'
      */
@@ -98,7 +94,7 @@ export interface StrongFBConfigOptions {
      * @default '/login'
      */
     loginUrl?: string;
-    getRefreshTokenApi?: (http: StrongFBHttpService) => Promise<{ access_token: string; refresh_token: string; }>;
+    getRefreshTokenApi?: (http: any) => Promise<{ access_token: string; refresh_token: string; }>;
     /**
      * @default 'en'
      */
@@ -133,22 +129,4 @@ export interface FormFieldMetaData<T = string> {
      * if user try to change value
     */
     is_dirty?: boolean;
-}
-
-
-export interface StrongFBJsonLayoutBuilderWidget {
-    type: string;
-    properties?: object;
-}
-
-export interface StrongFBJsonLayoutBuilderSchema<WIDGET extends string = string> extends StrongFBBaseLayoutBuilderSchema<WIDGET> {
-    layouts?: StrongFBJsonLayoutBuilderSchema<WIDGET>[];
-    widgets?: StrongFBJsonLayoutBuilderWidget[];
-}
-
-export interface StrongFBJsonFormSchema<WIDGET extends string = string> {
-    version: string;
-    form: {
-        layout: StrongFBJsonLayoutBuilderSchema<WIDGET>;
-    };
 }

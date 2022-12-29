@@ -5,6 +5,9 @@ import { select } from '@dat/lib/input';
 import { error } from '@dat/lib/log';
 import { UIFrameWorkType } from './types';
 
+
+export const VERSION = '0.130';
+
 export async function detectAngularSourcePath() {
     let cwdir = await cwd();
     let angularDirs = _detectAngularSourcePath([

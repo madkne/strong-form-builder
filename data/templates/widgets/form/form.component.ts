@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges, ElementRef, ChangeDetectorR
 import { takeUntil } from 'rxjs';
 import { StrongFBFormClass } from '../../common/StrongFB-base';
 import { checkAndDoByInterval } from '../../common/StrongFB-common';
+import { StrongFBJsonFormSchema } from '../../common/StrongFB-interfaces';
 import { StrongFBLayoutBuilderSchema } from '../../common/StrongFB-layout-builder-types';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBService } from '../../services/StrongFB.service';
@@ -14,6 +15,7 @@ import { StrongFBService } from '../../services/StrongFB.service';
 export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChanges {
     initStart = false;
     @Input() form: StrongFBFormClass;
+    // @Input() jsonForm: StrongFBJsonFormSchema;
     // @Input() initialData: object;
 
     // protected override  showLoading = false;
@@ -47,19 +49,23 @@ export class StrongFBFormComponent extends StrongFBBaseWidget implements OnChang
     }
 
     async ngOnChanges(changes: SimpleChanges) {
+        // =>if set form
         if (changes['form'] && this.form) {
-
             // console.log('form layout:', this.form.layout.generateSchema());
             this.updateForm();
             if (!this.initStart) {
                 this.ngOnInit();
             }
-
         }
+        // =>if set json form
+        // else if (changes['jsonForm'] && this.jsonForm) {
+        //     // =>convert json to form class
+        //     //TODO: this.jsonToFormClass()
+        // }
     }
 
     updateForm() {
-        this.formSchema = this.form.layout.generateSchema();
+        this.formSchema = this.form.layout.schema;
     }
 
     override onDestroy() {

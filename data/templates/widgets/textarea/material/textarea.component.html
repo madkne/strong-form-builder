@@ -1,7 +1,15 @@
 <ng-container *ngIf="schema && show">
-    <textarea (focus)="makeDirtyField()" matInput [status]="schema.status"
-        [fullWidth]="schema.fullWidth ? true : undefined" [disabled]="schema.disabled? true : undefined"
-        [shape]="schema.shape" [fieldSize]="schema.size" [placeholder]="schema.placeholder ? schema.placeholder : ''"
-        [id]="widgetId" [(ngModel)]="schema.value" (ngModelChange)="changeValue($event)" [rows]="schema.rows"
-        [cols]="schema.cols" [ngStyle]="{'max-width': schema.maxWidth, 'max-height': schema.maxHeight}"></textarea>
+    <mat-form-field [class.full]="schema.fullWidth"
+        [appearance]="schema._form?.appearance !== 'default' ? schema._form?.appearance : 'standard'">
+        <mat-label *ngIf="schema._form?.label">
+            {{schema._form.label}}
+            <span class="required" *ngIf="schema._form?.__isRequired">*</span>
+        </mat-label>
+        <textarea (focus)="makeDirtyField()" matInput [status]="schema.status"
+            [fullWidth]="schema.fullWidth ? true : undefined" [disabled]="schema.disabled? true : undefined"
+            [shape]="schema.shape" [fieldSize]="schema.size"
+            [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId" [(ngModel)]="schema.value"
+            (ngModelChange)="changeValue($event)" [rows]="schema.rows" [cols]="schema.cols"
+            [ngStyle]="{'max-width': schema.maxWidth, 'max-height': schema.maxHeight}"></textarea>
+    </mat-form-field>
 </ng-container>

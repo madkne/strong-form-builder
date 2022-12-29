@@ -1,4 +1,3 @@
-import { json2WidgetClass } from "../../common/helpers/StrongFB-json";
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBValidatorName, StrongFBWidgetShowCallback } from "../../common/StrongFB-types";
 import { StrongFBValidator } from "../../common/StrongFB-validator";
@@ -6,7 +5,7 @@ import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBButtonWidget } from "../button/button.header";
 import { StrongFBInputWidget } from "../input/input.header";
 import { FormAppearance, FormFieldErrorCallback, FormFieldSchema, FormFieldSize, FormFieldType } from "./form-field-interfaces";
-import { StrongFBFormFieldWidgetComponent } from "./form-field.component";
+
 
 
 
@@ -14,10 +13,6 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
 
     protected override _schema: FormFieldSchema = {};
 
-
-    override get component(): any {
-        return StrongFBFormFieldWidgetComponent;
-    }
 
     override get widgetName(): string {
         return 'form-field';
@@ -31,9 +26,9 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
 
     field(field: FormFieldType) {
         this._schema.field = field;
-        if (this._showCallback) {
-            this._schema.field.showByCallback(this._showCallback);
-        }
+        // if (this._showCallback) {
+        //     this._schema.field.showByCallback(this._showCallback);
+        // }FIXME:
         return this;
     }
 
@@ -78,32 +73,29 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
         return this;
     }
 
-    // value<T = string>(text: T) {
-    //     this._schema.value = text as any;
-    //     return this;
-    // }
 
-    /**
-     * @param callback 
-     * @returns 
-     */
-    formFieldError(callback: FormFieldErrorCallback) {
-        this._schema.formFieldErrorCallback = callback;
-        return this;
-    }
-
-    private _loadFromJson(json: object) {
-        this._schema = json as any;
-        // =>parse validator
-        if (this._schema?.validator) {
-            let validator = new StrongFBValidator();
-            validator['_schema'] = this._schema.validator as any
-            this._schema.validator = validator;
+    async toObject() {
+        let obj = this._schema;
+        // =>normalize field
+        if (this._schema.field) {
+            let props = {};
+            if (this._schema.field['toObject']) {
+                props = await this._schema.field['toObject']() as any;
+            } else {
+                props = this._schema.field['_schema'] as any;
+            }
+            this._schema.field = {
+                type: this._schema.field.widgetName,
+                properties: props,
+            } as any;
         }
-        // =>parse field
-        if (this._schema?.field) {
-            this._schema.field = json2WidgetClass(this._schema.field as any) as any;
+        // =>normalize validator
+        if (this._schema.validator) {
+            this._schema.validator = this._schema.validator['_schema'] as any;
         }
 
+        return obj;
     }
+
+
 }

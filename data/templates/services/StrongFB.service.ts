@@ -3,7 +3,7 @@ import { Injectable, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { StrongFBFormClass } from '../common/StrongFB-base';
-import { StrongFBConfigOptions, StrongFBDialogAction } from '../common/StrongFB-interfaces';
+import { StrongFBConfigOptions, StrongFBDialogAction, StrongFBJsonFormSchema } from '../common/StrongFB-interfaces';
 import { StrongFBDialogWidgetComponent } from '../widgets/dialog/dialog.component';
 import { StrongFBHttpService } from './StrongFB-http.service';
 import { StrongFBLocaleService } from './StrongFB-locale.service';
@@ -13,7 +13,7 @@ import { Confirm, IConfirmOptions } from 'notiflix/build/notiflix-confirm-aio';
 import { NotifyCssAnimationStyle, NotifyMode } from '../common/StrongFB-types';
 import { StrongFBHelper } from '../StrongFB-helpers';
 import { StrongFBTransmitService } from './StrongFB-transmit.service';
-import { checkAndDoByInterval } from '../common/StrongFB-common';
+import { checkAndDoByInterval, clone } from '../common/StrongFB-common';
 
 @Injectable({
     providedIn: 'root'
@@ -365,7 +365,7 @@ export class StrongFBService {
                 confirmOptions,
             );
         } else if (options.type === 'prompt') {
-            Confirm.ask(
+            Confirm.prompt(
                 options.title,
                 options.text,
                 options.inputPlaceholder,
@@ -393,5 +393,24 @@ export class StrongFBService {
         style.innerHTML = block;
         head.appendChild(style);
     }
+    /********************************* */
+    async loadJsonForm(jsonForm: StrongFBJsonFormSchema, data?: object) {
+        let form = new StrongFBFormClass(this._http, this, this._transmit, {
+            rtl: this._locale.getLangInfo()?.direction === 'rtl',
+            initData: data,
+            defaultLocaleNamespace: this._defaultLocaleNamespace,
+        },);
+        // =>set layout
+        form.importedLayout = () => {
+            let json = clone(jsonForm);
+            let layout = form.layoutBuilder();
+            // =>if exist form layout
+            if (json?.form?.layout) {
+                layout.loadSchemaByJson(json.form.layout);
+            }
+            return layout;
+        }
 
+        return form;
+    }
 }

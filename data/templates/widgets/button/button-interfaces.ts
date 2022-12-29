@@ -1,3 +1,4 @@
+import { APIRequest } from "../../common/StrongFB-interfaces";
 import { ButtonAppearance, ButtonStatus } from "../../common/StrongFB-types";
 import { StrongFBButtonWidget } from "./button.header";
 
@@ -11,10 +12,10 @@ export type ButtonMode = 'iconButton' | 'text' | 'iconBeforeText' | 'iconAfterTe
 
 export type ButtonClickEvent = (event?: MouseEvent, self?: StrongFBButtonWidget) => Promise<any> | any;
 
-export interface ButtonSchema {
+export interface BaseButtonSchema {
     /**
-     * @default medium
-     */
+        * @default medium
+        */
     size?: ButtonSize;
     /**
      * @default fill
@@ -48,9 +49,19 @@ export interface ButtonSchema {
      * @default false
      */
     disabledForFormFields?: string[];
+}
+export interface ButtonSchema extends BaseButtonSchema {
 
     /********************************* */
     /*************EVENTS************** */
     /********************************* */
     click?: ButtonClickEvent;
+}
+
+export interface JsonButtonSchema extends BaseButtonSchema {
+
+    /********************************* */
+    /*************EVENTS************** */
+    /********************************* */
+    click?: APIRequest;
 }

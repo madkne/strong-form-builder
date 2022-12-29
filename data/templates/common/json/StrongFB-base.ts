@@ -1,32 +1,29 @@
-import { StrongFBHttpService } from "../services/StrongFB-http.service";
+
 import { StrongFBLayoutBuilder } from "./StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs'
+
 
 import { NotifyCssAnimationStyle, NotifyMode, TransmitChannelName } from "./StrongFB-types";
 import { FormFieldMetaData, StrongFBFormOptions } from "./StrongFB-interfaces";
-import { StrongFBService } from "../services/StrongFB.service";
-import { StrongFBLocaleService } from "../services/StrongFB-locale.service";
-import { StrongFBTransmitService } from "../services/StrongFB-transmit.service";
+
+
 
 export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS extends object = object, INIT_FIELDS extends object = FORM_FIELDS, CUSTOM_LOCALES extends string = string, TRANSMIT extends string = TransmitChannelName> {
     private _callOnInit = false;
     private _usedWidgets: { [k in WIDGET]?: StrongFBBaseWidgetHeader } = {};
     private _usedWidgetComponents: { [k in WIDGET]?: any } = {};
-    private _http: StrongFBHttpService;
+    private _http: any;
     private _formFieldValues = {};
     private _formFieldMetaData: { [k in keyof FORM_FIELDS]?: FormFieldMetaData } = {};
-    private _formFieldValuesUpdated$ = new BehaviorSubject<boolean>(true);
     private _options: StrongFBFormOptions;
-    private _service: StrongFBService;
-    protected destroy$ = new Subject<boolean>();
-    protected _transmit: StrongFBTransmitService<TRANSMIT>;
+    private _service: any;
+    protected _transmit: any;
 
     public defaultLocaleNamespace: CUSTOM_LOCALES;
 
     constructor(
-        _http: StrongFBHttpService, _service: StrongFBService,
-        _transmit: StrongFBTransmitService<TRANSMIT>,
+        _http: any, _service: any,
+        _transmit: any,
         _options: StrongFBFormOptions<INIT_FIELDS> = {
             rtl: false,
         }) {
@@ -68,7 +65,6 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         for (const key of Object.keys(fields)) {
             this._formFieldValues[key] = fields[key];
         }
-        this._formFieldValuesUpdated$.next(true);
     }
 
     formFieldValues(): FORM_FIELDS {
@@ -113,78 +109,10 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         return fields as any;
     }
 
-    injectService<R = any, T = string>(name: T): R {
-        return this.service['_injectServices'][name as any];
-    }
 
-    notify(text: string, mode: NotifyMode = 'info', timeout = 3000, cssAnimationStyle: NotifyCssAnimationStyle = 'fade') {
-        this.service.notify({
-            mode,
-            text,
-            timeout,
-            cssAnimationStyle,
-        });
-    }
 
-    async confirm(title: string, text: string, okText?: string, cancelText?: string): Promise<boolean> {
-        return new Promise((res) => {
-            this.service.confirm({
-                title,
-                text,
-                type: 'confirm',
-                cssAnimationStyle: 'fade',
-                okButtonText: okText,
-                cancelButtonText: cancelText,
-                okButtonCallback: () => {
-                    res(true);
-                },
-                cancelButtonCallback: () => {
-                    res(false);
-                }
-            });
-        });
-    }
-
-    async prompt(title: string, text: string, defaultValue?: string, okText?: string, cancelText?: string): Promise<string> {
-        return new Promise((res) => {
-            this.service.confirm({
-                title,
-                text,
-                type: 'prompt',
-                okButtonText: okText,
-                cancelButtonText: cancelText,
-                inputPlaceholder: defaultValue,
-                cssAnimationStyle: 'fade',
-                okButtonCallback: (value) => {
-                    res(value);
-                },
-                cancelButtonCallback: (value) => {
-                    res(value);
-                }
-            });
-        });
-    }
-
-    /**
-     * translate a word with custom locales
-     * must be override 'defaultLocaleNamespace'
-     * @param key 
-     * @param params 
-     */
-    __(key: string, params?: object) {
-        if (!this.defaultLocaleNamespace) return key;
-        return this.locale.__(this.defaultLocaleNamespace, key, params);
-    }
-
-    importedLayout(): StrongFBLayoutBuilder {
-        //TODO:call by json form parser
-        return undefined;
-    }
 
     get layout(): StrongFBLayoutBuilder {
-        if (this.importedLayout()) {
-            return this.importedLayout();
-        }
         return this.layoutBuilder();
     }
 
@@ -192,17 +120,6 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
         return new StrongFBLayoutBuilder<WIDGET>();
     }
 
-    get http(): StrongFBHttpService {
-        return this._http;
-    }
-
-    get locale(): StrongFBLocaleService<CUSTOM_LOCALES> {
-        return this.service.locale();
-    }
-
-    get service(): StrongFBService {
-        return this._service;
-    }
 
     get initialData(): INIT_FIELDS {
         return this._options?.initData || {} as any;

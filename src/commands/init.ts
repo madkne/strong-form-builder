@@ -7,6 +7,7 @@ import { saveRenderFile } from '@dat/lib/template';
 import { detectAngularSourcePath, UIFrameWorks } from '../common';
 import { select, boolean } from '@dat/lib/input';
 import { info, success, error, warning } from '@dat/lib/log';
+import * as TEM from '@dat/lib/template';
 
 @cliCommandItem()
 export class InitCommand extends CliCommand<CommandName, CommandArgvName> implements OnImplement {
@@ -24,6 +25,7 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
         languages?: string[];
         uiFramework?: UIFrameWorkType;
     };
+    loadedWidgets: { name: string; path: string; }[] = [];
 
 
     get name(): CommandName {
@@ -106,7 +108,12 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
 
     async copyTemplates() {
         // =>copy common files
-        await copyDirectory(path.join(this.templatesPath, 'common'), path.join(this.sourceAppStrongFBPath, 'common'));
+        let files = fs.readdirSync(path.join(this.templatesPath, 'common'), { withFileTypes: true });
+        for (const f of files) {
+            if (f.isFile()) {
+                fs.copyFileSync(path.join(this.templatesPath, 'common', f.name), path.join(this.sourceAppStrongFBPath, 'common', f.name));
+            }
+        }
         // =>copy forms files
         await copyDirectory(path.join(this.templatesPath, 'forms'), path.join(this.sourceAppStrongFBPath, 'forms'));
         // =>copy services file
@@ -128,6 +135,17 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
                     fs.copyFileSync(path.join(this.templatesPath, this.uiFramework, dir.name), path.join(this.sourceAppStrongFBPath, dir.name));
                 }
             }
+        }
+        // =>compile & copy common helper files
+        let helperFiles = fs.readdirSync(path.join(this.templatesPath, 'common', 'helpers'), { withFileTypes: true });
+        fs.mkdirSync(path.join(this.sourceAppStrongFBPath, 'common', 'helpers'), { recursive: true });
+        for (const f of helperFiles) {
+            if (!f.isFile()) continue;
+            await TEM.saveRenderFile(path.join(this.templatesPath, 'common', 'helpers', f.name), path.join(this.sourceAppStrongFBPath, 'common', 'helpers'), {
+                data: {
+                    loadedWidgets: this.loadedWidgets.map(i => i.name),
+                }
+            });
         }
         // =>build strongfb.module file
         // fs.copyFileSync(path.join(this.templatesPath, 'StrongFB.module.ts'), path.join(this.sourceAppStrongFBPath, 'StrongFB.module.ts'));
@@ -153,6 +171,11 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
                 // =>create widget dir folder
                 fs.mkdirSync(appWidgetDirPath, { recursive: true });
                 let widgetFiles = fs.readdirSync(widgetDirPath, { withFileTypes: true });
+                // =>add loaded widget
+                this.loadedWidgets.push({
+                    name: widDir.name,
+                    path: widgetDirPath,
+                });
                 for (const widFile of widgetFiles) {
                     // =>if common files
                     if (widFile.isFile()) {
@@ -195,18 +218,20 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
             fs.writeFileSync(path.join(this.source, 'tsconfig.json'), JSON.stringify(projectTsConfig, null, 2));
 
             // =>add properties to tsconfig.app of project
-            let projectTsConfigApp = fs.readFileSync(path.join(this.source, 'tsconfig.app.json')).toString();
-            if (projectTsConfigApp.startsWith('/*')) {
-                let lines = projectTsConfigApp.split('\n');
-                lines.shift();
-                projectTsConfigApp = lines.join('\n');
+            if (fs.existsSync(path.join(this.source, 'tsconfig.app.json'))) {
+                let projectTsConfigApp = fs.readFileSync(path.join(this.source, 'tsconfig.app.json')).toString();
+                if (projectTsConfigApp.startsWith('/*')) {
+                    let lines = projectTsConfigApp.split('\n');
+                    lines.shift();
+                    projectTsConfigApp = lines.join('\n');
+                }
+                projectTsConfigApp = JSON.parse(projectTsConfigApp);
+                if (!projectTsConfigApp['include'].includes("src/app/StrongFB/**/*.ts")) {
+                    projectTsConfigApp['include'].push("src/app/StrongFB/**/*.ts");
+                }
+                // =>save tsconfig
+                fs.writeFileSync(path.join(this.source, 'tsconfig.app.json'), JSON.stringify(projectTsConfigApp, null, 2));
             }
-            projectTsConfigApp = JSON.parse(projectTsConfigApp);
-            if (!projectTsConfigApp['include'].includes("src/app/StrongFB/**/*.ts")) {
-                projectTsConfigApp['include'].push("src/app/StrongFB/**/*.ts");
-            }
-            // =>save tsconfig
-            fs.writeFileSync(path.join(this.source, 'tsconfig.app.json'), JSON.stringify(projectTsConfigApp, null, 2));
         } catch (e) {
             error(e);
         }
@@ -280,20 +305,11 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
         let declarations = [];
         let widgetImports = [];
         // =>iterate widgets
-        const widgetsDirPath = path.join(this.templatesPath, 'widgets');
-        let widgetsDirs = fs.readdirSync(widgetsDirPath, { withFileTypes: true });
-        for (const widDir of widgetsDirs) {
-            let widgetDirPath = path.join(this.templatesPath, 'widgets', widDir.name);
-            // =>if widget is valid
-            if (!widDir.isDirectory()) continue;
-            // =>check exist on current ui framework
-            if (!fs.existsSync(path.join(widgetDirPath, '.nocustom')) && !fs.existsSync(path.join(widgetDirPath, this.uiFramework))) {
-                continue;
-            }
+        for (const widget of this.loadedWidgets) {
             // =>find component class file
-            let componentClassFilePath = path.join(widgetDirPath, widDir.name + '.component.ts');
+            let componentClassFilePath = path.join(widget.path, widget.name + '.component.ts');
             if (!fs.existsSync(componentClassFilePath)) {
-                componentClassFilePath = path.join(widgetDirPath, this.uiFramework, widDir.name + '.component.ts');
+                componentClassFilePath = path.join(widget.path, this.uiFramework, widget.name + '.component.ts');
             }
             // =>extract widget class
             let res = fs.readFileSync(componentClassFilePath).toString().matchAll(/export\s+class\s+[\w\d]+/g);
@@ -303,7 +319,7 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
                 if (!match) break;
                 let widgetClassName = match[0].replace(/export\s+class\s+/g, '').trim();
                 // =>create widget import
-                widgetImports.push(`import { ${widgetClassName} } from "./widgets/${widDir.name}/${widDir.name}.component";
+                widgetImports.push(`import { ${widgetClassName} } from "./widgets/${widget.name}/${widget.name}.component";
                             `)
                 // =>add declarations
                 declarations.push(widgetClassName);

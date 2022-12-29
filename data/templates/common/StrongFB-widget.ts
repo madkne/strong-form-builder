@@ -146,6 +146,9 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
                     this.schema[valueField] = this.widgetForm['_formFieldValues'][this.widgetHeader['_formFieldName']];
                 }
             });
+            if (this.ngModelValue) {
+                this.updateFormField(valueField);
+            }
         }
     }
     /******************************************* */

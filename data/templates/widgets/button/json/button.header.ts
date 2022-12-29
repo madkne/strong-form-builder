@@ -1,18 +1,14 @@
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
-import { StrongFBButtonWidgetComponent } from "./button.component";
-import { ButtonClickEvent, ButtonMode, ButtonSchema, ButtonShape, ButtonSize } from "./button-interfaces";
+import { ButtonClickEvent, ButtonMode, JsonButtonSchema, ButtonShape, ButtonSize } from "./button-interfaces";
 import { ButtonAppearance, ButtonStatus } from "../../common/StrongFB-types";
+import { APIRequest } from "../../common/StrongFB-interfaces";
 
 
 
 export class StrongFBButtonWidget extends StrongFBBaseWidgetHeader {
 
-    protected override _schema: ButtonSchema = {};
-
-    override get component(): any {
-        return StrongFBButtonWidgetComponent;
-    }
+    protected override _schema: JsonButtonSchema = {};
 
     override get widgetName(): string {
         return 'button';
@@ -77,16 +73,13 @@ export class StrongFBButtonWidget extends StrongFBBaseWidgetHeader {
     /********************************* */
     /*************EVENTS************** */
     /********************************* */
-    click(click: ButtonClickEvent) {
+    click(click: APIRequest) {
         this._schema.click = click;
         return this;
     }
 
 
-    private _loadFromJson(json: object) {
-        this._schema = json as any;
 
-    }
 
 
 
