@@ -1,6 +1,6 @@
 import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
 
-export type TransmitChannelName = 'notification' | 'snackbar-message' | 'page' | 'response' | 'page-loading' | 'screen-mode' | 'dialog-response' | 'dialog-action-click';
+export type TransmitChannelName = 'notification' | 'snackbar-message' | 'page' | 'response' | 'page-loading' | 'screen-mode' | 'dialog-response' | 'dialog-action-click' | 'form-loading';
 
 export enum APIStatusCodes {
     HTTP_100_CONTINUE = 100,
@@ -63,6 +63,9 @@ export type ButtonStatus = 'basic' | 'primary' | 'info' | 'success' | 'warning' 
 
 export type ButtonAppearance = 'fill' | 'outline' | 'colorful' | 'basic';
 
+export type BlockLoadingType = 'circle' | 'standard' | 'hourglass' | 'arrows' | 'dots' | 'pulse';
+
+export type HttpMethodName = 'GET' | 'POST' | 'PUT' | 'DELETE';
 /**************************** */
 /*********CONSTANTS********** */
 /**************************** */
@@ -72,11 +75,11 @@ export const AvailableLanguages: AvailableLanguage[] = ['fa', 'en'];
 export const AudioMimeTypes = ['audio/mp3', 'audio/wav', 'audio/mpeg'];
 export const ImageMimeTypes = ['image/png', 'image/jpeg', 'image/gif'];
 export const VideoMimeTypes = ['video/mp4', 'video/webm'];
-export const TextMimeTypes = ['application/xml', 'application/json', 'text/plain'];
+export const TextMimeTypes = ['application/xml', 'application/json', 'text/plain', 'application/msword'];
 export const ArchiveMimeTypes = ['application/zip', 'application/gzip', 'application/x-7z-compressed', 'application/vnd.rar'];
 export const ExecuteMimeTypes = ['application/x-sega-cd-rom', 'application/vnd.android.package-archive'];
 
-export type MimeTypes = '*' | 'audio/mp3' | 'audio/wav' | 'audio/mpeg' | 'image/png' | 'image/jpeg' | 'image/gif' | 'video/mp4' | 'video/webm' | 'video/mpeg' | 'video/ogg' | 'application/xml' | 'application/json' | 'text/plain' | 'application/zip' | 'application/gzip' | 'application/x-7z-compressed' | 'application/vnd.rar' | 'application/x-sega-cd-rom' | 'application/vnd.android.package-archive' | 'image/*' | 'application/pdf' | 'audio/*' | 'video/*' | 'application/x-mpegurl';
+export type MimeTypes = '*' | 'audio/mp3' | 'audio/wav' | 'audio/mpeg' | 'image/png' | 'image/jpeg' | 'image/gif' | 'video/mp4' | 'video/webm' | 'video/mpeg' | 'video/ogg' | 'application/xml' | 'application/json' | 'text/plain' | 'application/zip' | 'application/gzip' | 'application/x-7z-compressed' | 'application/vnd.rar' | 'application/x-sega-cd-rom' | 'application/vnd.android.package-archive' | 'image/*' | 'application/pdf' | 'audio/*' | 'video/*' | 'application/x-mpegurl' | 'application/msword';
 
 export const ExecuteExtensions = ['exe', 'sh'];
 export const ImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];

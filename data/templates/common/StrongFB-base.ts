@@ -3,7 +3,7 @@ import { StrongFBLayoutBuilder } from "./StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "./StrongFB-widget-header";
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs'
 
-import { NotifyCssAnimationStyle, NotifyMode, TransmitChannelName } from "./StrongFB-types";
+import { BlockLoadingType, NotifyCssAnimationStyle, NotifyMode, TransmitChannelName } from "./StrongFB-types";
 import { FormFieldMetaData, StrongFBFormOptions } from "./StrongFB-interfaces";
 import { StrongFBService } from "../services/StrongFB.service";
 import { StrongFBLocaleService } from "../services/StrongFB-locale.service";
@@ -16,10 +16,12 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
     private _http: StrongFBHttpService;
     private _formFieldValues = {};
     private _formFieldMetaData: { [k in keyof FORM_FIELDS]?: FormFieldMetaData } = {};
-    private _formFieldValuesUpdated$ = new BehaviorSubject<boolean>(true);
+    protected _formFieldValuesUpdated$ = new BehaviorSubject<boolean>(true);
     private _options: StrongFBFormOptions;
     private _service: StrongFBService;
     protected destroy$ = new Subject<boolean>();
+    protected formWidgetId: string;
+    protected _minFormHeight: string;
     protected _transmit: StrongFBTransmitService<TRANSMIT>;
 
     public defaultLocaleNamespace: CUSTOM_LOCALES;
@@ -206,5 +208,18 @@ export class StrongFBFormClass<WIDGET extends string = string, FORM_FIELDS exten
 
     get initialData(): INIT_FIELDS {
         return this._options?.initData || {} as any;
+    }
+
+    formLoading(is = true, type: BlockLoadingType = 'circle', message?: string) {
+        this.transmit.emit('form-loading_' + this.formWidgetId as any, {
+            formId: this.formWidgetId,
+            is,
+            type,
+            message,
+        });
+    }
+
+    minimumFormHeight(size: string = '200px') {
+        this._minFormHeight = size;
     }
 }

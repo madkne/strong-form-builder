@@ -90,9 +90,9 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
 
     async tinyMceLoad() {
         // =>load dynamic resources
-        await this.srv.loadScript(this.srv.assetsUrl('js/tinymce.min.js'));
+        await this.srv.loadScript(this.srv.assetsUrl('tinymce/tinymce.min.js'));
         if (this.locale.getLangInfo().code !== 'en') {
-            await this.srv.loadScript(this.srv.assetsUrl(`js/tinymce-${this.locale.getLangInfo().code}.js`));
+            await this.srv.loadScript(this.srv.assetsUrl(`tinymce/langs/tinymce-${this.locale.getLangInfo().code}.js`));
         }
 
         let editorLoaded = setInterval(async () => {
@@ -103,8 +103,8 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
                 min_height: this.schema.minHeight,
                 skin: this.srv['_darkTheme'] ? 'oxide-dark' : 'oxide',
                 content_css: this.srv['_darkTheme'] ? 'dark' : 'default',
-                toolbar: 'undo redo styleselect bold italic alignleft aligncenter alignright bullist numlist outdent indent code',
-                plugins: 'code',
+                toolbar: 'undo redo styleselect bold italic alignright alignleft aligncenter  bullist numlist outdent indent code ltr rtl',
+                plugins: 'code directionality wordcount table',
                 menubar: 'edit view format table',
                 language: this.locale.getLangInfo().code,
                 directionality: this.locale.getLangInfo().direction,

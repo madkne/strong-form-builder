@@ -72,6 +72,10 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
         let setContainerInterval = setInterval(async () => {
             if (!this.FieldContainer) return;
             this.FieldContainer.clear();
+            // =>set field properties
+            if (this.schema.disabled !== undefined) {
+                this.schema.field.schema['disabled'] = this.schema.disabled;
+            }
             // =>load dynamic field
             this.formFieldInstance = (await this.loadDynamicWidgets(this.FieldContainer, { widgets: [() => this.schema.field] })).widgetComponents;
             // =>set form schema on widget

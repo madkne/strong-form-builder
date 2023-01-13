@@ -1,8 +1,9 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, SimpleChanges } from '@angular/core';
 import { delay, takeUntil } from 'rxjs';
 import { FormFieldMetaData } from '../../common/StrongFB-interfaces';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
+import { StrongFBHttpService } from '../../services/StrongFB-http.service';
 import { ButtonSchema } from './button-interfaces';
 import { extraNormalizeSchema } from './convertor';
 
@@ -14,6 +15,11 @@ import { extraNormalizeSchema } from './convertor';
 export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSchema> {
 
     @Input() override schema: ButtonSchema;
+
+    constructor(public elRef: ElementRef<any>, public cdr: ChangeDetectorRef, public http: StrongFBHttpService) {
+        super(elRef, cdr);
+    }
+
     override async onInit() {
         this.initSchema();
     }
@@ -46,25 +52,27 @@ export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSche
 
     async scanFormFields() {
         this.schema.disabled = true;
+        let needFormFields = await this.getFormFieldsByNames(this.schema.disabledForFormFields);
+        let isValidAllFields = needFormFields.isValidAllFields;
+        // let fieldsWithMeta = needFormFields.fieldsWithMeta;
+        // // =>get all need form fields
+        // let fieldsWithMeta: FormFieldMetaData[] = [];
+        // let allFormFields = this.widgetForm.formFieldValuesWithMeta();
 
-        // =>get all need form fields
-        let fieldsWithMeta: FormFieldMetaData[] = [];
-        let allFormFields = this.widgetForm.formFieldValuesWithMeta();
+        // let isValidAllFields = true;
+        // // =>iterate all widgets
+        // for (const field of allFormFields) {
 
-        let isValidAllFields = true;
-        // =>iterate all widgets
-        for (const field of allFormFields) {
-
-            // =>if select all fields or match fields
-            if (this.schema.disabledForFormFields[0] === '*' || this.schema.disabledForFormFields.includes(field.name)) {
-                fieldsWithMeta.push(field);
-                // =>check all fields to valid
-                if (field.is_show !== false && field.is_valid === false) {
-                    isValidAllFields = false;
-                    break;
-                }
-            }
-        }
+        //     // =>if select all fields or match fields
+        //     if (this.schema.disabledForFormFields[0] === '*' || this.schema.disabledForFormFields.includes(field.name)) {
+        //         fieldsWithMeta.push(field);
+        //         // =>check all fields to valid
+        //         if (field.is_show !== false && field.is_valid === false) {
+        //             isValidAllFields = false;
+        //             break;
+        //         }
+        //     }
+        // }
 
         // =>enable button
         if (isValidAllFields) {
@@ -87,8 +95,14 @@ export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSche
     }
 
 
-    clickEvent(event: MouseEvent) {
+    async clickEvent(event: MouseEvent) {
         if (!this.schema.click) return;
-        this.schema.click.call(this.widgetForm, event, this.widgetHeader);
+        // =>if json mode
+        if (this.widgetHeader['_isJsonMode']) {
+            await this.sendRequestByJsonApi(this.http, this.schema.click as any);
+        }
+        else {
+            this.schema.click.call(this.widgetForm, event, this.widgetHeader);
+        }
     }
 }

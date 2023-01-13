@@ -1,4 +1,4 @@
-import { APIStatusCodes, AvailableLanguage, ButtonAppearance, ButtonStatus, CustomLocales, Direction, LocaleCalendar, StrongFBValidatorName } from "./StrongFB-types";
+import { APIStatusCodes, AvailableLanguage, ButtonAppearance, ButtonStatus, CustomLocales, Direction, HttpMethodName, LocaleCalendar, StrongFBValidatorName } from "./StrongFB-types";
 import { HttpErrorResponse } from "@angular/common/http";
 import { StrongFBHttpService } from "../services/StrongFB-http.service";
 import { ViewContainerRef } from "@angular/core";
@@ -7,8 +7,8 @@ import { StrongFBBaseLayoutBuilderSchema, StrongFBLayoutBuilderSchema } from "./
 
 export interface APIRequest<T = any> {
     path: string;
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE';
-    params?: { [param: string]: string | boolean | number | string[] };
+    method: HttpMethodName;
+    params?: { [param in keyof T]: string | boolean | number | string[] };
     headers?: { [header: string]: string | string[]; };
     body?: T,
     formData?: FormData;
@@ -121,6 +121,8 @@ export interface StrongFBConfigOptions {
      * @default {}
      */
     injectServices?: { [k: string]: any };
+
+    fontFamily?: string;
 }
 
 export interface FormFieldMetaData<T = string> {
@@ -139,6 +141,8 @@ export interface FormFieldMetaData<T = string> {
 export interface StrongFBJsonLayoutBuilderWidget {
     type: string;
     properties?: object;
+    formFieldName?: string;
+    commonStyles?: object;
 }
 
 export interface StrongFBJsonLayoutBuilderSchema<WIDGET extends string = string> extends StrongFBBaseLayoutBuilderSchema<WIDGET> {
@@ -151,4 +155,18 @@ export interface StrongFBJsonFormSchema<WIDGET extends string = string> {
     form: {
         layout: StrongFBJsonLayoutBuilderSchema<WIDGET>;
     };
+}
+
+
+export interface StrongFBJsonApiRequestSchema {
+    method?: HttpMethodName;
+    params?: object;
+    headers?: object;
+    path?: string;
+    url?: string;
+    body?: any;
+    _actions?: {
+        name?: 'append_form_fields_to_body',
+        value?: any;
+    }[];
 }

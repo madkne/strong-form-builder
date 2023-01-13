@@ -7,6 +7,7 @@ import { saveRenderFile } from '@dat/lib/template';
 import { detectAngularSourcePath, UIFrameWorks, VERSION } from '../common';
 import { select, boolean } from '@dat/lib/input';
 import { info, success, error, warning } from '@dat/lib/log';
+import * as TEM from '@dat/lib/template';
 
 @cliCommandItem()
 export class JsonFactoryCommand extends CliCommand<CommandName, CommandArgvName> implements OnImplement {
@@ -14,6 +15,7 @@ export class JsonFactoryCommand extends CliCommand<CommandName, CommandArgvName>
     templatesPath: string;
     source: string;
     sourceAppStrongFBPath: string;
+    loadedWidgets: { name: string; path: string; }[] = [];
 
 
     get name(): CommandName {
@@ -103,6 +105,7 @@ export class JsonFactoryCommand extends CliCommand<CommandName, CommandArgvName>
                 }
             }
         }
+
         // =>copy widgets file
         await this.copyWidgetsTemplates();
         // =>copy json required files
@@ -113,6 +116,17 @@ export class JsonFactoryCommand extends CliCommand<CommandName, CommandArgvName>
                     fs.copyFileSync(path.join(this.templatesPath, 'json', dir.name), path.join(this.sourceAppStrongFBPath, dir.name));
                 }
             }
+        }
+        // =>compile & copy common helper files
+        let helperFiles = fs.readdirSync(path.join(this.templatesPath, 'common', 'helpers'), { withFileTypes: true });
+        fs.mkdirSync(path.join(this.sourceAppStrongFBPath, 'common', 'helpers'), { recursive: true });
+        for (const f of helperFiles) {
+            if (!f.isFile()) continue;
+            await TEM.saveRenderFile(path.join(this.templatesPath, 'common', 'helpers', f.name), path.join(this.sourceAppStrongFBPath, 'common', 'helpers'), {
+                data: {
+                    loadedWidgets: this.loadedWidgets.map(i => i.name),
+                }
+            });
         }
     }
     /********************************** */
@@ -131,6 +145,11 @@ export class JsonFactoryCommand extends CliCommand<CommandName, CommandArgvName>
                 // =>create widget dir folder
                 fs.mkdirSync(appWidgetDirPath, { recursive: true });
                 let widgetFiles = fs.readdirSync(widgetDirPath, { withFileTypes: true });
+                // =>add loaded widget
+                this.loadedWidgets.push({
+                    name: widDir.name,
+                    path: widgetDirPath,
+                });
                 for (const widFile of widgetFiles) {
                     if (widFile.name.indexOf('component.ts') > -1 || widFile.name.indexOf('component.html') > -1 || widFile.name.indexOf('component.scss') > -1) continue;
                     // =>if common files

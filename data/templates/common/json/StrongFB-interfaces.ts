@@ -1,4 +1,5 @@
-import { APIStatusCodes, AvailableLanguage, ButtonAppearance, ButtonStatus, CustomLocales, Direction, LocaleCalendar, StrongFBValidatorName } from "./StrongFB-types";
+import { APIStatusCodes, AvailableLanguage, ButtonAppearance, ButtonStatus, CustomLocales, Direction, HttpMethodName, LocaleCalendar, StrongFBValidatorName } from "./StrongFB-types";
+import { StrongFBBaseLayoutBuilderSchema, StrongFBLayoutBuilderSchema } from "./StrongFB-layout-builder-types";
 
 
 export interface APIRequest<T = any> {
@@ -129,4 +130,37 @@ export interface FormFieldMetaData<T = string> {
      * if user try to change value
     */
     is_dirty?: boolean;
+}
+
+export interface StrongFBJsonLayoutBuilderWidget {
+    type: string;
+    properties?: object;
+    formFieldName?: string;
+    commonStyles?: object;
+}
+
+export interface StrongFBJsonLayoutBuilderSchema<WIDGET extends string = string> extends StrongFBBaseLayoutBuilderSchema<WIDGET> {
+    layouts?: StrongFBJsonLayoutBuilderSchema<WIDGET>[];
+    widgets?: StrongFBJsonLayoutBuilderWidget[];
+}
+
+export interface StrongFBJsonFormSchema<WIDGET extends string = string> {
+    version: string;
+    form: {
+        layout: StrongFBJsonLayoutBuilderSchema<WIDGET>;
+    };
+}
+
+
+export interface StrongFBJsonApiRequestSchema {
+    method?: HttpMethodName;
+    params?: object;
+    headers?: object;
+    path?: string;
+    url?: string;
+    body?: any;
+    _actions?: {
+        name?: 'append_form_fields_to_body',
+        value?: any;
+    }[];
 }

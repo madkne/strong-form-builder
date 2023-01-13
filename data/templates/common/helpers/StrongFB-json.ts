@@ -89,10 +89,19 @@ export function json2WidgetClass(json: StrongFBJsonLayoutBuilderWidget) {
 
     // =>parse json
     if (res) {
+        res['_isJsonMode'] = true;
         if (res['_loadFromJson']) {
             res['_loadFromJson'](json.properties);
         } else {
             res['_schema'] = json.properties;
+        }
+        // =>load form field name
+        if (json.formFieldName) {
+            res['_formFieldName'] = json.formFieldName;
+        }
+        // =>load common styles
+        if (json.commonStyles) {
+            res['_commonStyles'] = json.commonStyles;
         }
     }
 

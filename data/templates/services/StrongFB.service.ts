@@ -26,6 +26,7 @@ export class StrongFBService {
     protected _darkTheme: boolean;
     protected _injectServices: { [k: string]: any } = {};
     protected _defaultLocaleNamespace: string;
+    protected _defaultFontFamily: string;
 
     protected defaultOptions: StrongFBConfigOptions = {
         localStorageTokenKey: 'access_token',
@@ -89,6 +90,7 @@ export class StrongFBService {
         this._defaultLocaleNamespace = options.defaultLocaleNamespace;
         // =>set service options
         this._viewContainerRef = options.viewContainerRef;
+        this._defaultFontFamily = options.fontFamily;
         this._assetsBaseUrl = options.assetsBaseUrl;
         this._darkTheme = options.darkTheme;
         this._injectServices = options.injectServices;
@@ -198,13 +200,13 @@ export class StrongFBService {
         return component;
     }
     /********************************* */
-    async dialogBox<T extends object = object>(options: {
+    async dialogBox<SEND_DATA extends object = object, ACTION_FORM extends object = {}>(options: {
         form?: any;
         title?: string;
         description?: string;
         html?: string;
-        actions?: StrongFBDialogAction[],
-        data?: T,
+        actions?: StrongFBDialogAction<ACTION_FORM>[],
+        data?: SEND_DATA,
         minWidth?: string;
     }) {
         // =>create instance of form
@@ -313,6 +315,7 @@ export class StrongFBService {
                 timeout: options.timeout,
                 rtl: options.rtl,
                 clickToClose: options.clickToClose,
+                fontFamily: this._defaultFontFamily,
             });
         } else {
             Notify[options.mode](options.text, {
@@ -320,6 +323,7 @@ export class StrongFBService {
                 timeout: options.timeout,
                 rtl: options.rtl,
                 clickToClose: options.clickToClose,
+                fontFamily: this._defaultFontFamily,
             });
         }
 

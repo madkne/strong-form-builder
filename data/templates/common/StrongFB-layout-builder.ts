@@ -1,7 +1,7 @@
 import { BehaviorSubject } from "rxjs";
 import { json2WidgetClass } from "./helpers/StrongFB-json";
 import { clone, generateId, SFB_error } from "./StrongFB-common";
-import { StrongFBJsonLayoutBuilderSchema } from "./StrongFB-interfaces";
+import { StrongFBJsonLayoutBuilderSchema, StrongFBJsonLayoutBuilderWidget } from "./StrongFB-interfaces";
 import { StrongFBLayoutBuilderProperties } from "./StrongFB-layout-builder-properties";
 import { StrongFBLayoutBuilderBoxCommonProperties, StrongFBLayoutBuilderGridColumnType, StrongFBLayoutBuilderGridCommonProperties, StrongFBLayoutBuilderNormalBoxProperties, StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderType } from "./StrongFB-layout-builder-types";
 import { ScreenMode } from "./StrongFB-types";
@@ -135,17 +135,30 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
         }
         // =>set widgets
         if (currentSchema.widgets) {
-            let _widgets = [];
+            let _widgets: StrongFBJsonLayoutBuilderWidget[] = [];
             for (const wid of currentSchema.widgets) {
                 let widgetRes = await wid.call(formClass ?? this);
                 const addWidget = async (widgetClass: any) => {
                     let props = widgetClass._schema;
                     if (widgetClass['toObject']) {
-                        props = await widgetClass.toObject();
+                        props = await widgetClass.toObject(formClass ?? this);
                     }
+                    // =>add form field name
+                    let widgetFormFieldName: string;
+                    if (widgetClass['_formFieldName']) {
+                        widgetFormFieldName = widgetClass['_formFieldName'];
+                    }
+                    // =>add common styles
+                    let widgetCommonStyles: object;
+                    if (widgetClass['_commonStyles']) {
+                        widgetCommonStyles = widgetClass['_commonStyles'];
+                    }
+                    // =>add widget properties
                     _widgets.push({
                         type: widgetClass.widgetName,
-                        properties: props
+                        properties: props,
+                        formFieldName: widgetFormFieldName,
+                        commonStyles: widgetCommonStyles,
                     });
                 }
                 // console.log('ffff:', widgetRes)
@@ -157,7 +170,7 @@ export class StrongFBLayoutBuilder<WIDGET extends string = string> {
                     await addWidget(widgetRes);
                 }
             }
-            currentSchema.widgets = _widgets;
+            currentSchema.widgets = _widgets as any;
         }
         return currentSchema;
     }

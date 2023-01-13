@@ -21,4 +21,5 @@ export class StrongFBMainClass<WIDGET extends string = string> {
             version: STRONGFB_VERSION,
         };
     }
+
 }

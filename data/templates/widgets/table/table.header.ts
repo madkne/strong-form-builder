@@ -14,7 +14,7 @@ import { BehaviorSubject } from 'rxjs';
  */
 export class StrongFBTableWidget<COL extends string = string, ROW extends object = object> extends StrongFBBaseWidgetHeader<TableSchema<COL>> {
 
-    private _updateRows$ = new BehaviorSubject<boolean>(true);
+    private _updateRows$ = new BehaviorSubject<{ resetPagination?: boolean }>({ resetPagination: true });
     protected override _schema: TableSchema<COL> = {};
 
     override get component(): any {
@@ -143,16 +143,16 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
         return this;
     }
 
-    loadTableByApi(options: TableLoadByApi<ROW, COL>) {
+    loadTableByApi<BODY_REQUEST = {}, RESPONSE = ROW[]>(options: TableLoadByApi<ROW, COL, BODY_REQUEST, RESPONSE>) {
         if (!options) return this;
         this._schema.loadRowsByApi = {
             options: options.prepareRequest ? options.prepareRequest : { method: 'GET', path: '/' },
-            response: options.prepareRows ? options.prepareRows : (rep, err) => {
+            response: options.prepareRows ? options.prepareRows as any : (rep, err) => {
                 if (err) return [];
                 if (Array.isArray(rep)) return rep;
                 return [];
             },
-            request: options.callRequest ? options.callRequest : undefined,
+            request: options.callRequest ? options.callRequest : undefined as any,
         };
         return this;
     }
@@ -162,8 +162,10 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
         return this;
     }
 
-    updateRows() {
-        this._updateRows$.next(true);
+    updateRows(resetPagination = true) {
+        this._updateRows$.next({
+            resetPagination,
+        });
     }
 
     selectable(selectable: TableSelectable<ROW>) {

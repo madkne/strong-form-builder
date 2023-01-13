@@ -41,6 +41,9 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
         // =>listen on update rows
         this.widgetHeader['_updateRows$'].pipe(takeUntil(this.destroy$)).subscribe(it => {
             if (!it) return;
+            if (it['resetPagination']) {
+                this.page = 1;
+            }
             // =>load rows
             this.loadRows();
         });
@@ -57,7 +60,7 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
         if (this.schema.loadRowsByApi) {
             let [res, options] = await this.callApi();
             // =>call 'response' function
-            this.simpleRows = await this.schema.loadRowsByApi.response.call(this.widgetForm, res.result, res.error, this.widgetHeader, options);
+            this.simpleRows = await this.schema.loadRowsByApi.response.call(this.widgetForm, res?.result, res?.error, this.widgetHeader, options);
             // =>set loading for display rows
             let displayRow = {};
             for (const col of this.schema.columns) {
@@ -107,7 +110,13 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
         let res: APIResponse;
         // =>call api by user request
         if (this.schema.loadRowsByApi.request) {
-            res = await this.schema.loadRowsByApi.request(options);
+            res = await this.schema.loadRowsByApi.request.call(this.widgetForm, options, this.page);
+            if (res && Array.isArray(res)) {
+                res = {
+                    result: res,
+                    statusCode: 200,
+                } as any;
+            }
         }
         // =>call api
         else {

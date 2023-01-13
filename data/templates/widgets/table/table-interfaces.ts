@@ -67,19 +67,19 @@ export interface TableSortRequest<COL extends string = string> {
     mode: TableColumnSortMode;
 }
 
-export type TablePrepareRequestForLoadTable<COL extends string = string> = (sort?: TableSortRequest<COL>, self?: StrongFBTableWidget) => APIRequest;
+export type TablePrepareRequestForLoadTable<COL extends string = string, BODY_REQUEST = any> = (sort?: TableSortRequest<COL>, self?: StrongFBTableWidget) => APIRequest<BODY_REQUEST>;
 
-export interface TableLoadByApi<ROW extends object = object, COL extends string = string> {
-    prepareRequest?: TablePrepareRequestForLoadTable<COL>;
-    callRequest?: (req: APIRequest<ROW>) => Promise<APIResponse<ROW>>;
-    prepareRows?: TableLoadRowsResponse<ROW>;
+export interface TableLoadByApi<ROW extends object = object, COL extends string = string, BODY_REQUEST = any, RESPONSE = ROW[]> {
+    prepareRequest?: TablePrepareRequestForLoadTable<COL, BODY_REQUEST>;
+    callRequest?: (req: APIRequest<BODY_REQUEST>, page?: number) => Promise<APIResponse<ROW[]>> | Promise<ROW[]>;
+    prepareRows?: TableLoadRowsResponse<ROW, RESPONSE>;
 }
 
 
 export type TableColumnMapValue<T = TableColumnMapValueType, R extends object = object> = (row?: R, index?: number, self?: StrongFBTableWidget) => Promise<T> | T
 
 
-export type TableLoadRowsResponse<ROW extends object = object> = (apiResponse: any[], error?: HttpErrorResponse, self?: StrongFBTableWidget, req?: APIRequest<ROW>) => Promise<ROW[]> | ROW[];
+export type TableLoadRowsResponse<ROW extends object = object, RESPONSE = any[]> = (apiResponse: RESPONSE, error?: HttpErrorResponse, self?: StrongFBTableWidget, req?: APIRequest<ROW>) => Promise<ROW[]> | ROW[];
 
 export type TableColumnDynamicActionsType<ROW extends object = object> = (row?: ROW, index?: number, self?: StrongFBTableWidget) => Promise<TableColumnAction<ROW>[]> | TableColumnAction<ROW>[];
 export interface TableColumnAction<R extends object = object> {
@@ -137,8 +137,8 @@ export interface TableSchema<COL extends string = string, ROW extends object = o
     columns?: TableColumn<COL, ROW>[];
     loadRowsByApi?: {
         options: APIRequest | TablePrepareRequestForLoadTable<COL>;
-        response: TableLoadRowsResponse<ROW>;
-        request?: (req: APIRequest<ROW>) => Promise<APIResponse<ROW>>
+        response: TableLoadRowsResponse<ROW, any[]>;
+        request?: (req: APIRequest<ROW>, page?: number) => Promise<APIResponse<ROW[]>> | Promise<ROW[]>;
     };
     columnActions?: { [k in COL]?: TableColumnAction<ROW>[] | TableColumnDynamicActionsType };
     mapApiPagination?: TableMapApiPagination;

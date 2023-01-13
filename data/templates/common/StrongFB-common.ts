@@ -25,10 +25,12 @@ export function SFB_error(message?: any, ...optionalParams: any[]) {
         optionalParams,
     );
 }
+/************************************************* */
 
 export function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
+/************************************************* */
 
 export function hashCode(value: string): string {
     let hash = 0, i, chr;
@@ -155,4 +157,14 @@ export function randomColor() {
     let red = Math.ceil(Math.random() * 255);
     let green = Math.ceil(Math.random() * 255);
     return `rgb(${red}, ${green}, ${blue})`;
+}
+
+/************************************************* */
+
+export async function sleep(ms = 1000) {
+    return new Promise((res) => {
+        setTimeout(() => {
+            return res(true);
+        }, ms);
+    });
 }

@@ -6,6 +6,8 @@ import { StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderWidgetFunction } from
 import { Block } from 'notiflix/build/notiflix-block-aio';
 import { checkAndDoByInterval, SFB_info, SFB_warn } from "./StrongFB-common";
 import { StrongFBHelper } from "../StrongFB-helpers";
+import { StrongFBHttpService } from "../services/StrongFB-http.service";
+import { APIRequest, FormFieldMetaData, StrongFBJsonApiRequestSchema } from "./StrongFB-interfaces";
 
 
 @Component({
@@ -272,9 +274,56 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
         this.afterViewInit();
     }
     /******************************************* */
-
     afterViewInit() {
         //TODO: fill by child
+    }
+    /******************************************* */
+    async getFormFieldsByNames(names = ['*']) {
+        // =>get all need form fields
+        let fieldsWithMeta: FormFieldMetaData[] = [];
+        let allFormFields = this.widgetForm.formFieldValuesWithMeta();
+
+        let isValidAllFields = true;
+        if (!names || names.length === 0) names = ['*'];
+        // =>iterate all widgets
+        for (const field of allFormFields) {
+            // =>if select all fields or match fields
+            if (names[0] === '*' || names.includes(field.name)) {
+                // =>check all fields to valid
+                if (field.is_show !== false && field.is_valid === false) {
+                    isValidAllFields = false;
+                    continue;
+                }
+                fieldsWithMeta.push(field);
+            }
+        }
+
+        return { fieldsWithMeta, isValidAllFields };
+    }
+    /******************************************* */
+    async sendRequestByJsonApi(http: StrongFBHttpService, jsonApiSchema: StrongFBJsonApiRequestSchema) {
+        let data: APIRequest = {
+            method: jsonApiSchema.method,
+            path: jsonApiSchema.path,
+            body: jsonApiSchema.body,
+            params: jsonApiSchema.params as any,
+            headers: jsonApiSchema.headers as any,
+        };
+        // =>iterate actions
+        if (jsonApiSchema._actions) {
+            for (const action of jsonApiSchema._actions) {
+                if (action.name === 'append_form_fields_to_body') {
+                    if (!data.body) data.body = {};
+                    let needFormFields = await this.getFormFieldsByNames(action.value);
+                    for (const field of needFormFields.fieldsWithMeta) {
+                        data.body[field.name] = field.value;
+                    }
+                }
+            }
+        }
+        // =>send request
+        let res = await http.sendPromise(data);
+
     }
 
 }

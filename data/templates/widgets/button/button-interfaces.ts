@@ -63,5 +63,5 @@ export interface JsonButtonSchema extends BaseButtonSchema {
     /********************************* */
     /*************EVENTS************** */
     /********************************* */
-    click?: APIRequest;
+    click?: any;
 }

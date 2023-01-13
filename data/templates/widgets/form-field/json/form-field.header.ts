@@ -1,8 +1,8 @@
+import { StrongFBJsonLayoutBuilderWidget } from "@SDK/strongfb/common/StrongFB-interfaces";
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBValidatorName, StrongFBWidgetShowCallback } from "../../common/StrongFB-types";
 import { StrongFBValidator } from "../../common/StrongFB-validator";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
-import { StrongFBButtonWidget } from "../button/button.header";
 import { StrongFBInputWidget } from "../input/input.header";
 import { FormAppearance, FormFieldErrorCallback, FormFieldSchema, FormFieldSize, FormFieldType } from "./form-field-interfaces";
 
@@ -32,10 +32,10 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
         return this;
     }
 
-    suffixButton(button: StrongFBButtonWidget) {
-        this._schema.suffixButton = button;
-        return this;
-    }
+    // suffixButton(button: StrongFBButtonWidget) {
+    //     this._schema.suffixButton = button;
+    //     return this;
+    // }FIXME:
 
     size(size: FormFieldSize) {
         this._schema.size = size;
@@ -74,20 +74,25 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
     }
 
 
-    async toObject() {
+    async toObject(formClass?: any) {
         let obj = this._schema;
         // =>normalize field
         if (this._schema.field) {
-            let props = {};
-            if (this._schema.field['toObject']) {
-                props = await this._schema.field['toObject']() as any;
-            } else {
-                props = this._schema.field['_schema'] as any;
-            }
-            this._schema.field = {
+            let fieldWidget: StrongFBJsonLayoutBuilderWidget = {
                 type: this._schema.field.widgetName,
-                properties: props,
-            } as any;
+                properties: {},
+            };
+            if (this._schema.field['toObject']) {
+                fieldWidget.properties = await this._schema.field['toObject'](formClass) as any;
+            } else {
+                fieldWidget.properties = this._schema.field['_schema'] as any;
+            }
+            // =>set form field name
+            fieldWidget.formFieldName = this._schema.field['_formFieldName'];
+            // =>set common styles
+            fieldWidget.commonStyles = this._schema.field['_commonStyles'];
+
+            this._schema.field = fieldWidget as any;
         }
         // =>normalize validator
         if (this._schema.validator) {

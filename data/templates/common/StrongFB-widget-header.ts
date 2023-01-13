@@ -6,6 +6,8 @@ export class StrongFBBaseWidgetHeader<SCHEMA extends object = object, WIDGET_NAM
 
     protected _schema: SCHEMA = {} as any;
 
+    protected _isJsonMode = false;
+
     protected _formFieldName: string;
 
     protected _name: string;

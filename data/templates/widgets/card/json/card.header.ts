@@ -38,19 +38,19 @@ export class StrongFBCardWidget extends StrongFBBaseWidgetHeader {
         return this;
     }
 
-    async toObject() {
+    async toObject(formClass?: any) {
         let obj = this._schema;
         // =>normalize header
         if (obj?.header?.layout) {
-            obj.header.layout = await obj.header.layout.generateSchema(this) as any;
+            obj.header.layout = await obj.header.layout.generateSchema(formClass) as any;
         }
         // =>normalize content
         if (obj?.content?.layout) {
-            obj.content.layout = await obj.content.layout.generateSchema(this) as any;
+            obj.content.layout = await obj.content.layout.generateSchema(formClass) as any;
         }
         // =>normalize footer
         if (obj?.footer?.layout) {
-            obj.footer.layout = await obj.footer.layout.generateSchema(this) as any;
+            obj.footer.layout = await obj.footer.layout.generateSchema(formClass) as any;
         }
         return obj;
     }
