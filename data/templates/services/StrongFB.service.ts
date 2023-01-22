@@ -3,7 +3,7 @@ import { Injectable, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { StrongFBFormClass } from '../common/StrongFB-base';
-import { StrongFBConfigOptions, StrongFBDialogAction, StrongFBJsonFormSchema } from '../common/StrongFB-interfaces';
+import { StrongFBConfigOptions, StrongFBDialogAction, StrongFBFormOptions, StrongFBJsonFormSchema } from '../common/StrongFB-interfaces';
 import { StrongFBDialogWidgetComponent } from '../widgets/dialog/dialog.component';
 import { StrongFBHttpService } from './StrongFB-http.service';
 import { StrongFBLocaleService } from './StrongFB-locale.service';
@@ -333,7 +333,9 @@ export class StrongFBService {
         title: string;
         text: string;
         rtl?: boolean;
+        width?: string;
         type?: 'confirm' | 'prompt';
+        messageMaxLength?: number;
         cssAnimationStyle?: NotifyCssAnimationStyle;
 
         okButtonText?: string;
@@ -343,6 +345,8 @@ export class StrongFBService {
         inputPlaceholder?: string;
     }) {
         // =>set defaults
+        if (!options.messageMaxLength) options.messageMaxLength = 110;
+        if (!options.width) options.width = '300px';
         if (options.rtl === undefined) options.rtl = this.locale().getLangInfo()?.direction === 'rtl';
         if (!options.type) options.type = 'confirm';
         if (!options.cssAnimationStyle) options.cssAnimationStyle = 'fade';
@@ -356,6 +360,8 @@ export class StrongFBService {
             backgroundColor: StrongFBHelper.notifyBackgroundColor(),
             messageColor: StrongFBHelper.notifyTextColor(),
             titleColor: StrongFBHelper.notifyTitleColor(),
+            width: options.width,
+            messageMaxLength: options.messageMaxLength,
         }
         // =>show confirm
         if (options.type === 'confirm') {
@@ -398,12 +404,17 @@ export class StrongFBService {
         head.appendChild(style);
     }
     /********************************* */
-    async loadJsonForm(jsonForm: StrongFBJsonFormSchema, data?: object) {
-        let form = new StrongFBFormClass(this._http, this, this._transmit, {
+    async loadJsonForm(jsonForm: StrongFBJsonFormSchema, data?: object, options: { baseApiUrl?: string } = {}) {
+        let formOptions: StrongFBFormOptions = {
             rtl: this._locale.getLangInfo()?.direction === 'rtl',
             initData: data,
             defaultLocaleNamespace: this._defaultLocaleNamespace,
-        },);
+
+        };
+        if (options?.baseApiUrl) {
+            formOptions.baseAPIUrl = options.baseApiUrl;
+        }
+        let form = new StrongFBFormClass(this._http, this, this._transmit, formOptions);
         // =>set layout
         form.importedLayout = () => {
             let json = clone(jsonForm);

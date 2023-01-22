@@ -14,6 +14,7 @@ export interface APIRequest<T = any> {
      * @default false
      */
     reportProgress?: boolean;
+    baseUrl?: string;
 }
 
 export interface APIResponse<T = any> {

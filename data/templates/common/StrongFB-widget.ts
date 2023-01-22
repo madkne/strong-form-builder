@@ -309,6 +309,10 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
             params: jsonApiSchema.params as any,
             headers: jsonApiSchema.headers as any,
         };
+        // =>if set url
+        if (this.widgetForm['_options']?.baseAPIUrl) {
+            data.baseUrl = this.widgetForm['_options']?.baseAPIUrl;
+        }
         // =>iterate actions
         if (jsonApiSchema._actions) {
             for (const action of jsonApiSchema._actions) {

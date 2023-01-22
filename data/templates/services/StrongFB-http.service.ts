@@ -109,10 +109,11 @@ export class StrongFBHttpService {
         // =>calculate request data size
         this.httpTransferData.upload += lengthInUtf8Bytes(JSON.stringify(data));
         // =>generate url
-        if (!this.apiEndpoint.endsWith('/')) {
-            this.apiEndpoint += '/';
+        if (!data.baseUrl) data.baseUrl = this.apiEndpoint;
+        if (!data.baseUrl.endsWith('/')) {
+            data.baseUrl += '/';
         }
-        const url = this.apiEndpoint + data.path;
+        const url = data.baseUrl + data.path;
         // =>set auth header
         if (!data.noAuth && this.getToken()) {
             data.headers[this.authenticationHeaderName] = this.getToken();

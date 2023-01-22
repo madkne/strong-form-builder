@@ -16,7 +16,7 @@ export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSche
 
     @Input() override schema: ButtonSchema;
 
-    constructor(public elRef: ElementRef<any>, public cdr: ChangeDetectorRef, public http: StrongFBHttpService) {
+    constructor(public override elRef: ElementRef<any>, public override cdr: ChangeDetectorRef, public http: StrongFBHttpService) {
         super(elRef, cdr);
     }
 
