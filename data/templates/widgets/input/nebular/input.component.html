@@ -1,5 +1,6 @@
 <ng-container *ngIf="schema && show">
-    <input (focus)="makeDirtyField()" nbInput [type]="schema.type" [status]="schema.status"
+    <input [style.textAlign]="schema.textAlign ?? undefined" [attr.dir]="schema.direction ?? undefined"
+        (focus)="makeDirtyField()" nbInput [type]="schema.type" [status]="schema.status"
         [fullWidth]="schema.fullWidth ? true : undefined" [disabled]="schema.disabled? true : undefined"
         [shape]="schema.shape" [fieldSize]="schema.size" [placeholder]="schema.placeholder ? schema.placeholder : ''"
         [id]="widgetId" [(ngModel)]="schema.value" (ngModelChange)="changeValue($event)" (keyup)="keyupEvent($event)" />

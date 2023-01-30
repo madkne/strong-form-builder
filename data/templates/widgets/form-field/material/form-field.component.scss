@@ -3,9 +3,14 @@
     font-size: 75%;
     margin-top: 0.6666666667em;
 }
+
 .main-form-field {
     margin: 5px 2px;
     display: flex;
     flex-direction: column;
 
+    .mat-hint {
+        margin-top: -10px;
+        font-size: 0.8em;
+    }
 }

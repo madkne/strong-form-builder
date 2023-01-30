@@ -158,14 +158,18 @@ export class StrongFBDialogWidgetRefComponent extends StrongFBBaseWidget {
     }
     /***************************************** */
     protected async runActionFunction(action: StrongFBDialogAction) {
+        let formFieldValues = {};
+        if (this.data?.form) {
+            formFieldValues = this.data.form.formFieldValues();
+        }
         if (action.action) {
-            const ret = await action.action.call(this.widgetForm, this.data.form.formFieldValues());
+            const ret = await action.action.call(this.widgetForm, formFieldValues);
             if (ret) {
-                this.dialogRef.close(this.data.form.formFieldValues());
+                this.dialogRef.close(formFieldValues);
             }
         }
         if (action.closable) {
-            this.dialogRef.close(this.data.form.formFieldValues());
+            this.dialogRef.close(formFieldValues);
         }
     }
 }

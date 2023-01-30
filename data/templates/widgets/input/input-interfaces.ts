@@ -41,6 +41,8 @@ export interface InputSchema {
      */
     disabled?: boolean;
     value?: string | number;
+    direction?: string;
+    textAlign?: string;
 
     _form?: FormFieldSchema;
     /********************************* */

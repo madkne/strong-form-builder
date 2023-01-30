@@ -105,7 +105,14 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
                 options.params[this.schema.mapApiPagination.pageParam] = this.page;
                 options.params[this.schema.mapApiPagination.pageSizeParam] = this.schema.mapApiPagination.pageSize;
             }
-            //TODO: post
+            // =>POST method
+            else if (options.method === 'POST') {
+                if (options.body === undefined) {
+                    options.body = {};
+                }
+                options.body[this.schema.mapApiPagination.pageParam] = this.page;
+                options.body[this.schema.mapApiPagination.pageSizeParam] = this.schema.mapApiPagination.pageSize;
+            }
         }
         let res: APIResponse;
         // =>call api by user request

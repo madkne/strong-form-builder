@@ -5,7 +5,8 @@
             {{schema._form.label}}
             <span class="required" *ngIf="schema._form?.__isRequired">*</span>
         </mat-label>
-        <input (focus)="makeDirtyField()" matInput [type]="schema.type" [status]="schema.status"
+        <input [style.textAlign]="schema.textAlign ?? undefined" [attr.dir]="schema.direction ?? undefined"
+            (focus)="makeDirtyField()" matInput [type]="schema.type" [status]="schema.status"
             [fullWidth]="schema.fullWidth ? true : undefined" [disabled]="schema.disabled? true : undefined"
             [shape]="schema.shape" [fieldSize]="schema.size"
             [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId" [(ngModel)]="schema.value"

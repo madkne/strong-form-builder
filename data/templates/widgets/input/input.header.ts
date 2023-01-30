@@ -56,6 +56,17 @@ export class StrongFBInputWidget<FIELDS = { [k: string]: any }> extends StrongFB
         return this;
     }
 
+    direction(dir: 'ltr' | 'rtl') {
+        this._schema.direction = dir;
+        return this;
+    }
+
+    textAlign(align: 'left' | 'right' | 'center') {
+        this._schema.textAlign = align;
+
+        return this;
+    }
+
     get keyup() {
         if (!this._schema.keyEvents) {
             this._schema.keyEvents = [];
