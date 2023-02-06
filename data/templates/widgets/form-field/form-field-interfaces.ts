@@ -4,6 +4,7 @@ import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBAutoCompleteWidget } from "../auto-complete/auto-complete.header";
 import { ButtonSchema } from "../button/button-interfaces";
 import { StrongFBButtonWidget } from "../button/button.header";
+import { StrongFBCheckBoxWidget } from "../check-box/check-box.header";
 import { StrongFBDatePickerWidget } from "../date-picker/date-picker.header";
 import { StrongFBEditorWidget } from "../editor/editor.header";
 import { StrongFBFileUploaderWidget } from "../file-uploader/file-uploader.header";
@@ -32,6 +33,7 @@ export type FormFieldType =
     StrongFBToggleWidget |
     StrongFBEditorWidget |
     StrongFBAutoCompleteWidget |
+    StrongFBCheckBoxWidget |
     StrongFBDatePickerWidget;
 
 export type FormFieldErrorCallback = (name: StrongFBValidatorName, value?: any, self?: StrongFBFormFieldWidget) => any;

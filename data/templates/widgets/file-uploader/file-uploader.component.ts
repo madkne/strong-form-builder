@@ -58,6 +58,16 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
         // =>normalize schema
         this.schema = await this.normalizeSchema(this.schema);
         this.listenOnFormFieldChange('value');
+        // =>listen on reset
+        this.widgetHeader['_resetUploader$'].pipe(takeUntil(this.destroy$)).subscribe(it => {
+            if (!it) return;
+            // =>reset
+            this.filePickerFiles = [];
+            this.schema.value = undefined;
+            this.detectChanges.detectChanges();
+            this.schema._value = [];
+            this.updateFormField('_value');
+        });
         // =>after 1.5s, upload a file
         interval(1500).pipe(takeUntil(this.destroy$)).subscribe(() => {
             // =>if no plan for upload files

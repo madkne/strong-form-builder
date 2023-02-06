@@ -1,0 +1,17 @@
+<ng-container *ngIf="schema">
+  <ng-container *ngIf="schema.mode === 'single'">
+    <nb-checkbox (checkedChange)="changeEvent(schema.options, $event)"
+      [status]="schema.status" [disabled]="schema.options.disabled" [(ngModel)]="schema.options._checked">
+      {{ schema.options.text }}
+    </nb-checkbox>
+  </ng-container>
+
+  <ng-container *ngIf="schema.mode === 'multi'">
+    <div [ngClass]="[schema.optionsDirection]">
+      <nb-checkbox *ngFor="let item of schema.options" (checkedChange)="changeEvent(item, $event)"
+        [status]="schema.status" [disabled]="item.disabled" class="justify-checkbox" [(ngModel)]="item._checked">
+        {{ item.text }}
+      </nb-checkbox>
+    </div>
+  </ng-container>
+</ng-container>

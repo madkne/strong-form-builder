@@ -1,13 +1,14 @@
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBFileUploaderWidgetComponent } from "./file-uploader.component";
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { FileUploaderErrorKey, FileUploaderFileStruct, FileUploaderFileUploadedEventCallback, FileUploaderMessageKey, FileUploaderSchema, FileUploaderServerSendFileType } from "./file-uploader-interfaces";
 import { MimeTypes } from "../../common/StrongFB-types";
 
 
 
 export class StrongFBFileUploaderWidget<FIELDS = { [k: string]: any }> extends StrongFBBaseWidgetHeader<FileUploaderSchema> {
+    private _resetUploader$ = new Subject<boolean>();
 
     protected override _schema: FileUploaderSchema = {};
 
@@ -73,6 +74,10 @@ export class StrongFBFileUploaderWidget<FIELDS = { [k: string]: any }> extends S
     removeFilesAfterUploaded(is = true) {
         this._schema.removeFilesAfterUploaded = true;
         return this
+    }
+
+    reset() {
+        this._resetUploader$.next(true);
     }
 
 

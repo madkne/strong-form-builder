@@ -23,5 +23,6 @@
 |16|auto-complete|YES|TESTING|supported multi select|madkne|
 |17|stat-card|YES|NO|supported buttons and ratio change|madkne|
 |18|css-image|YES|YES|supported illustration css images|madkne|
+|19|check-box|YES|NO|-|rashidi
 
 <!-- |16|date-picker|YES|-|rashidi| -->

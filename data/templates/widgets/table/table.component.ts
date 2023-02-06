@@ -83,6 +83,10 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
         }
         // =>load rows by local
         //TODO:
+        // =>set selected rows
+        if (this.schema?.selectable?.selectedRows) {
+            this.emitSelectedRows();
+        }
         this.displayLoading(false);
         refreshTable(this.tableRef);
     }
@@ -225,6 +229,11 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
             }
             this.cdr.detectChanges();
             refreshTable(this.tableRef);
+        }
+
+        // =>set selected rows
+        if (this.schema?.selectable?.selectedRows) {
+            this.emitSelectedRows();
         }
     }
 

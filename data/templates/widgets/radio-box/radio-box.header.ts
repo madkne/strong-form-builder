@@ -45,6 +45,16 @@ export class StrongFBRadioBoxWidget<FIELDS = { [k: string]: any }> extends Stron
         return this;
     }
 
+    radioName(value: string) {
+        this._schema.name = value;
+        return this;
+    }
+
+    disabled(is = true) {
+        this._schema.disabled = is;
+        return this;
+    }
+
     /********************************* */
     /*************EVENTS************** */
     /********************************* */

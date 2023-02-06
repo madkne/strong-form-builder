@@ -31,6 +31,8 @@ export interface RadioBoxSchema {
     options?: RadioOption[];
 
     value?: string;
+
+    name?: string;
     /**
      * @default column
      */
