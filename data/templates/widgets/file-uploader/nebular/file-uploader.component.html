@@ -3,7 +3,8 @@
         <input [id]="widgetId" class="file-picker-browser" [placeholder]="schema.placeholder" type="file"
             [accept]="schema.accept ? getFileAcceptRaw() : undefined" (change)="fileBrowserChange($event)"
             [multiple]="schema.multiple ? true : undefined" />
-        <label [for]="widgetId" aria-hidden="true">{{ schema.placeholder }} </label>
+        <label [style.font-family]="srv._defaultFontFamily" [for]="widgetId" aria-hidden="true">{{ schema.placeholder
+            }}</label>
     </div>
     <!-- uploading files -->
     <nb-card class="file-picker-scroller" *ngIf="filePickerFiles.length > 0">

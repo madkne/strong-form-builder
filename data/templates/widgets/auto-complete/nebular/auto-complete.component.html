@@ -30,7 +30,7 @@
 
 
     <!-- panel -->
-    <nb-card size="small" class="panel" [ngStyle]="panelStyles" [id]="panelId" *ngIf="showPopup">
+    <nb-card size="small" class="panel" *ngIf="showPopup">
         <nb-list>
             <nb-list-item class="nb-transition  option" [class.selected]="isSelected(opt.value)"
                 (click)="toggleSelectOption(opt)" *ngFor="let opt of options">

@@ -4,6 +4,8 @@ import { FileUploaderErrorKey, FileUploaderFileStruct, FileUploaderMessageKey, F
 import { interval, Observable, takeUntil } from 'rxjs';
 import { HttpEventType } from '@angular/common/http';
 import { StrongFBLocaleService } from '../../services/StrongFB-locale.service';
+import { StrongFBService } from '../../services/StrongFB.service';
+
 
 @Component({
     selector: 'file-uploader-widget',
@@ -48,6 +50,7 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
         protected detectChanges: ChangeDetectorRef,
         protected elref: ElementRef,
         public locale: StrongFBLocaleService,
+        public srv: StrongFBService,
     ) {
         super(elref, detectChanges);
     }

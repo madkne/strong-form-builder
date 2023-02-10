@@ -25,7 +25,7 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
 
     constructor(
         protected override elRef: ElementRef,
-        protected srv: StrongFBService,
+        public srv: StrongFBService,
         protected locale: StrongFBLocaleService,
         protected override cdr: ChangeDetectorRef,
     ) {
@@ -97,7 +97,7 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
 
         let editorLoaded = setInterval(async () => {
             if (!document.getElementById(this.editorId)) return;
-
+            // =>init tinymce
             await tinymce.init({
                 selector: '#' + this.editorId,
                 min_height: this.schema.minHeight,
@@ -119,6 +119,10 @@ export class StrongFBEditorWidgetComponent extends StrongFBBaseWidget<EditorSche
                     editor.on('init', (e) => {
                         this.displayLoading(false);
                         this.readyToUse = true;
+                        // =>apply default font on tinymce
+                        if (document.getElementsByClassName('tox tox-tinymce').length > 0) {
+                            document.getElementsByClassName('tox tox-tinymce')[0]['style']['font-family'] = this.srv['_defaultFontFamily'];
+                        }
                     });
                 }
             });

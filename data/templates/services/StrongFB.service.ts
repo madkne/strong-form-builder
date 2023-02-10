@@ -34,6 +34,7 @@ export class StrongFBService {
         apiEndPoint: 'http:localhost:8081/api',
         authenticationHeaderName: 'Authentication',
         loginUrl: '/login',
+        fontFamily: 'sans-serif',
         assetsBaseUrl: '/assets/StrongFB',
         getRefreshTokenApi: async (http: StrongFBHttpService) => {
             return {

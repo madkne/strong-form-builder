@@ -69,6 +69,7 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
             return false;
         }
         this.sourceAppStrongFBPath = path.join(this.source, 'src', 'app', 'StrongFB');
+        fs.mkdirSync(this.sourceAppStrongFBPath, { recursive: true });
         // =>read package.json of project
         this.projectPackageJson = JSON.parse(fs.readFileSync(path.join(this.source, 'package.json')).toString());
         warning(`Angular Project : ${this.projectPackageJson.name} - version ${this.projectPackageJson.version}`);
@@ -107,6 +108,7 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
     /********************************** */
 
     async copyTemplates() {
+        fs.mkdirSync(path.join(this.sourceAppStrongFBPath, 'common', 'helpers'), { recursive: true });
         // =>copy common files
         let files = fs.readdirSync(path.join(this.templatesPath, 'common'), { withFileTypes: true });
         for (const f of files) {
@@ -138,7 +140,7 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
         }
         // =>compile & copy common helper files
         let helperFiles = fs.readdirSync(path.join(this.templatesPath, 'common', 'helpers'), { withFileTypes: true });
-        fs.mkdirSync(path.join(this.sourceAppStrongFBPath, 'common', 'helpers'), { recursive: true });
+
         for (const f of helperFiles) {
             if (!f.isFile()) continue;
             await TEM.saveRenderFile(path.join(this.templatesPath, 'common', 'helpers', f.name), path.join(this.sourceAppStrongFBPath, 'common', 'helpers'), {
@@ -214,6 +216,7 @@ export class InitCommand extends CliCommand<CommandName, CommandArgvName> implem
             projectTsConfig = JSON.parse(projectTsConfig);
             projectTsConfig['compilerOptions']['experimentalDecorators'] = true;
             projectTsConfig['compilerOptions']['strict'] = false;
+            projectTsConfig['angularCompilerOptions']['strictTemplates'] = false;
             // =>save tsconfig
             fs.writeFileSync(path.join(this.source, 'tsconfig.json'), JSON.stringify(projectTsConfig, null, 2));
 
