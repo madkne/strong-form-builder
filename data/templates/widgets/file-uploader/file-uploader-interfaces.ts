@@ -25,6 +25,9 @@ export interface FileUploaderFileStruct {
 
 export type FileUploaderFileUploadedEventCallback = (file: FileUploaderFileStruct, event: HttpResponse<any>, self?: StrongFBFileUploaderWidget) => any;
 
+export type FileUploaderFileRemovedEventCallback = (file: FileUploaderFileStruct, self?: StrongFBFileUploaderWidget) => any;
+
+
 export type FileUploaderErrorKey = 'upload_max_size_limit' | 'upload_max_files_limit' | 'error_on_uploading';
 
 export type FileUploaderMessageKey = 'uploading' | 'upload_complete' | 'starting';
@@ -108,5 +111,5 @@ export interface FileUploaderSchema {
     /*************EVENTS************** */
     /********************************* */
     fileUploadedEvent?: FileUploaderFileUploadedEventCallback;
-
+    fileRemovedEvent?: FileUploaderFileRemovedEventCallback;
 }

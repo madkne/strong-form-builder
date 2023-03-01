@@ -4,6 +4,7 @@ import { FormFieldMetaData } from '../../common/StrongFB-interfaces';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { StrongFBBaseWidgetHeader } from '../../common/StrongFB-widget-header';
 import { StrongFBHttpService } from '../../services/StrongFB-http.service';
+import { StrongFBService } from '../../services/StrongFB.service';
 import { ButtonSchema } from './button-interfaces';
 import { extraNormalizeSchema } from './convertor';
 
@@ -16,7 +17,7 @@ export class StrongFBButtonWidgetComponent extends StrongFBBaseWidget<ButtonSche
 
     @Input() override schema: ButtonSchema;
 
-    constructor(public override elRef: ElementRef<any>, public override cdr: ChangeDetectorRef, public http: StrongFBHttpService) {
+    constructor(public override elRef: ElementRef<any>, public override cdr: ChangeDetectorRef, public http: StrongFBHttpService, public srv: StrongFBService) {
         super(elRef, cdr);
     }
 

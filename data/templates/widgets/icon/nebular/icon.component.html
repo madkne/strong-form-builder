@@ -1,0 +1,11 @@
+<ng-container *ngIf="show">
+    <ng-container>
+        <!-- font-awesome type -->
+        <i *ngIf="srv._customFontPack?.type === 'font-awesome'" [class.rtl]="locale.getLangInfo()?.direction === 'rtl'"
+            [class.ltr]="locale.getLangInfo()?.direction === 'ltr'" [class]="icon"></i>
+        <!-- other icon types -->
+        <nb-icon *ngIf="!srv._customFontPack || srv._customFontPack?.type !== 'font-awesome'"
+            [pack]="srv._customFontPack?.name" [icon]="icon"></nb-icon>
+    </ng-container>
+
+</ng-container>

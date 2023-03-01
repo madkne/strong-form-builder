@@ -32,7 +32,8 @@
     <ng-container *ngIf="!schema.mode || schema.mode === 'text'">{{schema.text}}</ng-container>
     <!-- icon before text  mode-->
     <ng-container *ngIf="schema.mode === 'iconBeforeText'">
-        <mat-icon [fontIcon]="schema.icon"></mat-icon>{{schema.text}}
+        <icon-widget [icon]="schema.icon"></icon-widget>
+        {{schema.text}}
     </ng-container>
     <!-- icon after text  mode-->
     <ng-container *ngIf="schema.mode === 'iconAfterText'">

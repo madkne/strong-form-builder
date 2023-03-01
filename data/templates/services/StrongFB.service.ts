@@ -3,7 +3,7 @@ import { Injectable, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { StrongFBFormClass } from '../common/StrongFB-base';
-import { StrongFBConfigOptions, StrongFBDialogAction, StrongFBFormOptions, StrongFBJsonFormSchema } from '../common/StrongFB-interfaces';
+import { CustomFontPackInterface, StrongFBConfigOptions, StrongFBDialogAction, StrongFBFormOptions, StrongFBJsonFormSchema } from '../common/StrongFB-interfaces';
 import { StrongFBDialogWidgetComponent } from '../widgets/dialog/dialog.component';
 import { StrongFBHttpService } from './StrongFB-http.service';
 import { StrongFBLocaleService } from './StrongFB-locale.service';
@@ -27,6 +27,7 @@ export class StrongFBService {
     protected _injectServices: { [k: string]: any } = {};
     protected _defaultLocaleNamespace: string;
     protected _defaultFontFamily: string;
+    protected _customFontPack: CustomFontPackInterface;
 
     protected defaultOptions: StrongFBConfigOptions = {
         localStorageTokenKey: 'access_token',
@@ -96,6 +97,7 @@ export class StrongFBService {
         this._darkTheme = options.darkTheme;
         this._injectServices = options.injectServices;
         this._configsLoaded = true;
+        this._customFontPack = options.customFontPack;
     }
     /********************************* */
     get configLoaded() {

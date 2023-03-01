@@ -46,6 +46,7 @@ export class StrongFBSelectWidget<FIELDS = { [k: string]: any }> extends StrongF
     }
 
     options(options: string[] | SelectOption[]) {
+        if (!options || !Array.isArray(options)) options = [];
         if (typeof options[0] === 'string') {
             options = options.map(i => {
                 return {

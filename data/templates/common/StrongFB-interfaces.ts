@@ -125,6 +125,16 @@ export interface StrongFBConfigOptions {
     injectServices?: { [k: string]: any };
 
     fontFamily?: string;
+
+    /**
+     * used in nebular theme
+     */
+    customFontPack?: CustomFontPackInterface;
+}
+
+export interface CustomFontPackInterface {
+    name: string;
+    type: 'font-awesome';
 }
 
 export interface FormFieldMetaData<T = string> {

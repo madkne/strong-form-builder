@@ -170,6 +170,10 @@ export class StrongFBFileUploaderWidgetComponent extends StrongFBBaseWidget<File
         let index = this.filePickerFiles.findIndex(i => i.name === file.name);
         if (index < 0) return;
         this.removeFileEvent.emit(file);
+        // =>if remove file event
+        if (this.schema.fileRemovedEvent) {
+            this.schema.fileRemovedEvent.call(this.widgetForm, file, this.widgetHeader);
+        }
         this.filePickerFiles.splice(index, 1);
         this.schema.value = undefined;
         this.detectChanges.detectChanges();

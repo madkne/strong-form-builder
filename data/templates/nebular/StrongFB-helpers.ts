@@ -13,7 +13,6 @@ export namespace StrongFBHelper {
 
     export function loadingTextColor() {
         return "var(--button-filled-primary-hover-border-color, #598bff)";
-
     }
 
 }
