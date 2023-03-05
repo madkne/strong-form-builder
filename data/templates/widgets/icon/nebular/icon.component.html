@@ -1,11 +1,17 @@
 <ng-container *ngIf="show">
-    <ng-container>
+    <!-- with custom font pack -->
+    <ng-container *ngIf="customFontPack">
         <!-- font-awesome type -->
-        <i *ngIf="srv._customFontPack?.type === 'font-awesome'" [class.rtl]="locale.getLangInfo()?.direction === 'rtl'"
+        <i [id]="'fa_'+widgetId" *ngIf="customFontPack?.type === 'font-awesome'"
+            [class.rtl]="locale.getLangInfo()?.direction === 'rtl'"
             [class.ltr]="locale.getLangInfo()?.direction === 'ltr'" [class]="icon"></i>
         <!-- other icon types -->
-        <nb-icon *ngIf="!srv._customFontPack || srv._customFontPack?.type !== 'font-awesome'"
-            [pack]="srv._customFontPack?.name" [icon]="icon"></nb-icon>
+        <nb-icon *ngIf="customFontPack?.type !== 'font-awesome'" [pack]="customFontPack?.name" [icon]="icon"></nb-icon>
+    </ng-container>
+    <!-- no custom font pack -->
+    <ng-container *ngIf="!customFontPack">
+        <!-- other icon types -->
+        <nb-icon [icon]="icon"></nb-icon>
     </ng-container>
 
 </ng-container>
