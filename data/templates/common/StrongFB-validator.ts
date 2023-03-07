@@ -134,7 +134,10 @@ export class StrongFBValidator {
         return /^\d+$/.test(String(value));
     }
 
-    protected validateRequired(value: string | number) {
+    protected validateRequired(value: string | number, widgetName?: string) {
+        if ((widgetName === 'select' || widgetName === 'check-box') && Array.isArray(value) && value.length === 0) {
+            return false;
+        }
         if (value === undefined || value === null) {
             return false;
         }
@@ -175,12 +178,12 @@ export class StrongFBValidator {
         return this._widgetForm?.locale?.trans('msgs', messages[type]) ?? messages[type];
     }
 
-    async checkValidators(value: string | number, form?: any): Promise<StrongFBCheckValidatorsResponse> {
+    async checkValidators(value: string | number, form?: any, widgetName?: string): Promise<StrongFBCheckValidatorsResponse> {
         // if (form) this._widgetForm = form;
         // =>find validator object by name
         const findVObj = (name: StrongFBValidatorName) => this._schema.find(i => i.name === name);
         // =>required validation
-        if (findVObj('required') && !this.validateRequired(value)) {
+        if (findVObj('required') && !this.validateRequired(value, widgetName)) {
             return {
                 isValid: false,
                 error: this.getErrorMessages('required'),

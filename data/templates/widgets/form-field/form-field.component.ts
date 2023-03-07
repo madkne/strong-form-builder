@@ -125,7 +125,7 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
             let validatorRes: StrongFBCheckValidatorsResponse;
             // =>if widget is shown
             if (widget.show) {
-                validatorRes = await this.schema.validator.checkValidators(event, this.widgetForm);
+                validatorRes = await this.schema.validator.checkValidators(event, this.widgetForm, widget.widgetHeader.widgetName);
             }
             // =>if hide widget
             else {
