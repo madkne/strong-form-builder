@@ -191,3 +191,21 @@
     border-radius: 5px;
     margin: 1px 4px;
 }
+
+@media only screen and (max-width: 580px) {
+    .file-picker-drop-label {
+        label {
+            text-align: center;
+            font-size: 0.7em;
+        }
+    }
+
+    .file-picker-file-content {
+        flex-direction: column;
+        height: unset;
+    }
+
+    .file-picker-error {
+        font-size: 0.7em;
+    }
+}

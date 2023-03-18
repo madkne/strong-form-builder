@@ -29,6 +29,11 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
         this.schema = this.widgetHeader.schema;
         // =>normalize schema
         this.schema = await this.normalizeSchema(this.schema);
+        // =>listen on update value
+        this.widgetHeader['_updateValue$'].pipe(takeUntil(this.destroy$)).subscribe(it => {
+            if (!it) return;
+            this.changeFormFieldValue(this.schema.field['_schema']['value']);
+        });
 
     }
 

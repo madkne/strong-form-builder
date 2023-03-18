@@ -1,7 +1,9 @@
 <ng-container *ngIf="schema && show">
     <nb-card>
         <nb-card-body>
-            <table *ngIf="!isNotFoundEnabled()">
+            <table
+                [ngStyle]="{'max-width': schema.responsive.maxWidth, 'min-width': schema.responsive.minWidth ?? 'unset'}"
+                *ngIf="!isNotFoundEnabled()">
                 <thead>
                     <tr>
                         <th *ngFor="let col of schema.columns" [class.has-sort]="col.hasSort">
@@ -33,9 +35,9 @@
                             *ngFor="let rowCol of schema.columns;let colIndex = index"
                             [class.td-has-checkbox]="colIndex == 0 && schema.selectable?.multiple">
                             <!-- multiple select -->
-                            <ng-container *ngIf="colIndex == 0 && schema.selectable?.multiple">
+                            <ng-container *ngIf="colIndex == 0 && schema.selectable?.multiple" style="width: 30px;">
                                 <nb-checkbox (checkedChange)="toggleSelectRow(rowIndex, $event)"
-                                    [checked]="isRowSelected(rowIndex)"></nb-checkbox>
+                                    [checked]="isRowSelected(rowIndex)" style="pointer-events: none;"></nb-checkbox>
                             </ng-container>
                             <!-- string type -->
                             <div *ngIf="!rowCol.type || rowCol.type === 'string'">

@@ -167,6 +167,12 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
                 schema.mapApiPagination.pageParam = 'page';
             }
         }
+        // =>set responsive options
+        if (!schema.responsive) {
+            schema.responsive = {
+                maxWidth: '100%',
+            };
+        }
         this.rowsSelected = {};
         this.rowsSelectedCount = 0;
         // =>set selected rows
@@ -186,6 +192,14 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
         if (schema.notFound && !schema.notFound.html) {
             schema.notFound.html = this.srv.locale().trans('common', 'Not Found!');
         }
+        // =>check if has enough columns for multiple selection
+        if (schema.selectable?.multiple && !schema.columns.find(i => i.type === 'selectRow')) {
+            schema.columns.unshift({
+                name: '',
+                type: 'selectRow',
+            });
+        }
+
 
         this.displayedColumns = this.schema.columns.map(i => i.name);
 

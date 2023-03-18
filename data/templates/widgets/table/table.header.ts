@@ -1,7 +1,7 @@
 
 import { APIRequest, APIResponse } from "../../common/StrongFB-interfaces";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
-import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableColumnSortMode, TableLoadByApi, TableLoadRowsResponse, TableMapApiPagination, TableNotFound, TableRowSetColorAction, TableSchema, TableSelectable, TableSelectableCallback } from "./table-interfaces";
+import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableColumnMapValue, TableColumnSortMode, TableLoadByApi, TableLoadRowsResponse, TableMapApiPagination, TableNotFound, TableResponsive, TableRowSetColorAction, TableSchema, TableSelectable, TableSelectableCallback } from "./table-interfaces";
 import { StrongFBTableWidgetComponent } from "./table.component";
 import { BehaviorSubject } from 'rxjs';
 
@@ -176,6 +176,14 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
     notFound(notfound?: TableNotFound) {
         this._schema.notFound = notfound;
         if (!this._schema.notFound) this._schema.notFound = {};
+        return this;
+    }
+
+    responsive(options: TableResponsive) {
+        this._schema.responsive = options;
+        if (!this._schema.responsive.maxWidth) {
+            this._schema.responsive.maxWidth = '100%';
+        }
         return this;
     }
 

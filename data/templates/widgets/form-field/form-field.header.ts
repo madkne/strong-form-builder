@@ -1,3 +1,4 @@
+import { BehaviorSubject } from "rxjs";
 import { json2WidgetClass } from "../../common/helpers/StrongFB-json";
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBValidatorName, StrongFBWidgetShowCallback } from "../../common/StrongFB-types";
@@ -11,6 +12,8 @@ import { StrongFBFormFieldWidgetComponent } from "./form-field.component";
 
 
 export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldSchema> {
+
+    private _updateValue$ = new BehaviorSubject<boolean>(false);
 
     protected override _schema: FormFieldSchema = {};
 
@@ -75,6 +78,7 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
         if (!this._schema.field) return this;
 
         this._schema.field['_schema']['value'] = val as any;
+        this._updateValue$.next(true);
         return this;
     }
 

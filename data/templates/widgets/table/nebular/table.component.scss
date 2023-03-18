@@ -9,14 +9,15 @@ table {
     border-spacing: 0;
     display: table;
     width: 100%;
-    max-width: 100%;
+    // max-width: 100%; 
     overflow: auto;
 
     thead {
         tr {
             th {
                 padding: 0.875rem 1.25rem;
-                border: 1px solid var(--background-basic-color-2);
+                // border: 1px solid var(--background-basic-color-2);
+                border-bottom: 2px solid var(--color-warning-100);
 
                 .title {
                     display: flex;
@@ -90,20 +91,20 @@ table {
         tr {
             td {
                 padding: 0.875rem 1.25rem;
-                border: 1px solid var(--background-basic-color-2);
-
+                // border: 1px solid var(--background-basic-color-2);
+                border-bottom: 0.5px solid var(--color-info-800);
             }
         }
     }
 }
 
 .td-has-checkbox {
-    display: flex;
-    align-items: center;
+    width: 30px;
 
     nb-checkbox {
-        margin: 0 5px;
-        margin-bottom: -5px;
+        pointer-events: none;
+        // margin: 0 5px;
+        // margin-bottom: -5px;
     }
 }
 

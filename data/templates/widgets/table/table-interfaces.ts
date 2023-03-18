@@ -24,7 +24,7 @@ export interface TableColumn<N extends string = string, R extends object = objec
     /**
      * @default string
      */
-    type?: 'string' | 'actions' | 'tag' | 'tagsList';
+    type?: 'string' | 'actions' | 'tag' | 'tagsList' | 'selectRow';
     /**
      * normalize value of row for this column
      * not exist for 'actions' type
@@ -128,6 +128,14 @@ export interface TableNotFound {
     imageUrl?: string;
 }
 
+export interface TableResponsive {
+    minWidth?: string;
+    /**
+     * @default '100%'
+     */
+    maxWidth?: string;
+}
+
 /**
  * @return background color like '#111' or array of background, foreground colors like ['#000', '#fff']
  */
@@ -148,4 +156,6 @@ export interface TableSchema<COL extends string = string, ROW extends object = o
     selectable?: TableSelectable<ROW>;
 
     notFound?: TableNotFound;
+
+    responsive?: TableResponsive;
 }
