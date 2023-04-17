@@ -123,8 +123,12 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
 
     async changeFormFieldValue(event) {
         // console.log('change value:', event);
+        if (this.formFieldInstance.length === 0 || !this.formFieldInstance[0].instance) return;
         // =>check validators with value
         let widget = this.formFieldInstance[0].instance;
+        if (widget['valueChanges$']) {
+            widget['valueChanges$'].next([true, event]);
+        }
         this.schema.formFieldHasError = undefined;
         if (this.schema.validator) {
             let validatorRes: StrongFBCheckValidatorsResponse;

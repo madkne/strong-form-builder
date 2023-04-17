@@ -1,6 +1,6 @@
 import { StrongFBLayoutBuilder } from "../../common/StrongFB-layout-builder";
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
-import { AutoCompleteAppearance, AutoCompleteChangeEvent, AutoCompleteLoadOptions, AutoCompleteOption, AutoCompleteSchema, AutoCompleteShape, AutoCompleteSize, AutoCompleteStatus } from "./auto-complete-interfaces";
+import { AutoCompleteAppearance, AutoCompleteChangeEvent, AutoCompleteLoadOptions, AutoCompleteLoadTextByValueCallback, AutoCompleteOption, AutoCompleteSchema, AutoCompleteShape, AutoCompleteSize, AutoCompleteStatus } from "./auto-complete-interfaces";
 import { StrongFBAutoCompleteWidgetComponent } from "./auto-complete.component";
 import { BehaviorSubject } from 'rxjs';
 
@@ -91,6 +91,12 @@ export class StrongFBAutoCompleteWidget<FIELDS = { [k: string]: any }> extends S
 
     forceToSelect(is = true) {
         this._schema.forceToSelectOption = is;
+        return this;
+    }
+
+    loadTextByValue(callback: AutoCompleteLoadTextByValueCallback) {
+        this._schema.loadTextByValue = callback;
+
         return this;
     }
 

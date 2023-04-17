@@ -31,6 +31,7 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
     public schema: SCHEMA;
     public show = true;
     public readyToUse = false;
+    public valueChanges$ = new BehaviorSubject<[boolean, any]>([false, undefined]);
 
     protected emitAutoReadyToUse = true;
 

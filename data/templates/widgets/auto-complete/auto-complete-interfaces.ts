@@ -18,6 +18,8 @@ export interface AutoCompleteOption {
 
 export type AutoCompleteLoadOptions = (self?: StrongFBAutoCompleteWidget, search?: string) => Promise<AutoCompleteOption[]> | AutoCompleteOption[];
 
+export type AutoCompleteLoadTextByValueCallback = (value: string, self?: StrongFBAutoCompleteWidget) => Promise<string> | string;
+
 export interface AutoCompleteSchema {
     /**
      * @default medium
@@ -62,6 +64,8 @@ export interface AutoCompleteSchema {
     loadOptions?: AutoCompleteLoadOptions;
 
     _searchText?: string;
+
+    loadTextByValue?: AutoCompleteLoadTextByValueCallback;
 
     /********************************* */
     /*************EVENTS************** */

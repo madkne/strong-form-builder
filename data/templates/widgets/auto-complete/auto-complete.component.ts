@@ -34,6 +34,41 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
             // =>load options
             this.loadOptions();
         });
+        // =>listen on value change
+        this.valueChanges$.pipe(takeUntil(this.destroy$)).subscribe(async (it: [boolean, any]) => {
+            if (!it || !it[0]) return;
+            // =>if multiple values
+            if (this.schema.multiple && Array.isArray(this.schema.value)) {
+                for (const val of this.schema.value) {
+                    // =>check for values that exist in selected options
+                    if (this.findTextOfValue(val, false)) continue;
+                    // =>if exist load text by value callback
+                    let text = val;
+                    if (this.schema.loadTextByValue) {
+                        text = await this.schema.loadTextByValue(val, this.widgetHeader as any);
+                    }
+                    this.schema.selectedOptions.push({
+                        text,
+                        value: val,
+                    });
+                }
+            }
+            // =>if single value
+            else if (!this.schema.multiple && this.schema.value) {
+                if (!this.findTextOfValue(this.schema.value as string, false)) {
+                    // =>if exist load text by value callback
+                    let text = this.schema.value as string;
+                    if (this.schema.loadTextByValue) {
+                        text = await this.schema.loadTextByValue(this.schema.value as string, this.widgetHeader as any);
+                    }
+                    this.schema.selectedOptions.push({
+                        text,
+                        value: this.schema.value as string,
+                    });
+                }
+            }
+
+        });
         this.listenOnFormFieldChange('value');
 
     }
@@ -139,11 +174,14 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
     onRemove(event) {
         // console.log('remove event:', event);
         // =>remove from selected options
-        if (this.schema.selectedOptions.find(i => i.text === event.text)) {
+        let option = this.schema.selectedOptions.find(i => i.text === event.text);
+        if (option) {
             this.schema.selectedOptions.splice(this.schema.selectedOptions.findIndex(i => i.text === event.text), 1);
         }
-        if (this.schema.multiple && (this.schema.value as string[]).indexOf(event.text) > -1) {
-            (this.schema.value as string[]).splice((this.schema.value as string[]).indexOf(event.text), 1);
+        let removedValue = event.text;
+        if (option) removedValue = option.value;
+        if (this.schema.multiple && (this.schema.value as string[]).indexOf(removedValue) > -1) {
+            (this.schema.value as string[]).splice((this.schema.value as string[]).indexOf(removedValue), 1);
         } else if (!this.schema.multiple) {
             this.schema.value = undefined;
         }
@@ -177,11 +215,11 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
         this.keyupEvent();
     }
 
-    findTextOfValue(value: string) {
+    findTextOfValue(value: string, setDefaultValue = true) {
         // =>find value in selected options
         let option = this.schema.selectedOptions.find(i => i.value === value);
         if (option) return option.text;
-
+        if (!setDefaultValue) return undefined;
         return value;
     }
 
