@@ -6,7 +6,7 @@ import { error } from '@dat/lib/log';
 import { UIFrameWorkType } from './types';
 
 
-export const VERSION = '0.141';
+export const VERSION = '0.142';
 
 export async function detectAngularSourcePath() {
     let cwdir = await cwd();

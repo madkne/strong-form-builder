@@ -182,7 +182,7 @@ export class StrongFBFormFieldWidgetComponent extends StrongFBBaseWidget<FormFie
                 if (validatorRes.newValue) {
                     widget.schema['value'] = validatorRes.newValue;
                 } else {
-                    widget.schema['value'] = undefined;
+                    widget.schema['value'] = widget['resetWidgetValueAfterFailedValidation']();
                 }
                 // =>set danger status
                 widget.schema['status'] = 'danger';

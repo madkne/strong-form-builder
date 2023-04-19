@@ -164,7 +164,7 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
     }
 
     isSelected(value: string) {
-        if (this.schema.multiple) {
+        if (this.schema.multiple && Array.isArray(this.schema.value)) {
             return this.schema.value.indexOf(value) > -1;
         } else {
             return this.schema.value === value;
@@ -185,6 +185,7 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
         } else if (!this.schema.multiple) {
             this.schema.value = undefined;
         }
+        this.updateFormField('value');
     }
 
 
@@ -241,6 +242,11 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
             (this.schema.value as string[]).push(value);
         }
         this.schema._searchText = '';
+    }
+
+    override resetWidgetValueAfterFailedValidation() {
+        if (this.schema.multiple) return [];
+        return undefined;
     }
 
 }

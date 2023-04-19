@@ -135,7 +135,7 @@ export class StrongFBValidator {
     }
 
     protected validateRequired(value: string | number, widgetName?: string) {
-        if ((widgetName === 'select' || widgetName === 'check-box' || widgetName === 'file-uploader') && Array.isArray(value) && value.length === 0) {
+        if ((widgetName === 'select' || widgetName === 'check-box' || widgetName === 'file-uploader' || widgetName === 'auto-complete') && Array.isArray(value) && value.length === 0) {
             return false;
         }
         if (value === undefined || value === null) {

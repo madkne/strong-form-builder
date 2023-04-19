@@ -330,5 +330,9 @@ export class StrongFBBaseWidget<SCHEMA extends object = { [k: string]: any }> im
         let res = await http.sendPromise(data);
 
     }
+    /******************************************* */
+    resetWidgetValueAfterFailedValidation() {
+        return undefined;
+    }
 
 }
