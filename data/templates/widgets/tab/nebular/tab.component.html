@@ -1,12 +1,15 @@
 <nb-tabset *ngIf="schema && show" [fullWidth]="schema.fullWidth" (changeTab)="changeAsyncTab($event.tabId, $event)">
-    <nb-tab [style.padding]="!schema.tabPadding ? '0' : undefined" [tabId]="header.name" [active]="header.isActive"
-        [disabled]="header.disabled"
-        [tabIcon]="header.mode === 'icon' || header.mode === 'textWithIcon' ? header.icon : undefined"
-        *ngFor="let header of schema.tabHeaders"
-        [tabTitle]="header.mode === 'text' || header.mode === 'textWithIcon' ? header.title : undefined"
-        [responsive]="header.mode === 'textWithIcon'">
+    <ng-container *ngFor="let header of schema.tabHeaders">
+        <nb-tab [style.padding]="!schema.tabPadding ? '0' : undefined" [tabId]="header.name" [active]="header.isActive"
+            [disabled]="header.disabled"
+            [tabIcon]="header.mode === 'icon' || header.mode === 'textWithIcon' ? header.icon : undefined"
+            *ngIf="!header.hidden"
+            [tabTitle]="header.mode === 'text' || header.mode === 'textWithIcon' ? header.title : undefined"
+            [responsive]="header.mode === 'textWithIcon'">
 
-    </nb-tab>
+        </nb-tab>
+    </ng-container>
+
 </nb-tabset>
 <!-- tab content -->
 <ng-container *ngIf="activeTabHeader && schema.tabContents[activeTabHeader.name]">

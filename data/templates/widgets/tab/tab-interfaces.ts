@@ -7,6 +7,7 @@ export interface TabHeader<H extends string = string> {
     title?: string;
     disabled?: boolean;
     icon?: string;
+    hidden?: boolean;
     /**
      * @default text
      */
