@@ -42,4 +42,6 @@ export interface TextAreaSchema {
     maxHeight?: string;
 
 
+
+    _form?: any;
 }

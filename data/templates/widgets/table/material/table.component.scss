@@ -1,8 +1,3 @@
-nb-card-body {
-    padding: 0;
-    border-radius: 5px;
-}
-
 table {
     line-height: 1.5em;
     border-collapse: collapse;
@@ -16,7 +11,8 @@ table {
         tr {
             th {
                 padding: 0.875rem 1.25rem;
-                border: 1px solid var(--background-basic-color-2);
+                text-align: start;
+                // border: 1px solid var(--background-basic-color-2);
 
                 .title {
                     text-transform: capitalize;
@@ -30,7 +26,7 @@ table {
         tr {
             td {
                 padding: 0.875rem 1.25rem;
-                border: 1px solid var(--background-basic-color-2);
+                // border: 1px solid var(--background-basic-color-2);
 
             }
         }
@@ -41,10 +37,10 @@ table {
     display: flex;
     align-items: center;
 
-    nb-checkbox {
-        margin: 0 5px;
-        margin-bottom: -5px;
-    }
+    // nb-checkbox {
+    //     margin: 0 5px;
+    //     margin-bottom: -5px;
+    // }
 }
 
 .td-selectable {

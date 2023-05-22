@@ -20,6 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [],
@@ -47,6 +48,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatCardModule,
     MatAutocompleteModule,
     MatDialogModule,
+    MatButtonToggleModule,
 
   ],
   providers: [],
@@ -73,6 +75,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatCardModule,
     MatAutocompleteModule,
     MatDialogModule,
+    MatButtonToggleModule,
   ],
 })
 export class StrongFBSharedModule { }

@@ -71,4 +71,7 @@ export interface AutoCompleteSchema {
     /*************EVENTS************** */
     /********************************* */
     change?: AutoCompleteChangeEvent;
+
+
+    _form?: any;
 }

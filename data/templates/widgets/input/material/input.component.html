@@ -6,9 +6,7 @@
             <span class="required" *ngIf="schema._form?.__isRequired">*</span>
         </mat-label>
         <input [style.textAlign]="schema.textAlign ?? undefined" [attr.dir]="schema.direction ?? undefined"
-            (focus)="makeDirtyField()" matInput [type]="schema.type" [status]="schema.status"
-            [fullWidth]="schema.fullWidth ? true : undefined" [disabled]="schema.disabled? true : undefined"
-            [shape]="schema.shape" [fieldSize]="schema.size"
+            (focus)="makeDirtyField()" matInput [type]="schema.type" [disabled]="schema.disabled? true : undefined"
             [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId" [(ngModel)]="schema.value"
             (ngModelChange)="changeValue($event)" (keyup)="keyupEvent($event)" />
     </mat-form-field>

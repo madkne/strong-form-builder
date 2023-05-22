@@ -60,4 +60,6 @@ export interface SelectSchema {
     /*************EVENTS************** */
     /********************************* */
     change?: SelectChangeEvent;
+
+    _form?: any;
 }

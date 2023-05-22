@@ -40,9 +40,7 @@
                 <span class="required" *ngIf="schema._form?.__isRequired">*</span>
             </mat-label>
             <input [matAutocomplete]="auto" matInput type="text" (focus)="makeDirtyField()"
-                (active)="showPopupPanel(true)" [color]="schema.status"
-                [fullWidth]="schema.fullWidth ? true : undefined" [disabled]="schema.disabled? true : undefined"
-                [shape]="schema.shape" [fieldSize]="schema.size"
+                (active)="showPopupPanel(true)" [disabled]="schema.disabled? true : undefined"
                 [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId"
                 [(ngModel)]="schema._searchText" (keyup)="keyupEvent($event)" (click)="showPopupPanel()">
             <!-- <mat-icon matSuffix (click)="showPopupPanel()">{{showPopup ? 'expand_less':'expand_more'}}</mat-icon> -->

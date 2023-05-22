@@ -6,8 +6,7 @@ import { TableColumn, TableColumnAction, TableColumnDynamicActionsType, TableCol
 import { takeUntil } from 'rxjs';
 import { StrongFBService } from '../../services/StrongFB.service';
 import { APIRequest, APIResponse } from '../../common/StrongFB-interfaces';
-import { refreshTable } from './convertor';
-// import { extraNormalizeSchema } from './convertor';
+import { normalizeActions, refreshTable, normalizeTagColumn } from './convertor';
 
 @Component({
     selector: 'table-widget',
@@ -218,13 +217,14 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
                     if (this.schema.columnActions[col.name]) {
                         // =>if dynamic add actions
                         if (typeof this.schema.columnActions[col.name] === 'function') {
-                            (this.schema.columnActions[col.name] as TableColumnDynamicActionsType).call(this.widgetForm, simpleRow, i, this.widgetHeader).then(it => {
-                                this.displayRows[i][col.name] = it;
-                            });
+                            let actionsFunc = await (this.schema.columnActions[col.name] as TableColumnDynamicActionsType).call(this.widgetForm, simpleRow, i, this.widgetHeader);
+                            this.displayRows[i][col.name] = actionsFunc;
+
                         } else if (Array.isArray(this.schema.columnActions[col.name])) {
                             this.displayRows[i][col.name] = this.schema.columnActions[col.name];
                         }
-
+                        // =>normalize actions
+                        this.displayRows[i][col.name] = normalizeActions(this.displayRows[i][col.name] ?? []);
                     }
                     // =>if no action map, change its type
                     else {
@@ -239,6 +239,11 @@ export class StrongFBTableWidgetComponent extends StrongFBBaseWidget<TableSchema
                 // =>set simple row value
                 else {
                     this.displayRows[i][col.name] = this.simpleRows[i][col.name] || '';
+                }
+
+                // =>normalize tag or tagsList column 
+                if (col.type == 'tag' || col.type == 'tagsList') {
+                    this.displayRows[i][col.name] = normalizeTagColumn(this.displayRows[i][col.name], col.type);
                 }
             }
             this.cdr.detectChanges();
