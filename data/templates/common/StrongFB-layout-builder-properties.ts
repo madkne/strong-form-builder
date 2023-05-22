@@ -55,6 +55,11 @@ export class StrongFBLayoutBuilderProperties<WIDGET extends string = string> {
         return this;
     }
 
+    /**
+     * @param widths 
+     * @param layout 
+     * @returns 
+     */
     gridColumnLayout(widths: { [k in ScreenMode]?: StrongFBLayoutBuilderGridColumnType }, layout: StrongFBLayoutBuilder<WIDGET>) {
         let classNames = [];
         // =>create class name by params
@@ -78,6 +83,39 @@ export class StrongFBLayoutBuilderProperties<WIDGET extends string = string> {
         if (!Array.isArray(this._schema.layouts)) this._schema.layouts = [];
         this._schema.layouts.push(layout);
         this._schema['layoutClasses'].push(classNames);
+        return this;
+    }
+
+    /**
+     * 
+     * @param widget 
+     * @param widths Array of widths in different screen modes: [desktop, tablet, mobile]
+     * @returns 
+     */
+    gridColumnWidget(widget: StrongFBLayoutBuilderWidgetFunction, widths: [number, number, number] = [6, 12, 12], margin2x: [string, string] = ['0.3em', '0.6em']) {
+        let classNames = [];
+        // =>add classes
+        classNames.push('col-xxl-' + widths[0]);
+        classNames.push('col-xl-' + widths[0]);
+        classNames.push('col-lg-' + widths[0]);
+        classNames.push('col-md-' + widths[1]);
+        classNames.push('col-sm-' + widths[2]);
+        // =>add classes to layout
+        if (!this._schema['layoutClasses']) this._schema['layoutClasses'] = [];
+        this._schema['layoutClasses'].push(classNames);
+
+
+
+        // =>add layout with widget
+        if (!Array.isArray(this._schema.layouts)) {
+            this._schema.layouts = [];
+        }
+        this._schema.layouts.push(new StrongFBLayoutBuilder<WIDGET>().box().widget(widget).styleCss('margin', `${margin2x[0]} ${margin2x[1]}`).finish());
+
+        // =>margin styles
+        // if (!this._schema.styles) this._schema.styles = {};
+        // this._schema.styles['margin'] = `${margin2x[0]} ${margin2x[1]}`;
+
         return this;
     }
 
