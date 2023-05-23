@@ -1,6 +1,8 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { ToggleSchema } from './toggle-interfaces';
+import { extraNormalizeSchema } from './convertor';
+
 @Component({
     selector: 'toggle-widget',
     templateUrl: './toggle.component.html',
@@ -25,6 +27,7 @@ export class StrongFBToggleWidgetComponent extends StrongFBBaseWidget<ToggleSche
         if (!schema.labelPosition) schema.labelPosition = 'left';
         if (!schema.checked) schema.checked = false;
 
+        schema = extraNormalizeSchema(schema);
         return schema;
     }
 

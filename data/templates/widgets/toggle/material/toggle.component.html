@@ -1,2 +1,14 @@
 <ng-container *ngIf="schema && show">
+    <div class="content">
+        <mat-slide-toggle [color]="schema.status" [disabled]="schema.disabled? true : undefined" [id]="widgetId"
+            (change)="changeValue($event)" [(ngModel)]="schema.value">
+            <span *ngIf="schema._form?.label; else label">
+                {{schema._form.label}}
+                <span class="required" *ngIf="schema._form?.__isRequired">*</span>
+            </span>
+            <ng-template #label>
+                {{schema.label}}
+            </ng-template>
+        </mat-slide-toggle>
+    </div>
 </ng-container>

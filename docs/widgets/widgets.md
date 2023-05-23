@@ -16,7 +16,7 @@
 |9|textarea|YES|NO|-|madkne|
 |10|radio-box|YES|NO|-|madkne|
 |11|[file-uploader](./file_uploader.md)|YES|NO|file browsing and uploading|madkne|
-|12|toggle|YES|NO|-|rashidi|
+|12|toggle|YES|YES|-|rashidi, madkne|
 |13|editor|YES|NO|html editor or markdown editor|madkne|
 |14|[component](./component.md)|YES|YES|load dynamic a custom component|madkne|
 |15|tab|YES|NO|-|madkne|
