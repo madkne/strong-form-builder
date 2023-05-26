@@ -1,5 +1,65 @@
-<div class="file-picker-root" *ngIf="schema && show">
+<div *ngIf="schema && show">
+    <span *ngIf="schema._form?.label">
+        {{schema._form.label}}
+        <span class="required" *ngIf="schema._form?.__isRequired">*</span>
+    </span>
 
-    <!-- global error -->
-    <p class="file-picker-error" *ngIf="globalError" (click)="globalError = undefined">{{ globalError }}</p>
+
+    <div class="file-picker-root">
+        <div class="file-picker-drop-label">
+            <input [id]="widgetId" class="file-picker-browser" [placeholder]="schema.placeholder" type="file"
+                [accept]="schema.accept ? getFileAcceptRaw() : undefined" (change)="fileBrowserChange($event)"
+                [multiple]="schema.multiple ? true : undefined" />
+            <label [style.font-family]="srv._defaultFontFamily" [for]="widgetId" aria-hidden="true">{{
+                schema.placeholder
+                }}</label>
+        </div>
+        <!-- uploading files -->
+        <mat-card class="file-picker-scroller" *ngIf="filePickerFiles.length > 0">
+            <mat-card-content>
+                <div class="file-picker-list">
+                    <mat-card [status]="file.color" *ngFor="let file of filePickerFiles" class="file-picker-file">
+                        <mat-card-content>
+                            <div class="file-picker-file-content"
+                                [ngStyle]="{'direction': locale.direction.getValue()}">
+                                <div class="preview">
+                                    <img *ngIf="file.imageSrc" [src]="file.imageSrc | sanitizerUrl">
+                                </div>
+                                <div class="title">
+                                    <div class="t1">{{ file.name }}</div>
+                                    <span>{{ locale.humanlySize(file.size) }}</span>
+                                </div>
+                                <div *ngIf="schema.server" class="status">
+                                    <!-- error -->
+                                    <span *ngIf="file.status === 'failed'">{{ file.error }}</span>
+                                    <!-- uploading -->
+                                    <ng-container *ngIf="file.status === 'uploading'">
+                                        <div>{{ schema.messages.uploading }}</div>
+                                        <mat-progress-bar size="tiny" [value]="file.progress" [displayValue]="true">
+                                        </mat-progress-bar>
+                                    </ng-container>
+                                    <!-- complete -->
+                                    <ng-container *ngIf="file.status === 'complete'">
+                                        <div>{{ schema.messages.upload_complete }}</div>
+                                    </ng-container>
+                                    <!-- start -->
+                                    <ng-container *ngIf="file.status === 'start'">
+                                        <div>{{ schema.messages.starting }}</div>
+                                    </ng-container>
+                                </div>
+                                <div class="actions">
+                                    <button mat-icon-button color="warn" (click)="removeFile(file)">
+                                        <icon-widget icon="cancel"></icon-widget>
+
+                                    </button>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <!-- global error -->
+        <p class="file-picker-error" *ngIf="globalError" (click)="globalError = undefined">{{ globalError }}</p>
+    </div>
 </div>

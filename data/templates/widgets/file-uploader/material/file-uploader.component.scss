@@ -10,12 +10,13 @@
         Segoe UI Emoji, Segoe UI Symbol;
     font-weight: 450;
     text-rendering: optimizeLegibility;
-    border-radius: var(--input-rectangle-border-radius);
+    border-radius: 3px;
+    border-color: #eeeeee;
     // color: #4c4e53;
     // background-color: #edf0f4;
-    background-color: var(--input-basic-background-color);
-    border-color: var(--input-basic-border-color);
-    color: var(--input-basic-text-color);
+    // background-color: var(--input-basic-background-color);
+    // border-color: var(--input-basic-border-color);
+    // color: var(--input-basic-text-color);
     border-width: 1px;
     border-style: solid;
     transition: all 0.3s;
@@ -23,8 +24,9 @@
     flex-direction: column;
 
     &:hover {
-        background-color: var(--input-basic-hover-background-color);
-        border-color: var(--input-basic-hover-border-color);
+        // background-color: var(--input-basic-hover-background-color);
+        // border-color: var(--input-basic-hover-border-color);
+        border-color: #dcd8d8;
     }
 }
 
@@ -89,8 +91,9 @@
         border-radius: 0.5em !important;
 
         &.status-danger {
-            background-color: var(--card-header-danger-background-color) !important;
-            color: var(--card-header-danger-text-color) !important;
+            // background-color: var(--card-header-danger-background-color) !important;
+            // color: var(--card-header-danger-text-color) !important;
+            color: red;
         }
 
         nb-card-body {
@@ -190,4 +193,22 @@
     height: 3px;
     border-radius: 5px;
     margin: 1px 4px;
+}
+
+@media only screen and (max-width: 580px) {
+    .file-picker-drop-label {
+        label {
+            text-align: center;
+            font-size: 0.7em;
+        }
+    }
+
+    .file-picker-file-content {
+        flex-direction: column;
+        height: unset;
+    }
+
+    .file-picker-error {
+        font-size: 0.7em;
+    }
 }
