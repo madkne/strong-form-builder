@@ -9,5 +9,6 @@
             (focus)="makeDirtyField()" matInput [type]="schema.type" [disabled]="schema.disabled? true : undefined"
             [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId" [(ngModel)]="schema.value"
             (ngModelChange)="changeValue($event)" (keyup)="keyupEvent($event)" />
+        <span matSuffix *ngIf="schema?._form?.suffixText">{{schema?._form?.suffixText}}</span>
     </mat-form-field>
 </ng-container>

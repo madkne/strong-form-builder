@@ -27,6 +27,7 @@ export class StrongFBDialogWidgetComponent extends StrongFBBaseWidget {
     // @Input() table: PopupTable;
     @Input() form: StrongFBFormClass;
     @Input() initialData: object;
+    @Input() styles = {};
     // @Input() waitForComponentResponse = false;
 
     // @Output() formValuesByAction = new EventEmitter<[string, object]>();

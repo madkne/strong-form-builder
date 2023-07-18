@@ -63,6 +63,11 @@ export class StrongFBButtonWidget extends StrongFBBaseWidgetHeader {
         return this;
     }
 
+    disabled(is = true) {
+        this._schema.disabled = is;
+        return this;
+    }
+
     /**
      * 
      * @param formFieldNames if not set, scan all  fields with form field name

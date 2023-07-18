@@ -15,7 +15,7 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
     options: AutoCompleteOption[] = [];
     @Output() override ngModelChange = new EventEmitter<string | string[]>();
     @ViewChild(Object, { read: ElementRef }) tagInput: ElementRef<HTMLInputElement>;
-
+    disableKeyupEventOneTime = false;
 
     constructor(
         private eRef: ElementRef,
@@ -130,6 +130,10 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
     }
 
     async keyupEvent(event?: KeyboardEvent) {
+        if (this.disableKeyupEventOneTime) {
+            this.disableKeyupEventOneTime = false;
+            return;
+        }
         // =>if not force to select option
         if (!this.schema.forceToSelectOption) {
             this.schema.value = clone(this.schema._searchText);
@@ -206,6 +210,8 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
                 (this.schema.value as string[]).push(option.value);
             } else {
                 this.schema.value = option.value;
+                this.disableKeyupEventOneTime = true;
+                this.schema._searchText = option.text;
             }
             this.schema.selectedOptions.push(option);
             if (this.schema.multiple) {

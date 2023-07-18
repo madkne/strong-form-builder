@@ -1,5 +1,4 @@
-import { TableColumnMapValueType } from "../table-interfaces";
-import { TableSchema, TableColumnAction } from "./table-interfaces";
+import { TableSchema, TableColumnAction, TableColumnMapValueType } from "./table-interfaces";
 
 export function refreshTable(tableRef) {
     //nothing to do!

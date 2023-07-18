@@ -45,6 +45,16 @@ export class StrongFBFormFieldWidget extends StrongFBBaseWidgetHeader<FormFieldS
         return this;
     }
 
+
+    /**
+     * supported in limited (ex material-input widget)
+     */
+    suffixText(text: string) {
+        this._schema.suffixText = text;
+        return this;
+    }
+
+
     size(size: FormFieldSize) {
         this._schema.size = size;
         return this;

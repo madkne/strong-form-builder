@@ -211,6 +211,7 @@ export class StrongFBService {
         actions?: StrongFBDialogAction<ACTION_FORM>[],
         data?: SEND_DATA,
         minWidth?: string;
+        styles?: object;
     }) {
         // =>create instance of form
         let formInstance: StrongFBFormClass;
@@ -235,6 +236,9 @@ export class StrongFBService {
         }
         if (options.minWidth) {
             component.instance['minWidth'] = options.minWidth;
+        }
+        if (options.styles) {
+            component.instance['styles'] = options.styles;
         }
         // if (options.data) {
         //     component.instance['initialData'] = options.data;
