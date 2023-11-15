@@ -10,5 +10,11 @@
             [placeholder]="schema.placeholder ? schema.placeholder : ''" [id]="widgetId" [(ngModel)]="schema.value"
             (ngModelChange)="changeValue($event)" (keyup)="keyupEvent($event)" />
         <span matSuffix *ngIf="schema?._form?.suffixText">{{schema?._form?.suffixText}}</span>
+        <!-- suffix button -->
+        <button *ngIf="schema?._form?.suffixButton && schema?._form?.suffixButton.schema?.mode == 'icon'" matSuffix
+            mat-icon-button (click)="suffixButtonClick()">
+            <icon-widget [icon]="schema?._form?.suffixButton.schema?.icon"></icon-widget>
+        </button>
+
     </mat-form-field>
 </ng-container>

@@ -131,7 +131,7 @@ export class StrongFBValidator {
     }
 
     protected validateNumber(value: string) {
-        return /^\d+$/.test(String(value));
+        return /^\d+$/.test(String(value)) || value === '';
     }
 
     protected validateRequired(value: string | number, widgetName?: string) {

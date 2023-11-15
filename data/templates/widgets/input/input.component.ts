@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { StrongFBBaseWidget } from '../../common/StrongFB-widget';
 import { InputSchema } from './input-interfaces';
 import { syncSchema } from './convertor';
+import { takeUntil } from 'rxjs';
 
 @Component({
     selector: 'input-widget',
@@ -22,6 +23,14 @@ export class StrongFBInputWidgetComponent extends StrongFBBaseWidget<InputSchema
         this.schema = syncSchema(this.schema);
 
         this.listenOnFormFieldChange('value');
+        // =>listen on value change
+        this.valueChanges$.pipe(takeUntil(this.destroy$)).subscribe(async (it: [boolean, any]) => {
+            if (!it || !it[0]) return;
+            this.schema.value = it[1];
+            if (it[1] === undefined || it[1] === null) {
+                this.changeValue();
+            }
+        });
     }
 
     normalizeSchema(schema: InputSchema) {
@@ -35,7 +44,7 @@ export class StrongFBInputWidgetComponent extends StrongFBBaseWidget<InputSchema
         return schema;
     }
 
-    changeValue(event) {
+    changeValue(event?) {
         this.updateFormField('value');
     }
 
@@ -48,5 +57,10 @@ export class StrongFBInputWidgetComponent extends StrongFBBaseWidget<InputSchema
             key.callback.call(this.widgetForm, event, this.widgetHeader);
             break;
         }
+    }
+
+    suffixButtonClick(e) {
+        if (!this.schema?._form?.suffixButton?.schema['click']) return;
+        this.schema?._form?.suffixButton?.schema['click'].call(this.widgetForm, e, this.schema?._form?.suffixButton);
     }
 }
