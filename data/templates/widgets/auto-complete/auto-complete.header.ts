@@ -100,6 +100,14 @@ export class StrongFBAutoCompleteWidget<FIELDS = { [k: string]: any }> extends S
         return this;
     }
 
+    reset() {
+        this._schema.value = null;
+        this._schema._searchText = null;
+        this.updateOptions();
+
+        return this;
+    }
+
     /********************************* */
     /*************EVENTS************** */
     /********************************* */
