@@ -9,7 +9,7 @@
         </ng-container>
 
     </nb-card-header>
-    <nb-card-body *ngIf="widgetHeader.schema.content">
+    <nb-card-body [style]="schema?.content?.styles" *ngIf="widgetHeader.schema.content">
         <strong-layout-builder [form]="widgetForm" [layout]="widgetHeader.schema.content.layout"
             (layoutLoadedEvent)="childLayoutLoaded(widgetHeader.schema.content.layout['_id'])">
         </strong-layout-builder>

@@ -29,9 +29,10 @@ export class StrongFBCardWidget extends StrongFBBaseWidgetHeader {
         return this;
     }
 
-    content(layout: StrongFBLayoutBuilder) {
+    content(layout: StrongFBLayoutBuilder, styles?: {}) {
         this._schema.content = {
             layout,
+            styles,
         };
         return this;
     }

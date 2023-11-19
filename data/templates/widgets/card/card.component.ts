@@ -19,6 +19,21 @@ export class StrongFBCardWidgetComponent extends StrongFBBaseWidget<CardSchema> 
         //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
         //Add 'implements OnInit' to the class.
         // console.log('card header:', this.widgetHeader)
+        this.initSchema();
+    }
+
+    initSchema() {
+        if (this.widgetHeader) {
+            this.schema = this.widgetHeader.schema;
+        } else if (!this.schema) {
+            this.schema = {};
+        }
+        // =>normalize schema
+        if (!this.schema.content) {
+            this.schema.content = { layout: null };
+        }
+        if (!this.schema.content?.styles) this.schema.content.styles = {};
+
     }
 
     childLayoutLoaded(layoutId: string) {
