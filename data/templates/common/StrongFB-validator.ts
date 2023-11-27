@@ -99,6 +99,13 @@ export class StrongFBValidator {
         return this;
     }
 
+    private _validateNull(value: any){
+        if (value === undefined || value === null) return true;
+        if (typeof value === 'string' && value === '') return true;
+        if (typeof value === 'number' && String(value) === '') return true;
+        return false;
+    }
+
     protected validateEmail(email: string) {
         let matches = String(email)
             .toLowerCase()
@@ -109,29 +116,29 @@ export class StrongFBValidator {
     }
 
     protected validateAcceptPattern(pattern: RegExp, value: string | number) {
-        return pattern.test(String(value));
+        return pattern.test(String(value)) || this._validateNull(value);
     }
 
     protected validateRejectPattern(pattern: RegExp, value: string | number) {
-        return !pattern.test(String(value));
+        return !pattern.test(String(value)) || this._validateNull(value);
     }
 
     protected validateMaxLength(max: number, value: string) {
-        return new RegExp(`^.{0,${max}}$`).test(String(value));
+        return new RegExp(`^.{0,${max}}$`).test(String(value))|| this._validateNull(value);
     }
     protected validateMinLength(min: number, value: string) {
-        return new RegExp(`^.{${min},}$`).test(String(value));
+        return new RegExp(`^.{${min},}$`).test(String(value)) || this._validateNull(value);
     }
 
     protected validateMax(max: number, value: number) {
-        return value <= max;
+        return value <= max || this._validateNull(value);
     }
     protected validateMin(min: number, value: number) {
-        return value >= min;
+        return value >= min || this._validateNull(value);
     }
 
     protected validateNumber(value: string) {
-        return /^\d+$/.test(String(value)) || value === '';
+        return /^\d+$/.test(String(value)) || this._validateNull(value);
     }
 
     protected validateRequired(value: string | number, widgetName?: string) {
