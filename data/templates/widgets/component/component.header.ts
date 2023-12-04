@@ -1,12 +1,14 @@
 import { StrongFBBaseWidgetHeader } from "../../common/StrongFB-widget-header";
 import { StrongFBComponentWidgetComponent } from "./component.component";
 import { ComponentEvent, ComponentInput, ComponentSchema } from "./component-interfaces";
+import { BehaviorSubject } from "rxjs";
 
 
 
 export class StrongFBComponentWidget extends StrongFBBaseWidgetHeader {
 
     protected override _schema: ComponentSchema = {};
+    private _updateComponent$ = new BehaviorSubject<ComponentSchema>(undefined);
 
     override get component(): any {
         return StrongFBComponentWidgetComponent;
@@ -31,5 +33,9 @@ export class StrongFBComponentWidget extends StrongFBBaseWidgetHeader {
         if (!this._schema.events) this._schema.events = [];
         this._schema.events.push(eventRef);
         return this;
+    }
+
+    update() {
+        this._updateComponent$.next(this._schema);
     }
 }
