@@ -87,6 +87,7 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
               text,
               value: this.schema.value as string,
             });
+            this.schema._searchText = this.schema.value as string;
           }
         }
       });
@@ -156,13 +157,14 @@ export class StrongFBAutoCompleteWidgetComponent extends StrongFBBaseWidget<Auto
   async changeValue(event) {}
 
   async keyupEvent(event?: KeyboardEvent) {
-    if (this.disableKeyupEventOneTime) {
-      this.disableKeyupEventOneTime = false;
-      return;
-    }
+    // if (this.disableKeyupEventOneTime) {
+    //   this.disableKeyupEventOneTime = false;
+    //   return;
+    // }
     // =>if not force to select option
     if (!this.schema.forceToSelectOption) {
-      this.changeEvent(clone(this.schema._searchText));
+      this.schema.value = clone(this.schema._searchText);
+      this.updateFormField("value");
     }
     this.loadOptions();
     this.showPopup = true;
