@@ -4,7 +4,7 @@ import { cli } from '@dat/lib/argvs';
 import { GenerateDocumentsCommand } from "./src/commands/gen_docs";
 import { JsonFactoryCommand } from "./src/commands/json-factory";
 import { VERSION } from "./src/common";
-
+ 
 
 export async function main(): Promise<number> {
    clear();

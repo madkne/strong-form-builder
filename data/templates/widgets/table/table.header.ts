@@ -188,5 +188,10 @@ export class StrongFBTableWidget<COL extends string = string, ROW extends object
     }
 
 
+    private _loadFromJson(json: object) {
+        this._schema = json as any;
+
+    }
+
 
 }

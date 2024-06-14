@@ -37,6 +37,11 @@ import { StrongFBEditorWidget } from "../../widgets/editor/editor.header";
 import { StrongFBTagsListWidget } from "../../widgets/tags-list/tags-list.header";
 {% endif %}
 
+// table
+{% if (loadedWidgets.includes('table')) %}
+import { StrongFBTableWidget } from "../../widgets/table/table.header";
+{% endif %}
+
 export function json2WidgetClass(json: StrongFBJsonLayoutBuilderWidget) {
     let res: StrongFBBaseWidgetHeader;
     {% if (loadedWidgets.includes('card')) %}
@@ -84,6 +89,13 @@ export function json2WidgetClass(json: StrongFBJsonLayoutBuilderWidget) {
     // =>check tags-list widget
     if (json.type === 'tags-list') {
         res = new StrongFBTagsListWidget();
+    }
+    {% endif %}
+
+    {% if (loadedWidgets.includes('table')) %}
+    // =>check form field widget
+    if (json.type === 'table') {
+        res = new StrongFBTableWidget();
     }
     {% endif %}
 
