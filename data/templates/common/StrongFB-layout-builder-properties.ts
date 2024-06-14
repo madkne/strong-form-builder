@@ -1,4 +1,3 @@
-import { BehaviorSubject } from "rxjs";
 import { StrongFBLayoutBuilder } from "./StrongFB-layout-builder";
 import { StrongFBLayoutBuilderBoxCommonProperties, StrongFBLayoutBuilderGridColumnType, StrongFBLayoutBuilderNormalBoxProperties, StrongFBLayoutBuilderSchema, StrongFBLayoutBuilderType, StrongFBLayoutBuilderWidgetFunction } from "./StrongFB-layout-builder-types";
 import { ScreenMode } from "./StrongFB-types";
